@@ -1,0 +1,46 @@
+{
+    "codeName": "trex",
+    "displayName": "T-Rex",
+    "scientificName": "Tyrannosaurus Rex", //optional
+
+    //"aiProfileName": "theropodNomadBig",
+    //"modelProfileName": "trexModel",
+
+    "cost": 2000,
+    "reward": 50,
+
+    "sizeMeasure": "length", //alternatively, height, wingspan
+
+    "varations": [
+        {
+            "displayName": "Male T-Rex",
+            "gender": "Male", //anything can go here
+            "populationProportion": 0.3,
+            "rewardMultiplier": 1,
+            "modelProfileVariation": "male",
+            "aiProfileVariation": "male",
+
+            "weightMin": 6,
+            "weightMax": 11,
+            "sizeMeasureMin": "7",
+            "sizeMeasureMax": "10",
+            "scaleMin": 0.6,
+            "scaleMax": 1.0
+        },
+        {
+            "displayName": "Female T-Rex",
+            "gender": "Female", //anything can go here
+            "populationProportion": 0.7,
+            "rewardMultiplier": 1,
+            "modelProfileVariation": "female",
+            "aiProfileVariation": "female",
+
+            "weightMin": 8,
+            "weightMax": 14,
+            "sizeMeasureMin": "9",
+            "sizeMeasureMax": "13",
+            "scaleMin": 0.7,
+            "scaleMax": 1.3
+        }
+    ]
+}

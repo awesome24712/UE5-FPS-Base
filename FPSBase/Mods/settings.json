@@ -1,0 +1,19 @@
+{
+  "movements": [
+	{
+	  "deltaX" : 0.0,
+	  "deltaY" : 0.0,
+	  "deltaZ" : 1.0,
+	},
+	{
+	  "deltaX" : 2.0,
+	  "deltaY" : 1.0,
+	  "deltaZ" : 0.0,
+	},
+	{
+	  "deltaX" : 2.0,
+	  "deltaY" : 1.0,
+	  "deltaZ" : 1.0,
+	},
+  ]
+}
