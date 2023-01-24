@@ -40,7 +40,7 @@ private:
 	TArray<ModProfile*> m_activeModList; //list of mods currently active
 
 	JsonTreeHandle m_pLoadedModContent; //top-level JSON tree representing all JSONs for all mods currently loaded. Root is Mods folder.
-
+	
 
 public:
 	SystemManager();
@@ -54,6 +54,8 @@ public:
 
 	const TArray<ModProfile*>*	GetModProfileList() const { return &m_modList; };
 	const TArray<ModProfile*>*	GetSelectedModProfileList() const { return &m_modList; };
+
+	void						InitializeAllSystems();
 
 };
 

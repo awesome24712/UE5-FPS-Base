@@ -19,10 +19,6 @@ namespace LangSystem {
 	LangCode GetCurrentLang();
 
 
-	//Use these to add flavors and languages
-	//The function smartly inferences flavor and lang based on folder structure
-	//Any lang in a folder titled "Lang" is assumed to be unflavored,
-	//elsewise it's assumed to be flavored, using the folder name as the flavor name
-	void AddLang(JsonTree* pFile);
+	void InitLangSystem();
 	
 };

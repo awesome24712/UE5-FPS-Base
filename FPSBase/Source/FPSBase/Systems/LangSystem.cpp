@@ -82,6 +82,9 @@ namespace LangSystem {
 
 
 	//Use these to add flavors and languages
+	//The function smartly inferences flavor and lang based on folder structure
+	//Any lang in a folder titled "Lang" is assumed to be unflavored,
+	//elsewise it's assumed to be flavored, using the folder name as the flavor name
 	void AddLang(JsonTree* pFile) {
 		if (!pFile->GetParent() || pFile->GetParent()->GetType() != JNT_FOLDER) {
 			NLogger::Warning("Localizer: Cannot parse orphaned JsonTree for AddLang");
@@ -96,4 +99,11 @@ namespace LangSystem {
 
 	}
 
+	void InitLangSystem() {
+		//Get list of folders in Lang folder
+
+		//For each lang folder, load up all JSONs. JSONs in subfolders use subfolder names as FactionLangFlavor names.
+		//Sub-sub-folders are ignored.
+
+	}
 }
