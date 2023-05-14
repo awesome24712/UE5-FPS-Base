@@ -1,6 +1,5 @@
 #include "SystemManager.h"
 #include "../Util/JSON/PropertyBinder.h"
-#include ""
 
 SystemManager* g_pSystems;
 

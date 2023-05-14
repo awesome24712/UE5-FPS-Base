@@ -22,8 +22,9 @@ namespace NLogger {
 	void Fatal(const char* pszFormat, ...);
 }
 
-inline const wchar_t* WCStr(const FString& str) { return &(str[0]); }
-void                  Msg(const char* pszFormat, ...);
-void				  Log(const char* pszFormat, ...);
-void                  Msg(const wchar_t* pszFormat, ...);
-inline void           Msg(const FString& str) { Msg(WCStr(str)); }
+inline const wchar_t*	WCStr(const FString& str) { return &(str[0]); }
+inline const char*		CStr(const FString& str) { return TCHAR_TO_ANSI(*str); }
+void					Msg(const char* pszFormat, ...);
+void					Log(const char* pszFormat, ...);
+void					Msg(const wchar_t* pszFormat, ...);
+inline void				Msg(const FString& str) { Msg(WCStr(str)); }

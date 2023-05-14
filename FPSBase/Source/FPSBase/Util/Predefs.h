@@ -6,6 +6,8 @@
 #define FPSBASE_API
 #endif
 
+class FString;
+
 typedef unsigned char      byte;
 typedef unsigned short     ushort;
 typedef unsigned int       uint;
