@@ -109,3 +109,71 @@ ConVar* ConVar::FindCvarByName(const FString& str) {
 		return NULL;
 	}
 }
+
+TArray<TPair<FString, ConVar*>> ConVar::GetAllCvars() {
+	return s_stringToCvar.Array();
+}
+
+void ConCommand::ExecuteCommand(const char* cmd) {
+	int length = strlen(cmd);
+	if (length < 2) {
+		return;
+	}
+
+	//create a buffer for us to manipulate
+	const int BUF_SIZE = 256;
+	char buffer[BUF_SIZE];
+	strcpy_s(buffer, cmd);
+
+	//figure out what our arguments are
+	int argc = 0;
+	TArray<char*> args;
+	for (int i = 1; i < BUF_SIZE; i++ ) {
+		if (buffer[i] != ' ' && buffer[i-1] == ' ') {
+			argc++;
+			args.Add(&buffer[i]);
+
+			//find the next space character and mark it as null
+			for (; i < BUF_SIZE; i++) {
+				if (buffer[i] == ' ' || !buffer[i]) {
+					buffer[i] = 0;
+					break;
+				}
+			}
+		}
+	}
+
+	//ensure the end of the buffer is always null
+	buffer[BUF_SIZE - 1] = 0;
+
+	//the name of our command is the first arg
+	FString scmd = args[0];
+	if (s_stringToCommand.Contains(scmd)) {
+		ConCommand* cmdObject = s_stringToCommand[scmd];
+	} else {
+		Msg("Unknown command %s", args[0]);
+	}
+}
+
+TMap<FString, ConCommand*> ConCommand::s_stringToCommand;
+
+void ConCommand::RegisterCommand(ConCommand* cvar) {
+	if (s_stringToCommand.Contains(cvar->m_cmdName)) {
+		NLogger::Fatal("DUPLICATE cvar %s", CStr(cvar->m_cmdName));
+	}
+	else {
+		s_stringToCommand.Add(cvar->m_cmdName, cvar);
+	}
+}
+
+ConCommand::ConCommand(const FString& name, int flags, const FString& tooltip) {
+	m_cmdName = name;
+	m_iFlags = flags;
+	m_tooltip = tooltip;
+
+	RegisterCommand(this);
+}
+
+CON_COMMAND(helloworld, 0, "Prints hello world") {
+	Msg("Hello world!");
+}

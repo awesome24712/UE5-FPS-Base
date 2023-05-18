@@ -122,8 +122,38 @@ public:
 
 	//Global accessors
 	static ConVar* FindCvarByName(const FString& str);
+
+	static TArray<TPair<FString, ConVar*>> GetAllCvars();
 };
 
 class ConCommand {
+protected:
+	static TMap<FString, ConCommand*> s_stringToCommand;
+	static void RegisterCommand(ConCommand* cmd);
 
+	int m_iFlags;
+
+	FString m_cmdName;
+	FString m_tooltip;
+	
+	virtual void RunCommandActual(int argc, TArray<char*> args) = 0;
+
+public:
+	static void ExecuteCommand(const char* cmd); //runs a command as if entered into console
+
+	ConCommand(const FString& name, int flags, const FString& tooltip);
+	virtual ~ConCommand() {}
+};
+
+#define CON_COMMAND(name, flags, tooltip) \
+class ConCommand_##name : ConCommand { \
+public: \
+	ConCommand_##name() : ConCommand(#name, flags, tooltip) {} \
+	void RunCommandActual(int argc, TArray<char*> args) override; \
+	~ConCommand_##name() {} \
+}; \
+void ConCommand_##name::RunCommandActual(int argc, TArray<char*> args)
+
+class Console {
+	
 };
