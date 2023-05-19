@@ -140,6 +140,9 @@ protected:
 
 public:
 	static void ExecuteCommand(const char* cmd); //runs a command as if entered into console
+	static void ExecuteCommand(int argc, TArray<char*> args); //runs a command as if entered into console
+
+	static ConCommand* FindCommandByName(const FString& str);
 
 	ConCommand(const FString& name, int flags, const FString& tooltip);
 	virtual ~ConCommand() {}

@@ -139,11 +139,11 @@ private:
 	static JsonTree* CreateParentlessTreeFromTokens(TArray<NTokenizer::Token>& );
 
 	//This is recursively called 
-	static JsonTree* CreateParentlessTreeFromPath(FString path);
+	static JsonTree* CreateParentlessTreeFromPath(const FString& path);
 public:
 
-	static JsonTreeHandle CreateFromDirectory(FString path);
-	static JsonTreeHandle CreateFromFile(FString path);
+	static JsonTreeHandle CreateFromDirectory(const FString& path);
+	static JsonTreeHandle CreateFromFile(const FString& path);
 	
 
 	JsonTreeHandle(const JsonTreeHandle& otherPtr) {

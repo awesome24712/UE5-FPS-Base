@@ -9,7 +9,7 @@ namespace NTokenizer {
 		TCHAR m_char;
 	};
 
-	void TokenizeFile(FString path, TArray<Token>& result);
+	void TokenizeFile(const FString& path, TArray<Token>& result);
 
 
 

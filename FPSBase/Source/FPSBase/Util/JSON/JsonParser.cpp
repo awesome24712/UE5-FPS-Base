@@ -297,7 +297,7 @@ JsonTree* JsonTreeHandle::CreateParentlessTreeFromTokens(TArray<Token>& tokens) 
 	return pResult;
 }
 
-JsonTreeHandle JsonTreeHandle::CreateFromFile(FString path) {
+JsonTreeHandle JsonTreeHandle::CreateFromFile(const FString& path) {
 	//Log(__FUNCTION__ "\n");
 	TArray<NTokenizer::Token> tokens;
 	NTokenizer::TokenizeFile(path, tokens);
@@ -310,7 +310,7 @@ JsonTreeHandle JsonTreeHandle::CreateFromFile(FString path) {
 	return JsonTreeHandle(CreateParentlessTreeFromTokens(tokens));
 }
 
-JsonTree* JsonTreeHandle::CreateParentlessTreeFromPath(FString path) {
+JsonTree* JsonTreeHandle::CreateParentlessTreeFromPath(const FString& path) {
 	namespace fs = std::filesystem;
 
 	TArray<JsonTree*> foundChildren;
@@ -360,7 +360,7 @@ JsonTree* JsonTreeHandle::CreateParentlessTreeFromPath(FString path) {
 	return parentNode;
 }
 
-JsonTreeHandle JsonTreeHandle::CreateFromDirectory(FString pathRelativeToMods) {
+JsonTreeHandle JsonTreeHandle::CreateFromDirectory(const FString& pathRelativeToMods) {
 	
 	return JsonTreeHandle(CreateParentlessTreeFromPath(FPaths::ProjectModsDir() + pathRelativeToMods));
 		

@@ -1,4 +1,3 @@
-#include "CoreMinimal.h"
 #include "ConsoleSystem.h"
 
 ConVar sr_cheats("sr_cheats", CVAR_ADMIN | CVAR_NOTIFY | CVAR_REPLICATED, false, "Whether or not to allow built-in cheats on the server.");
@@ -152,6 +151,15 @@ void ConCommand::ExecuteCommand(const char* cmd) {
 		ConCommand* cmdObject = s_stringToCommand[scmd];
 	} else {
 		Msg("Unknown command %s", args[0]);
+	}
+}
+
+ConCommand* ConCommand::FindCommandByName(const FString& str) {
+	if (s_stringToCommand.Contains(str)) {
+		return s_stringToCommand[str];
+	}
+	else {
+		return NULL;
 	}
 }
 

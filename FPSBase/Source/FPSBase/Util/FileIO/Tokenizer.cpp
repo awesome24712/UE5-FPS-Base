@@ -4,7 +4,7 @@
 
 namespace NTokenizer {
 
-	void TokenizeFile(FString pathRelativeToMods, TArray<Token>& result) {
+	void TokenizeFile(const FString& pathRelativeToMods, TArray<Token>& result) {
 		Log(__FUNCTION__ "\n");
 
 		FString newPath = FPaths::ProjectModsDir() + pathRelativeToMods;
