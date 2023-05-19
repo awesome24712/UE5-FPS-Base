@@ -170,3 +170,9 @@ JsonTreeHandle::JsonTreeHandle(const JsonTree* root) {
 		m_piReferenceCount = NULL;
 	}
 }
+
+JsonTreeHandle JsonTreeHandle::CreateEmptyForEditing() {
+	JsonTree* empty = new JsonTree(NULL, 0, JNT_OBJECT, "");
+
+	return JsonTreeHandle(empty);
+}

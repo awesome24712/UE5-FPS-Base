@@ -73,6 +73,12 @@ public:
 	const JsonTree* GetChild(const FString& key) const;
 	bool			AllChildrenOfType(EJsonNodeType type) const;
 
+	//Functions for modifying JsonTrees from elsewhere
+	JsonTree*		AddChild(const FString& key, EJsonNodeType type = JNT_STRING);
+	void			SetValue(const FString& value);
+	void			SetValue(double value;)
+	void			SetValue(bool value);
+
 
 	bool HasKey() const { return m_key.Len() > 0; }; //Elements within arrays won't have keys
 	const FString& Key() const {
@@ -142,6 +148,8 @@ private:
 	static JsonTree* CreateParentlessTreeFromPath(const FString& path);
 public:
 
+	static JsonTreeHandle CreateEmptyForEditing();
+
 	static JsonTreeHandle CreateFromDirectory(const FString& path);
 	static JsonTreeHandle CreateFromFile(const FString& path);
 	
@@ -166,6 +174,7 @@ public:
 	}
 
 	const JsonTree* Get() const { return m_pTree; }
+	JsonTree* GetForEditing() const { return m_pTree; }
 
 	const JsonTree* operator ->() const {
 		return m_pTree;

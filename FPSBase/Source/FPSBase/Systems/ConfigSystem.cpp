@@ -61,7 +61,7 @@ namespace ConfigSystem {
 	}
 
 	void WriteConfigToDisk() {
-
+		
 	}
 
 	void LoadAutoexecFromDisk() {
