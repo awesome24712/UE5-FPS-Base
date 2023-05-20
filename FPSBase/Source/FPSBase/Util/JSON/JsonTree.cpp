@@ -159,7 +159,7 @@ FString JsonTree::ToString(int depth) const {
 	return result;
 }
 
-JsonTreeHandle::JsonTreeHandle(const JsonTree* root) {
+JsonTreeHandle::JsonTreeHandle(JsonTree* root) {
 	if (root) {
 		//Log(__FUNCTION__ "\n");
 		m_pTree = root;

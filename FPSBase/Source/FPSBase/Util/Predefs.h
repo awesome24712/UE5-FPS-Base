@@ -8,14 +8,15 @@
 
 class FString;
 
-typedef unsigned char      byte;
-typedef unsigned short     ushort;
-typedef unsigned int       uint;
-typedef unsigned long long ulong;
-typedef float              ftime; // time
-typedef float              vec;   // float representing world space (used by vectors)
-typedef unsigned short     eindex; // entity index
-typedef float              lerp;   // linear interpolation
+typedef unsigned char		byte;
+typedef unsigned short		ushort;
+typedef unsigned int		uint;
+typedef unsigned short		uint16;
+typedef unsigned long long	ulong;
+typedef float				ftime; // time
+typedef float				vec;   // float representing world space (used by vectors)
+typedef unsigned short		eindex; // entity index
+typedef float				lerp;   // linear interpolation
 
 
 //Each language has a language identifier, ex. "en", "es"

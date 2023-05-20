@@ -44,10 +44,7 @@ private:
 	JsonTree(JsonTree* pParent, int iNumChildren, EJsonNodeType type, FString key);
 	FORCENOINLINE ~JsonTree();
 	void SetChild(int index, JsonTree* child);
-	void SetValue(const FString& value);
-	void SetValue(bool value);
-	void SetValue(double value);
-	void SetKey(const FString& key) { m_key = key; }
+	
 
 	JsonTree* m_parent;
 	JsonTree** m_children;
@@ -76,8 +73,9 @@ public:
 	//Functions for modifying JsonTrees from elsewhere
 	JsonTree*		AddChild(const FString& key, EJsonNodeType type = JNT_STRING);
 	void			SetValue(const FString& value);
-	void			SetValue(double value;)
 	void			SetValue(bool value);
+	void			SetValue(double value);
+	void			SetKey(const FString& key) { m_key = key; }
 
 
 	bool HasKey() const { return m_key.Len() > 0; }; //Elements within arrays won't have keys
@@ -126,10 +124,10 @@ public:
 
 private:
 
-	JsonTreeHandle(const JsonTree* root);
+	JsonTreeHandle(JsonTree* root);
 
 	int* m_piReferenceCount;
-	const JsonTree* m_pTree;
+	JsonTree* m_pTree;
 
 	FORCENOINLINE void nullify() {
 		(*m_piReferenceCount)--;
