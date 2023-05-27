@@ -13,6 +13,8 @@ extern const char* g_ppszAmericanPlayerModels[];
 extern ConVar mp_year_accuracy;
 extern ConVar mp_year;
 
+class FPSBaseCharacter;
+
 //forward declaration
 namespace NClassQuota {
 	struct SPopulationCounter;
@@ -40,7 +42,7 @@ public:
 	bool	m_bDisabledOnHistoricityDisabled = false;
 	//UnlockableBit m_iControllingBit = (UnlockableBit)0;
 
-	inline bool ProgressionLocked() const { return m_iControllingBit != 0; }
+	//inline bool ProgressionLocked() const { return m_iControllingBit != 0; }
 
 #ifdef CLIENT_DLL
 	wchar* GetLocalizedName() const { return m_pLocalizedName; }
@@ -84,7 +86,7 @@ public:
 
 	uint8			m_iDefaultPrimaryAmmoCount;
 	uint8			m_iDefaultSecondaryAmmoCount = 0;
-	const char*		m_pszPrimaryAmmo = AMMO_DEFAULT_NAME;
+	const char*		m_pszPrimaryAmmo = "Musket";
 	const char*		m_pszSecondaryAmmo = "Grenade";
 
 
@@ -128,11 +130,11 @@ public:
 	bool			m_bNerfResistance = false;
 
 	//Functions
-	inline bool		isAmerican() const { return m_iDefaultTeam == TEAM_AMERICANS; }
-	inline bool		isBritish() const { return m_iDefaultTeam == TEAM_BRITISH; }
+	//inline bool		isAmerican() const { return m_iDefaultTeam == TEAM_AMERICANS; }
+	//inline bool		isBritish() const { return m_iDefaultTeam == TEAM_BRITISH; }
 
 	inline uint8		numChooseableWeapons() const { return m_iChooseableKits; }
-	uint8				numChooseableUniformsForPlayer(CBasePlayer* pPlayer) const; // { return m_bForceRandomUniform ? 1 : m_iNumUniforms; }
+	uint8				numChooseableUniformsForPlayer(FPSBaseCharacter* pPlayer) const; // { return m_bForceRandomUniform ? 1 : m_iNumUniforms; }
 	inline uint8		numUniforms() const { return m_iNumUniforms; }
 	const WeaponDef*	getWeaponDef(uint8 iKit) const;
 	void				getWeaponDef(uint8 iKit, const WeaponDef** ppPrimary, const WeaponDef** ppSecondary, const WeaponDef** ppTertiary) const;
@@ -178,18 +180,18 @@ public:
 	mutable ConVar* m_pcvLimit_med = nullptr;
 	mutable ConVar* m_pcvLimit_sml = nullptr;
 public:
-	int		GetLimitLrg() const { return m_pcvLimit_lrg->GetInt(); }
-	int		GetLimitMed() const { return m_pcvLimit_med->GetInt(); }
-	int		GetLimitSml() const { return m_pcvLimit_sml->GetInt(); }
+	//int		GetLimitLrg() const { return m_pcvLimit_lrg->GetInt(); }
+	//int		GetLimitMed() const { return m_pcvLimit_med->GetInt(); }
+	//int		GetLimitSml() const { return m_pcvLimit_sml->GetInt(); }
 
 	NClassQuota::SPopulationCounter* m_pPopCounter;
 	//static int getClassLimit(const PlayerClass* pClass); //maximum number of players on the team who can use this class
-	static int numClasses(); //teams count individually, so American Infantry and British Infantry are separate classes
-	static int numModelsForTeam(int iTeam);
-	inline static int numClassesForTeam(int iTeam) { return iTeam == TEAM_AMERICANS ? TOTAL_AMER_CLASSES : TOTAL_BRIT_CLASSES; }
-	static const PlayerClass* const* asList(); //retrieves a list of pointers to the classes
+	//static int numClasses(); //teams count individually, so American Infantry and British Infantry are separate classes
+	//static int numModelsForTeam(int iTeam);
+	//inline static int numClassesForTeam(int iTeam) { return iTeam == TEAM_AMERICANS ? TOTAL_AMER_CLASSES : TOTAL_BRIT_CLASSES; }
+	//static const PlayerClass* const* asList(); //retrieves a list of pointers to the classes
 
-	static void RemoveClassLimits();
+	//static void RemoveClassLimits();
 	static void UpdateClassSpeeds(); //updates class base speeds based on server variables
 };
 

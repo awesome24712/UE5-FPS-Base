@@ -1,6 +1,6 @@
 #pragma once
 #include "CoreMinimal.h"
-#include "../Util/FileIO/Logger.h"
+#include "../Util.h"
 #define DAMAGE_OVER_RANGE_GRAPH_RANGE_MAX 401
 
 enum {
@@ -20,7 +20,7 @@ enum {
 //-----------------------------------------------------------------------------
 // Purpose: Outlines stats for a left or right mouse button attack.
 //-----------------------------------------------------------------------------
-struct WeaponAttackInfo : IJsonBindable {
+struct WeaponAttackInfo : public IJsonBindable {
 	int			m_iAttacktype;
 	//Activity	m_iAttackActivity,
 		//m_iAttackActivityEmpty;
@@ -62,7 +62,7 @@ bool WeaponAttackInfo::HasMelee() const {
 // Purpose: Stores all weapon stats into a single definition, rather than including
 //		copies in every instance of a weapon.
 //-----------------------------------------------------------------------------
-class WeaponDef : IJsonBindable {
+class WeaponDef : public IJsonBindable {
 public:
 	//Two attackinfos for the two modes of attack
 	WeaponAttackInfo	m_Attackinfos[2];
@@ -108,7 +108,7 @@ public:
 
 	FString m_weaponName;
 	//const char* m_pszWeaponDefName;
-	WeaponDef(const char* pszWeaponName);
+	WeaponDef();
 
 	static const WeaponDef* GetDefForWeapon(const char* pszWeaponName);
 	static const WeaponDef* GetDefault(); //for non-standard weapons, to avoid crashing

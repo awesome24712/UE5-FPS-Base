@@ -55,7 +55,7 @@ private:
 	
 public:
 
-	EConVarType GetType() const { return m_eTYpe; }
+	EConVarType GetType() const { return m_eType; }
 
 	inline bool HasFlag(int flag) const { return !!(m_iFlags && flag); }
 

@@ -79,7 +79,7 @@ void JsonTree::ReserveChildren(int numChildren) {
 	m_iNumChildren = numChildren;
 }
 
-void JsonTree::AddChild(const FString& key, EJsonNodeType type) {
+JsonTree* JsonTree::AddChild(const FString& key, EJsonNodeType type) {
 	//First let's create the new child
 	JsonTree* newChild = new JsonTree(this, 0, type, key);
 

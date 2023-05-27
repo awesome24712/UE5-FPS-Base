@@ -110,16 +110,19 @@ public:
 	void LoadBindingsFromJson(FString path);
 
 	inline FString GetCodeName() const { return m_codeName; }
+
+	const TMap<FString, IJsonBindable*>* GetAllOfThisType() const { return &m_bindingSet->m_factoryMap; };
 };
 
 #ifndef JT_CALC_MEMORY_OFFSET
 #define JT_CALC_MEMORY_OFFSET(member) ((unsigned char*)(&member) - (unsigned char*)this)
+#define JT_CALC_MEMORY_OFFSET_OBJECT(member) ((unsigned char*)(static_cast<IJsonBindable*>(&member)) - (unsigned char*)this)
 
 #define JT_START_BINDING_UCLASS(name, _class) LinkObjectToBindingSet(JTClassBindingSet::__CreateBindingSet(name, nullptr, GetClass()), reinterpret_cast<unsigned char*>(this))
 #define JT_START_BINDING(name, _class) LinkObjectToBindingSet(JTClassBindingSet::__CreateBindingSet(name, new IJsonBindableFactory<_class>()), reinterpret_cast<unsigned char*>(this))
 
 //#define JT_BIND_OBJECT(member, bindingName) JTClassBindingSet::__CreateBinding(JT_CALC_MEMORY_OFFSET(member), bindingName, JNT_OBJECT, true)
-#define JT_BIND_OBJECT(member, bindingName, required) JTClassBindingSet::__CreateBinding(JT_CALC_MEMORY_OFFSET(member), bindingName, JNT_OBJECT, required)
+#define JT_BIND_OBJECT(member, bindingName, required) JTClassBindingSet::__CreateBinding(JT_CALC_MEMORY_OFFSET_OBJECT(member), bindingName, JNT_OBJECT, required)
 
 //#define JT_BIND_STRING(member, bindingName) JTClassBindingSet::__CreateBinding(JT_CALC_MEMORY_OFFSET(member), bindingName, JNT_STRING, true)
 #define JT_BIND_STRING(member, bindingName, required) JTClassBindingSet::__CreateBinding(JT_CALC_MEMORY_OFFSET(member), bindingName, JNT_STRING, required)

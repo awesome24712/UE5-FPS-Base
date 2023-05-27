@@ -21,7 +21,7 @@ WeaponAttackInfo::WeaponAttackInfo() {
 	JT_BIND_FLOAT(m_flCrouchMoving, "unaimedCrouchMoving", false);
 	JT_BIND_FLOAT(m_flCrouchStill, "unaimedCrouchStill", false);
 	JT_BIND_FLOAT(m_flStandAimStill, "aimedStandStill", false);
-	JT_BIND_FLOAT(m_flCrocuhAimStill, "aimedCrouchStill", false);
+	JT_BIND_FLOAT(m_flCrouchAimStill, "aimedCrouchStill", false);
 
 	JT_BIND_FLOAT(m_flConstantDamageRange, "constantDamageRange", false);
 	JT_BIND_FLOAT(m_flRelativeDrag, "dragMultiplier", false);
@@ -34,7 +34,7 @@ TMap<FString, WeaponDef*> g_dictWeaponDefs;
 //-----------------------------------------------------------------------------
 // Purpose: Puts any weapon def into the dictionary
 //-----------------------------------------------------------------------------
-WeaponDef::WeaponDef(const char* pszWeaponName) {
+WeaponDef::WeaponDef() {
 	//m_bQuickdraw = false;
 	//m_bSlowDraw = false;
 	m_flIronsightsTime = 0.3f;
@@ -57,12 +57,6 @@ WeaponDef::WeaponDef(const char* pszWeaponName) {
 	m_bBreakable = false;
 
 	m_Attackinfos[0].m_flRetraceDelay = m_Attackinfos[1].m_flRetraceDelay = 0;
-
-	m_bFiresUnderwater = false;
-	m_bAltFiresUnderwater = false;
-
-	g_dictWeaponDefs.Add(pszWeaponName, this);
-	m_pszWeaponDefName = pszWeaponName;
 
 	m_bShotOnly = false;
 
@@ -106,7 +100,7 @@ WeaponDef::WeaponDef(const char* pszWeaponName) {
 	JT_BIND_FLOAT(m_flIronsightFOVOffset, "ironsightFOV_Offset", false);
 	JT_BIND_BOOLEAN(m_bWeaponHasSights, "weaponHasSights", true);
 	JT_BIND_BOOLEAN(m_bDemoteNonHeadhitsToSecondaryDamage, "demoteHeadHitsToSecondaryDamage", false);
-	JT_BIND_FLOAT(m_flIronSightsTime, "ironsightsTime", false);
+	JT_BIND_FLOAT(m_flIronsightsTime, "ironsightsTime", false);
 	JT_BIND_BOOLEAN(m_bBreakable, "breakable", false);
 	JT_BIND_FLOAT(m_fHolsterTime, "holsterTime", true);
 	JT_BIND_FLOAT(m_flLockTime, "lockTime", false);
@@ -117,14 +111,15 @@ WeaponDef::WeaponDef(const char* pszWeaponName) {
 }
 
 //Default weapon def used by non-BG3 weapons
-DEC_BG3_WEAPON_DEF(weapon_default); //Use this to declare a weapon definiton
-DEF_BG3_WEAPON_DEF(weapon_default) {} //Use this to define a weapon definitions constructor
+//DEC_BG3_WEAPON_DEF(weapon_default); //Use this to declare a weapon definiton
+//DEF_BG3_WEAPON_DEF(weapon_default) {} //Use this to define a weapon definitions constructor
 
 //-----------------------------------------------------------------------------
 // Purpose: Gets default weapon def for weapons
 //-----------------------------------------------------------------------------
 const WeaponDef* WeaponDef::GetDefault() {
-	return &g_Def_weapon_default;
+	//return &g_Def_weapon_default;
+	return NULL;
 }
 
 //-----------------------------------------------------------------------------
@@ -139,6 +134,6 @@ const WeaponDef* WeaponDef::GetDefForWeapon(const char* pszWeaponName) {
 
 CON_COMMAND(weapon_list, 0, "Lists all standard BG3 weapons, excluding grenades") {
 	for (auto pair : g_dictWeaponDefs) {
-		Msg("%s\n", pair.Value->m_pszWeaponDefName);
+		Msg("%s\n", CStr(pair.Value->m_weaponName));
 	}
 }

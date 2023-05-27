@@ -6,7 +6,8 @@ namespace ConfigSystem {
 
 	//Modifies the give TArray to include all persistent cvars
 	void GetArchivableCvars(TArray<TPair<FString, ConVar*>>& out) {
-		TArray<TPair<FString, ConVar*>> all = ConVar::GetAllCvars();
+		TArray<TPair<FString, ConVar*>> all; 
+		ConVar::GetAllCvars(all);
 		out.Empty();
 		for (auto e : all) {
 			if (e.Value->HasFlag(CVAR_PERSISTENT)) {
@@ -85,12 +86,12 @@ namespace ConfigSystem {
 			JsonTree* child = jt->AddChild(pair.Key);
 			switch (pair.Value->GetType()) {
 			case EConVarType::INT:
-				child->SetValue(pair.Value->GetValueInt());
+				child->SetValue((double)pair.Value->GetValueInt());
 				child->SetType(JNT_DOUBLE_TO_INT);
 				break;
 			case EConVarType::STRING:
 				child->SetValue(FString(pair.Value->GetValuePszString()));
-				child->SetTYpe(JNT_STRING);
+				child->SetType(JNT_STRING);
 				break;
 			case EConVarType::BOOL:
 				child->SetValue(pair.Value->GetValueBool());
@@ -108,13 +109,13 @@ namespace ConfigSystem {
 
 		//Write the file
 		FString writePath = FPaths::ProjectModsDir() + "config.json";
-		FFileHelpers::SaveStringToFile(
+		/*FFileHelpers::SaveStringToFile(
 			stringRep,
 			writePath,
 			EEncodingOptions::AutoDetect,
 			IFileManager* FileManager,
 			uint32 WriteFlags
-		);
+		);*/
 	}
 
 	void LoadAutoexecFromDisk() {

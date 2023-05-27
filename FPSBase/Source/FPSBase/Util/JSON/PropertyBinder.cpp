@@ -227,8 +227,8 @@ void IJsonBindable::LoadBindingsFromJson(const JsonTree* pTree) {
 		case JNT_DOUBLE_TO_FLOAT:
 			pFloat = reinterpret_cast<float*>(pBoundLocation);
 			*pFloat = (float)pChildNode->GetValueDouble();
-		case JNT_DOUBLE_TO_FLOAT:
-			pByte = reinterpret_cast<float*>(pBoundLocation);
+		case JNT_DOUBLE_TO_BYTE:
+			pByte = reinterpret_cast<uint8*>(pBoundLocation);
 			*pByte = (uint8)pChildNode->GetValueDouble();
 		case JNT_DOUBLE:
 			pDouble = reinterpret_cast<double*>(pBoundLocation);
