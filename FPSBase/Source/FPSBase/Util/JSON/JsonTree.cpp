@@ -49,6 +49,62 @@ void JsonTree::SetChild(int index, JsonTree* child) {
 	}
 }
 
+void JsonTree::ReserveChildren(int numChildren) {
+	if (m_eType != JNT_ARRAY
+	&& m_eType != JNT_STRING_ARRAY
+	&& m_eType != JNT_OBJECT) {
+		NLogger::Fatal("JsonTree::ReserveChildren call FAILED, node %s is not of parent type", CStr(m_key));
+	}
+
+	if (numChildren < m_iNumChildren) {
+		NLogger::Fatal("JsonTree::ReserveChildren call FAILED, %i < %i", numChildren, m_iNumChildren);
+		return;
+	}
+
+	if (numChildren == m_iNumChildren) {
+		return;
+	}
+
+	JsonTree** newChildren = new JsonTree*[numChildren];
+	//copy in old children
+	for (int i = 0; i < m_iNumChildren; i++) {
+		newChildren[i] = m_children[i];
+	}
+
+	//free memory
+	delete[] m_children;
+	m_children = newChildren;
+
+	//ensure we remember our new number of children
+	m_iNumChildren = numChildren;
+}
+
+void JsonTree::AddChild(const FString& key, EJsonNodeType type) {
+	//First let's create the new child
+	JsonTree* newChild = new JsonTree(this, 0, type, key);
+
+	//find an empty null slot in our list of children
+	int emptySlot = -1;
+	for (int i = 0; i < m_iNumChildren; i++) {
+		if (m_children[i] == nullptr) {
+			emptySlot = i;
+			break;
+		}
+	}
+
+	//if we didn't find an empty slot, create one
+	//the function call also increment m_iNumChildren
+	if (emptySlot == -1) {
+		this->ReserveChildren(m_iNumChildren + 1);
+		emptySlot = m_iNumChildren - 1;
+	}
+	
+	//actually assign the child to the empty slot
+	m_children[emptySlot] = newChild;
+
+	return newChild;
+}
+
 void JsonTree::SetValue(const FString& value) {
 	m_sValue = value;
 }
@@ -113,13 +169,22 @@ FString JsonTree::ToString(int depth) const {
 		result = result + '"' + Key() + "\" : ";
 	}
 
+	char buffer[32];
+
 	//next depends on type
 	if (m_eType == JNT_STRING) {
 		result = result + '"' + GetValueString() + '"';
 	}
-	else if (m_eType == JNT_DOUBLE) {
-		char buffer[32];
+	else if (m_eType == JNT_DOUBLE || m_eType == JNT_DOUBLE_TO_FLOAT) {
 		sprintf_s(buffer, "%f", GetValueDouble());
+		result = result + buffer;
+	}
+	else if (m_eType == JNT_DOUBLE_TO_INT) {
+		sprintf_s(buffer, "%i", (int)GetValueDouble());
+		result = result + buffer;
+	}
+	else if (m_eType == JNT_DOUBLE_TO_BYTE) {
+		sprintf_s(buffer, "%i", (int)((uint8)GetValueDouble()));
 		result = result + buffer;
 	}
 	else if (m_eType == JNT_BOOLEAN) {

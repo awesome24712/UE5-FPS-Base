@@ -55,6 +55,8 @@ private:
 	
 public:
 
+	EConVarType GetType() const { return m_eTYpe; }
+
 	inline bool HasFlag(int flag) const { return !!(m_iFlags && flag); }
 
 	int GetValueInt() const {
@@ -123,7 +125,7 @@ public:
 	//Global accessors
 	static ConVar* FindCvarByName(const FString& str);
 
-	static TArray<TPair<FString, ConVar*>> GetAllCvars();
+	static void GetAllCvars(TArray<TPair<FString, ConVar*>>& out);
 };
 
 class ConCommand {

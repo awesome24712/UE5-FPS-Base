@@ -31,5 +31,6 @@ typedef FString FactionLangFlavor;
 #define until(condition) while (!(condition)) // simplifies thinking in many contexts
 //#define INTERFACE        class // abstract class never directly constructed
 
+#define BF(shiftAmount) (1 << shiftAmount)
 
 FORCEINLINE bool CharIsNumber(TCHAR c) { return c <= '9' && c >= '0'; }

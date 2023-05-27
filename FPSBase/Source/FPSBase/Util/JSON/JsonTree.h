@@ -26,6 +26,8 @@ enum EJsonNodeType {
 	JNT_NONEXISTANT, //either is set to null or doesn't exist as a key
 
 	JNT_DOUBLE_TO_INT, //used only by bindings to indicate that a double from the JSON should be converted to an int in memory
+	JNT_DOUBLE_TO_FLOAT, //used only by bindings to indicate that a double from the JSON should be converted to a float in memory
+	JNT_DOUBLE_TO_BYTE, //used only by bindings to indicate that a double from the JSON should be converted to a byte in memory
 	JNT_STRING_ARRAY //used only by bindings to indicate that an array from JSON should be converted to TArray<String>
 };
 
@@ -71,11 +73,13 @@ public:
 	bool			AllChildrenOfType(EJsonNodeType type) const;
 
 	//Functions for modifying JsonTrees from elsewhere
+	void			ReserveChildren(int numChildren); //reserves slots of more efficiently adding children. All slots must be filled
 	JsonTree*		AddChild(const FString& key, EJsonNodeType type = JNT_STRING);
 	void			SetValue(const FString& value);
 	void			SetValue(bool value);
 	void			SetValue(double value);
 	void			SetKey(const FString& key) { m_key = key; }
+	void			SetType(EJsonNodeType jnt) { m_eType = jnt; }
 
 
 	bool HasKey() const { return m_key.Len() > 0; }; //Elements within arrays won't have keys

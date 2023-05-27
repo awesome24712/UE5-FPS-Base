@@ -1,6 +1,33 @@
 #include "WeaponDataProfile.h"
 #include "../Util.h"
 
+WeaponAttackInfo::WeaponAttackInfo() {
+
+	//Bindings
+	JT_START_BINDING("weaponAttackInfo", WeaponAttackInfo);
+	JT_BIND_INT(m_iAttacktype, "attackType", true);
+	JT_BIND_BOOLEAN(m_bFiresUnderwater, "firesUnderwater", true);
+	JT_BIND_FLOAT(m_flRange, "range", true);
+	JT_BIND_INT(m_iDamage, "damage", true);
+	JT_BIND_FLOAT(m_flRecoil, "recoil", false);
+	JT_BIND_FLOAT(m_flCosAngleTolerance, "cosAngleTolerance", false);
+	JT_BIND_FLOAT(m_flRetraceDuration, "retraceDuration", false);
+	JT_BIND_FLOAT(m_flRetraceDelay, "flRetraceDelay", false);
+	JT_BIND_FLOAT(m_flAttackrate, "attackRate", false);
+	JT_BIND_INT(m_iStaminaDrain, "staminaDrain", true);
+	//accuracies
+	JT_BIND_FLOAT(m_flStandMoving, "unaimedStandMoving", false);
+	JT_BIND_FLOAT(m_flStandStill, "unaimedStandStill", false);
+	JT_BIND_FLOAT(m_flCrouchMoving, "unaimedCrouchMoving", false);
+	JT_BIND_FLOAT(m_flCrouchStill, "unaimedCrouchStill", false);
+	JT_BIND_FLOAT(m_flStandAimStill, "aimedStandStill", false);
+	JT_BIND_FLOAT(m_flCrocuhAimStill, "aimedCrouchStill", false);
+
+	JT_BIND_FLOAT(m_flConstantDamageRange, "constantDamageRange", false);
+	JT_BIND_FLOAT(m_flRelativeDrag, "dragMultiplier", false);
+	JT_FINISH_BINDING();
+}
+
 //Maps weapon names to their weapon defs - for external usage
 TMap<FString, WeaponDef*> g_dictWeaponDefs;
 
@@ -55,6 +82,38 @@ WeaponDef::WeaponDef(const char* pszWeaponName) {
 	int bmin = mainColor == 2 ? 200 : 0;
 	m_graphColor = FColor(RndInt(rmin, 255), RndInt(gmin, 255), RndInt(bmin, 255), 255);
 #endif
+
+	JT_START_BINDING("WeaponDef", WeaponDef);
+	JT_BIND_OBJECT(m_Attackinfos[0], "attack1", true);
+	JT_BIND_OBJECT(m_Attackinfos[1], "attack2", true);
+	JT_BIND_FLOAT(m_flShotAimModifier, "shotAimModifier", false);
+	JT_BIND_FLOAT(m_flShotSpread, "shotSpread", false);
+	JT_BIND_BYTE(m_iNumShot, "numShot", false);
+	JT_BIND_INT(m_iDamagePerShot, "damagePerShot", false);
+	JT_BIND_BOOLEAN(m_bShotOnly, "shotOnly", false);
+	JT_BIND_FLOAT(m_flShotMuzzleVelocity, "shotMuzzleVelocity", false);
+	JT_BIND_FLOAT(m_flMuzzleVelocity, "muzzleVelocity", false);
+	JT_BIND_FLOAT(m_flDamageDropoffMultiplier, "damageDropoffMultiplier", false);
+	JT_BIND_BOOLEAN(m_bPenetrateFlesh, "penetrateFlesh", false);
+	JT_BIND_FLOAT(m_flVerticalAccuracyScale, "verticalAccuracyScale", false);
+	JT_BIND_FLOAT(m_flZeroRange, "zeroRange", false);
+	JT_BIND_BYTE(m_iOwnerSpeedModOnKill, "speedModOnKill", false);
+	JT_BIND_BYTE(m_iAerialDamageMod, "aerialDamageMod", false);
+	JT_BIND_INT(m_iExtraDamageTypes, "extraDamageTypes", false);
+	JT_BIND_BOOLEAN(m_bDontAutoreload, "dontAutoReload", false);
+	JT_BIND_BOOLEAN(m_bCantAbortReload, "cantAbortReload", false);
+	JT_BIND_FLOAT(m_flReloadMovementSpeedModifier, "reloadMovementSpeedModifier", false);
+	JT_BIND_FLOAT(m_flIronsightFOVOffset, "ironsightFOV_Offset", false);
+	JT_BIND_BOOLEAN(m_bWeaponHasSights, "weaponHasSights", true);
+	JT_BIND_BOOLEAN(m_bDemoteNonHeadhitsToSecondaryDamage, "demoteHeadHitsToSecondaryDamage", false);
+	JT_BIND_FLOAT(m_flIronSightsTime, "ironsightsTime", false);
+	JT_BIND_BOOLEAN(m_bBreakable, "breakable", false);
+	JT_BIND_FLOAT(m_fHolsterTime, "holsterTime", true);
+	JT_BIND_FLOAT(m_flLockTime, "lockTime", false);
+	JT_BIND_FLOAT(m_flRandomAdditionalLockTimeMax, "randomAdditionalLockTime", false);
+	JT_BIND_STRING(m_weaponName, "weaponName", true);
+	JT_FINISH_BINDING();
+
 }
 
 //Default weapon def used by non-BG3 weapons

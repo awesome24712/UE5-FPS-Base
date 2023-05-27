@@ -109,8 +109,8 @@ ConVar* ConVar::FindCvarByName(const FString& str) {
 	}
 }
 
-TArray<TPair<FString, ConVar*>> ConVar::GetAllCvars() {
-	return s_stringToCvar.Array();
+void ConVar::GetAllCvars(TArray<TPair<FString, ConVar*>>& out) {
+	out = s_stringToCvar.Array();
 }
 
 void ConCommand::ExecuteCommand(const char* cmd) {

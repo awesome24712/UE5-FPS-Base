@@ -20,10 +20,11 @@ enum {
 //-----------------------------------------------------------------------------
 // Purpose: Outlines stats for a left or right mouse button attack.
 //-----------------------------------------------------------------------------
-struct WeaponAttackInfo {
+struct WeaponAttackInfo : IJsonBindable {
 	int			m_iAttacktype;
 	//Activity	m_iAttackActivity,
 		//m_iAttackActivityEmpty;
+	bool 	m_bFiresUnderwater;
 
 	float	m_flRange;
 	int		m_iDamage;
@@ -42,14 +43,14 @@ struct WeaponAttackInfo {
 			m_flCrouchStill,
 			// For iron sights. -HairyPotter
 			m_flStandAimStill,
-			m_flStandAimMoving,
 			m_flCrouchAimStill,
-			m_flCrouchAimMoving,
 			//
 			m_flConstantDamageRange,	//how long until we start losing damage?
 			m_flRelativeDrag;			//how does the drag on this bullet compare to a musket's?
 
 	inline bool HasMelee() const;
+
+	WeaponAttackInfo();
 };
 
 bool WeaponAttackInfo::HasMelee() const {
@@ -61,7 +62,7 @@ bool WeaponAttackInfo::HasMelee() const {
 // Purpose: Stores all weapon stats into a single definition, rather than including
 //		copies in every instance of a weapon.
 //-----------------------------------------------------------------------------
-class WeaponDef {
+class WeaponDef : IJsonBindable {
 public:
 	//Two attackinfos for the two modes of attack
 	WeaponAttackInfo	m_Attackinfos[2];
@@ -70,15 +71,16 @@ public:
 	//values related to internal ballistics
 	float	m_flShotAimModifier;//applies to aim cone. afterwards m_flShotSpread applies. should be negative
 	float	m_flShotSpread;		//used when firing shot, if the current gun is capable of that
+	uint8	m_iNumShot;
+	int		m_iDamagePerShot;
+	bool	m_bShotOnly;
 	float	m_flMuzzleVelocity;
 	float	m_flShotMuzzleVelocity;	//muzzle velocity when firing buckshot
 	float	m_flDamageDropoffMultiplier;
 	bool	m_bPenetrateFlesh;
 	float	m_flVerticalAccuracyScale;
 	float	m_flZeroRange;		//range to zero the gun in at
-	uint8	m_iNumShot;
-	float	m_iDamagePerShot;
-	bool	m_bShotOnly;
+	
 
 	uint8	m_iOwnerSpeedModOnKill; //BG3 - was for Native war club, removed for now
 	uint8	m_iAerialDamageMod; //damage modifier for hits in the air
@@ -98,15 +100,14 @@ public:
 	float	m_flIronsightsTime;
 	bool	m_bBreakable;
 
-	bool	m_bFiresUnderwater,
-			m_bAltFiresUnderwater;
-
 	float	m_fHolsterTime;
 	float	m_flLockTime;
 	float	m_flRandomAdditionalLockTimeMax;
-	float	m_flApproximateReloadTime; //approximate because the actual time used is based on the animation. These values need to be kept up-to-date with animation times
+	//float	m_flApproximateReloadTime; //approximate because the actual time used is based on the animation. These values need to be kept up-to-date with animation times
 
-	const char* m_pszWeaponDefName;
+
+	FString m_weaponName;
+	//const char* m_pszWeaponDefName;
 	WeaponDef(const char* pszWeaponName);
 
 	static const WeaponDef* GetDefForWeapon(const char* pszWeaponName);
@@ -127,10 +128,10 @@ private:
 
 //Don't use this macro by itself - combine it with DEC_BG3_WEAPON_ENT, unless you know what you're doing
 //This forward declares a weapon definition of the format g_Def_##weaponName
-#define DEC_BG3_WEAPON_DEF(weaponName) \
+/*#define DEC_BG3_WEAPON_DEF(weaponName) \
 	class WeaponDef_##weaponName : public WeaponDef { public: WeaponDef_##weaponName(); }; \
 	const WeaponDef_##weaponName g_Def_##weaponName;
 
 //Use this to define constructor for weapon def
 #define DEF_BG3_WEAPON_DEF(weaponName) \
-	WeaponDef_##weaponName::WeaponDef_##weaponName() : WeaponDef(#weaponName)
+	WeaponDef_##weaponName::WeaponDef_##weaponName() : WeaponDef(#weaponName)*/
