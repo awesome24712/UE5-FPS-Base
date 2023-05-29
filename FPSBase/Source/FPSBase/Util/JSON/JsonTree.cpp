@@ -187,6 +187,10 @@ FString JsonTree::ToString(int depth) const {
 		sprintf_s(buffer, "%i", (int)((uint8)GetValueDouble()));
 		result = result + buffer;
 	}
+	else if (m_eType == JNT_DOUBLE_TO_USHORT) {
+		sprintf_s(buffer, "%i", (int)((uint16)GetValueDouble()));
+		result = result + buffer;
+	}
 	else if (m_eType == JNT_BOOLEAN) {
 		result = result + (m_bValue ? "true" : "false");
 	}

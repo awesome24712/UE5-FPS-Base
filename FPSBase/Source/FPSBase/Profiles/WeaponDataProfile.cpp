@@ -127,8 +127,8 @@ const WeaponDef* WeaponDef::GetDefault() {
 //		For external usage; instantiated weapons should get their weapon def in
 //		their own constructors.
 //-----------------------------------------------------------------------------
-const WeaponDef* WeaponDef::GetDefForWeapon(const char* pszWeaponName) {
-	return g_dictWeaponDefs[FString(pszWeaponName)];
+const WeaponDef* WeaponDef::GetDefForWeapon(const FString& weaponName) {
+	return g_dictWeaponDefs[weaponName];
 }
 
 

@@ -28,6 +28,7 @@ enum EJsonNodeType {
 	JNT_DOUBLE_TO_INT, //used only by bindings to indicate that a double from the JSON should be converted to an int in memory
 	JNT_DOUBLE_TO_FLOAT, //used only by bindings to indicate that a double from the JSON should be converted to a float in memory
 	JNT_DOUBLE_TO_BYTE, //used only by bindings to indicate that a double from the JSON should be converted to a byte in memory
+	JNT_DOUBLE_TO_USHORT, //used only by bindings to indicate that a double from the JSON should be converted to a uint16 in memory
 	JNT_STRING_ARRAY //used only by bindings to indicate that an array from JSON should be converted to TArray<String>
 };
 

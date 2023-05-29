@@ -141,6 +141,8 @@ public:
 
 #define JT_BIND_BYTE(member, bindingName, required) JTClassBindingSet::__CreateBinding(JT_CALC_MEMORY_OFFSET(member), bindingName, JNT_DOUBLE_TO_BYTE, required)
 
+#define JT_BIND_USHORT(member, bindingName, required) JTClassBindingSet::__CreateBinding(JT_CALC_MEMORY_OFFSET(member), bindingName, JNT_DOUBLE_TO_USHORT, required)
+
 //#define JT_BIND_BOOLEAN(member, bindingName) JTClassBindingSet::__CreateBinding(JT_CALC_MEMORY_OFFSET(member), bindingName, JNT_BOOLEAN, true)
 #define JT_BIND_BOOLEAN(member, bindingName, required) JTClassBindingSet::__CreateBinding(JT_CALC_MEMORY_OFFSET(member), bindingName, JNT_BOOLEAN, required)
 

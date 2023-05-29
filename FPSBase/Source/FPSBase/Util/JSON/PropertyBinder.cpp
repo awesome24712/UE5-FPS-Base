@@ -171,6 +171,7 @@ void IJsonBindable::LoadBindingsFromJson(const JsonTree* pTree) {
 		bool* pBool;
 		float* pFloat;
 		uint8* pByte;
+		uint16* puShort;
 
 		switch (b.m_jnt) {
 		case JNT_OBJECT:
@@ -230,6 +231,9 @@ void IJsonBindable::LoadBindingsFromJson(const JsonTree* pTree) {
 		case JNT_DOUBLE_TO_BYTE:
 			pByte = reinterpret_cast<uint8*>(pBoundLocation);
 			*pByte = (uint8)pChildNode->GetValueDouble();
+		case JNT_DOUBLE_TO_USHORT:
+			puShort = reinterpret_cast<uint16*>(pBoundLocation);
+			*puShort = (uint16)pChildNode->GetValueDouble();
 		case JNT_DOUBLE:
 			pDouble = reinterpret_cast<double*>(pBoundLocation);
 			*pDouble = pChildNode->GetValueDouble();

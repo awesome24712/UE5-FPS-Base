@@ -37,6 +37,7 @@ namespace ConfigSystem {
 					cvar->SetValue((float)child->GetValueDouble());
 					break;
 				case JNT_DOUBLE_TO_BYTE:
+				case JNT_DOUBLE_TO_USHORT:
 				case JNT_DOUBLE_TO_INT:
 					cvar->SetValue((int)child->GetValueDouble());
 					break;

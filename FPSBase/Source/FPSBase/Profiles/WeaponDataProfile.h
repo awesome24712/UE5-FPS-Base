@@ -110,7 +110,7 @@ public:
 	//const char* m_pszWeaponDefName;
 	WeaponDef();
 
-	static const WeaponDef* GetDefForWeapon(const char* pszWeaponName);
+	static const WeaponDef* GetDefForWeapon(const FString& pszWeaponName);
 	static const WeaponDef* GetDefault(); //for non-standard weapons, to avoid crashing
 	inline bool HasMelee() const { return m_Attackinfos[0].HasMelee() || m_Attackinfos[1].HasMelee(); }
 

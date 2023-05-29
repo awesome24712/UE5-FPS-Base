@@ -20,22 +20,24 @@ namespace NClassQuota {
 	struct SPopulationCounter;
 }
 
-class GunKit {
+class GunKit : public IJsonBindable {
 	friend class PlayerClass;
 	friend class CKitButton;
 	friend class CKitSelectionButton;
 public:
-	char* m_pszWeaponPrimaryName = nullptr;
-	char* m_pszWeaponSecondaryName = nullptr;
-	char* m_pszWeaponTertiaryName = nullptr;
+	GunKit();
+
+	FString m_weaponPrimaryName;
+	FString m_weaponSecondaryName;
+	FString m_weaponTertiaryName;
 
 
 	bool	m_bAllowBuckshot = false;
 	uint8	m_iAmmoOverrideCount = 0;
 	int8	m_iMovementSpeedModifier = 0;
-	int8	m_iSleeveSkinOverride = -1;
-	char* m_pszAmmoOverrideName = nullptr;
-	char* m_pszPlayerModelOverrideName = nullptr;
+	int8	m_iSleeveTextureOverride = -1;
+	//FString m_ammoOverrideName = "";
+	//char* m_pszPlayerModelOverrideName = nullptr;
 
 	uint16	m_iMinYear = 0;
 	uint16	m_iMaxYear = 1860;
@@ -44,58 +46,59 @@ public:
 
 	//inline bool ProgressionLocked() const { return m_iControllingBit != 0; }
 
-#ifdef CLIENT_DLL
-	wchar* GetLocalizedName() const { return m_pLocalizedName; }
-	wchar* GetLocalizedDesc() const { return m_pLocalizedDesc; }
+//#ifdef CLIENT_DLL
+	FString GetLocalizedName() const { return m_pLocalizedName; }
+	FString GetLocalizedDesc() const { return m_pLocalizedDesc; }
 
 	bool	AvailableForCurrentYear() const;
 
 public:
-	void	SetLocalizedName(const char* pszToken) { m_pszLocalizedNameOverride = pszToken; }
-	void	SetLocalizedDesc(const char* pszToken) { m_pszLocalizedDescOverride = pszToken; }
+	void	SetLocalizedName(const FString& token) { m_pszLocalizedNameOverride = token; }
+	void	SetLocalizedDesc(const FString& token) { m_pszLocalizedDescOverride = token; }
 
 private:
-	mutable const char* m_pszLocalizedNameOverride = nullptr;
-	mutable const char* m_pszLocalizedDescOverride = nullptr;
-	mutable wchar* m_pLocalizedName;
-	mutable wchar* m_pLocalizedDesc;
-#endif
+	mutable FString m_pszLocalizedNameOverride = "";
+	mutable FString m_pszLocalizedDescOverride = "";
+	mutable FString m_pLocalizedName;
+	mutable FString m_pLocalizedDesc;
+//#endif
 };
 
-#define TOTAL_BRIT_CLASSES 6 //same as above
-#define TOTAL_AMER_CLASSES 5 // merged state militia and minuteman classes
-#define TOTAL_NUM_CLASSES (TOTAL_BRIT_CLASSES + TOTAL_AMER_CLASSES) //used to build the list of classes and model lists
+//#define TOTAL_BRIT_CLASSES 6 //same as above
+//#define TOTAL_AMER_CLASSES 5 // merged state militia and minuteman classes
+//#define TOTAL_NUM_CLASSES (TOTAL_BRIT_CLASSES + TOTAL_AMER_CLASSES) //used to build the list of classes and model lists
 
 /*
 A "class" in BG3 is unique with its own model, skins, weapons, and stats.
 I'm tired of these stats and information being spread out into unwieldly functions,
 so I'm putting them all into these separate files
 */
-class PlayerClass {
+class PlayerClass : public IJsonBindable {
 
 public:
 	const char* m_pszAbbreviation; //for example, "off" or "gre", used for player class limits
 protected:
-	PlayerClass(const char* abrv);
-	PlayerClass() { }
 	static void postClassConstruct(PlayerClass*);
 
 public:
-	uint8			m_iDefaultTeam;
-	uint8			m_iClassNumber = 0; //for backwards-compatibility
+
+	PlayerClass();
+
+	//uint8			m_iDefaultTeam;
+	uint8			m_iRoleNumber = 0; //for backwards-compatibility
 
 	uint8			m_iDefaultPrimaryAmmoCount;
 	uint8			m_iDefaultSecondaryAmmoCount = 0;
-	const char*		m_pszPrimaryAmmo = "Musket";
-	const char*		m_pszSecondaryAmmo = "Grenade";
+	//const char*		m_pszPrimaryAmmo = "Musket";
+	//const char*		m_pszSecondaryAmmo = "Grenade";
 
 
-	mutable float	m_flBaseSpeedCalculated = 190.f;
+	mutable float	m_flBaseSpeedCalculated = 190.f; //these are for server-wide speed modifications
 	float			m_flBaseSpeedOriginal = 190.f;
-	float			m_flFlagWeightMultiplier = 1.0f;
+	float			m_flFlagWeightMultiplier = 1.0f; //multiplier for speed while carrying flag
 
-	const char*		m_pszPlayerModel;
-	const char*		m_pszJoinName = nullptr;
+	//const char*		m_pszPlayerModel;
+	//const char*		m_pszJoinName = nullptr;
 
 #define				NUM_POSSIBLE_WEAPON_KITS 9
 	GunKit			m_aWeapons[NUM_POSSIBLE_WEAPON_KITS];
@@ -103,20 +106,20 @@ private:
 	mutable uint8	m_iChooseableKits;
 public:
 
-	uint8			m_iSkinDepth = 1; //how many skin variations per uniform
+	//uint8			m_iSkinDepth = 1; //how many skin variations per uniform
 protected:
 	uint8			m_iNumUniforms = 1; //how many uniforms?
 public:
-	uint8			m_iSleeveBase = 0; //chosen sleeve skin is m_iSleeveBase + pOwner->m_iClassSkin - 1
-	uint8			m_iArmModel = 0;
-	int8			m_iSleeveInnerModel = 0;
+	//uint8			m_iSleeveBase = 0; //chosen sleeve skin is m_iSleeveBase + pOwner->m_iClassSkin - 1
+	//uint8			m_iArmModel = 0;
+	//int8			m_iSleeveInnerModel = 0;
 
-	bool			m_bLastUniformRestricted = false; //beta tester only uniforms
-	const char*		m_pszDroppedHat = 0;
-#define				NUM_POSSIBLE_UNIFORMS 4
-	const char*		m_pszUniformModelOverrides[NUM_POSSIBLE_UNIFORMS]; //per-uniform model overrides
-	int8			m_aUniformSleeveOverrides[NUM_POSSIBLE_UNIFORMS]; //per-uniform sleeve base overrides
-	int8			m_aUniformArmModelOverrides[NUM_POSSIBLE_UNIFORMS]; //per-uniform sleeve model overrides
+	//bool			m_bLastUniformRestricted = false; //beta tester only uniforms
+	//const char*		m_pszDroppedHat = 0;
+//#define				NUM_POSSIBLE_UNIFORMS 4
+//	const char*		m_pszUniformModelOverrides[NUM_POSSIBLE_UNIFORMS]; //per-uniform model overrides
+//	int8			m_aUniformSleeveOverrides[NUM_POSSIBLE_UNIFORMS]; //per-uniform sleeve base overrides
+//	int8			m_aUniformArmModelOverrides[NUM_POSSIBLE_UNIFORMS]; //per-uniform sleeve model overrides
 
 	//progression system uniform stuff
 	bool			m_bDefaultRandomUniform = false;
@@ -134,7 +137,7 @@ public:
 	//inline bool		isBritish() const { return m_iDefaultTeam == TEAM_BRITISH; }
 
 	inline uint8		numChooseableWeapons() const { return m_iChooseableKits; }
-	uint8				numChooseableUniformsForPlayer(FPSBaseCharacter* pPlayer) const; // { return m_bForceRandomUniform ? 1 : m_iNumUniforms; }
+	//uint8				numChooseableUniformsForPlayer(FPSBaseCharacter* pPlayer) const; // { return m_bForceRandomUniform ? 1 : m_iNumUniforms; }
 	inline uint8		numUniforms() const { return m_iNumUniforms; }
 	const WeaponDef*	getWeaponDef(uint8 iKit) const;
 	void				getWeaponDef(uint8 iKit, const WeaponDef** ppPrimary, const WeaponDef** ppSecondary, const WeaponDef** ppTertiary) const;
@@ -200,7 +203,7 @@ EXPOSE INDIVIDUAL CLASSES TO REST OF PROGRAM
 */
 namespace PlayerClasses {
 #define dec(name) extern const PlayerClass* g_p##name;
-	dec(BInfantry)
+		dec(BInfantry)
 		dec(BOfficer)
 		dec(BJaeger)
 		dec(BNative)
