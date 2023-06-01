@@ -1,5 +1,6 @@
 #include "DamageInfo.h"
 #include "../FPSBaseCharacter.h"
+#include "BVector.h"
 
 DamageInfo::DamageInfo(
     int iDamage, 
@@ -96,6 +97,11 @@ void IDamageable::TakeDamage(DamageInfo& di) {
     //Dispatch damage event
     OnTakeDamage(di);
 
+    //dispatch stun event if applicable
+    if (!di.IsNominallyFatal() && (di.GetDamageTypes() & DMG_STUN)) {
+        OnStunned(di);
+    }
+
     //if damage is non-fatal, ensure we have at least 1 health
     if (di.GetDamageTypes() & DMG_NONFATAL) {
         m_iHealth = m_iHealth < 1 ? 1 : m_iHealth;
@@ -108,6 +114,61 @@ void IDamageable::TakeDamage(DamageInfo& di) {
     //Dispatch death event if we're dead now
     if (IsDead()) {
         OnDeath();
+    }
+}
+
+void DmgEvents::DmgExplosion(const FVector& src, int damage, int radius, IDamageable** pIgnoredActors, AActor* pAttacker, AActor* pWeapon, WeaponDef* pWeapon) {
+    int r2 = radius*radius; //using the square of the radius avoids using square roots later
+    
+    //iterate through all actors to find close enough actor
+    //TODO make this more efficient?
+    for (FActorIterator itr<AActor>(()); itr; itr++) {
+        AActor* act = itr.Get();
+
+        IDamageable* pVictim = dynamic_cast<IDamageable*>(act);
+        if (!pVictim)
+            continue;
+        
+        //ensure we're close enough
+        vec dist2 = DistanceBetweenSqr(act, src);
+        if (dist2 < r2)
+            continue;
+
+
+        //TODO trace from source to victim to check for obstacles
+        //FHitResult trace;
+        //call UTIL_TraceLine or bypass to make more efficient
+
+
+        //if initial trace failed, try a tetrahedral pattern, top to bottom
+        /*float tr = 5.f;
+        FVector tetrahedron[6] = {
+            src + FVector(tr, 0, 0),
+            src + FVector(-tr, 0, 0),
+            src + FVector(0, tr, 0),
+            src + FVector(0, -tr, 0),
+            src + FVector(0, 0, tr),
+            src + FVector(0, 0, -tr),
+        }
+        for (int i = 0; i < 6; i++) {
+
+        }*/
+
+        //build damage object and apply it
+        //calc damage amount based on distance compared to radius
+        damage *= (dist2 / r2); //quadratic damage dropoff, in the real world it'd be cubic
+        DamageInfo di = DamageInfo(
+            damage,
+            pVictim,
+            DMG_EXPLOSION | DMG_STUN,
+            pAttacker,
+            pWeapon,
+            pWeapon
+        )
+        di.ApplyToVictim();
+
+        //TODO do a physics explosion too?
+        
     }
 }
 

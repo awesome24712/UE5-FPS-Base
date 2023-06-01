@@ -1,4 +1,6 @@
 #include "../Util.h"
+#include "CoreMinimal.h"
+#include "DamageInfo.generated.h"
 
 enum EDamageType : int {
     DMG_GENERIC     = BF(0);
@@ -30,6 +32,7 @@ class WeaponDef;
 class IDamageable;
 class Faction;
 
+USTRUCT()
 struct DamageInfo {
     friend class IDamageable;
 private:
@@ -63,7 +66,8 @@ public:
     void SetDamage(int iDamage) { m_iDamage = iDamage; }
 }
 
-class IDamageable {
+USTRUCT()
+struct IDamageable {
 private:
 
     int m_iHealth;
@@ -91,4 +95,19 @@ public:
     virtual void OnDeath(const DamageInfo& di) {}
     virtual void OnTakeDamageDeathBlocked(const DamageInfo& di) {} //called when we receive non-fatal damage that would have otherwise killed us
     virtual void OnHealed(const DamageInfo& di) {} //called when damage is negative
+    virtual void OnStunned(const DamageInfo& di) {} //called when hit with stun damage
+}
+
+UCLASS()
+class DamageEvents : public UObject {
+
+    void DmgExplosion(
+        const FVector& src, 
+        int damage, 
+        int radius, 
+        IDamageable** ppIgnoredActors = NULL, //null-terminated list
+        AActor* pAttacker = NULL, 
+        AActor* pWeapon = NULL,
+        WeaponDef* pWeapon = NULL);
+
 }
