@@ -4,6 +4,8 @@
 #include "FPSBaseCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 
+UWorld* g_pCurrentWorld;
+
 AFPSBaseGameMode::AFPSBaseGameMode()
 	: Super()
 {

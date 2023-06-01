@@ -1,14 +1,15 @@
 #include "DamageInfo.h"
 #include "../FPSBaseCharacter.h"
 #include "BVector.h"
+#include "EngineUtils.h"
 
-DamageInfo::DamageInfo(
+FDamageInfo::FDamageInfo(
     int iDamage, 
-    IDamageable* pVictim,
-    int damageTypes = DMG_GENERIC,
-    AActor* pAttacker = NULL,
-    AActor* pWeapon = NULL, 
-    WeaponDef* pWeaponDef = NULL
+    FIDamageable* pVictim,
+    int damageTypes,
+    AActor* pAttacker,
+    AActor* pWeapon, 
+    WeaponDef* pWeaponDef
 ) {
     m_iDamage = iDamage;
     m_pVictim = pVictim;
@@ -18,15 +19,15 @@ DamageInfo::DamageInfo(
     m_pWeaponDef = pWeaponDef;
 }
 
-void DamageInfo::ApplyToVictim() {
-    pVictim->TakeDamage(*this);
+void FDamageInfo::ApplyToVictim() {
+    m_pVictim->TakeDamage(*this);
 }
 
-bool DamageInfo::IsNominallyFatal() {
+bool FDamageInfo::IsNominallyFatal() const {
     return !(m_iDamageTypes & DMG_NONFATAL) && (m_pVictim->GetHealth() <= m_iDamage);
 }
 
-bool DamageInfo::IsFriendlyFire() {
+bool FDamageInfo::IsFriendlyFire() const {
     bool result = false;
     if (m_pAttacker) {
         AFPSBaseCharacter* pAttacker = dynamic_cast<AFPSBaseCharacter*>(m_pAttacker);
@@ -40,7 +41,7 @@ bool DamageInfo::IsFriendlyFire() {
     return result;
 }
 
-IDamageable::IDamageable(int health, int maxHealth, int ignoredDamageTypes) {
+FIDamageable::FIDamageable(int health, int maxHealth, int ignoredDamageTypes) {
     m_iHealth = health;
     m_iMaxHealth = maxHealth;
     m_iIgnoredDamageTypes = ignoredDamageTypes;
@@ -50,7 +51,7 @@ IDamageable::IDamageable(int health, int maxHealth, int ignoredDamageTypes) {
 extern ConVar* gr_friendlyfire;
 extern ConVar* gr_friendlyfire_grenades;
 extern ConVar* gr_friendlyfire_cannon;
-bool IDamageable::ShouldTakeDamage(const DamageInfo& di) {
+bool FIDamageable::ShouldTakeDamage(const FDamageInfo& di) {
     //ignore if we're already dead
     if (IsDead()) {
         return false;
@@ -73,13 +74,13 @@ postFFCheck:
     return !!leftoverDamage;
 }
 
-void IDamageable::TakeDamage(DamageInfo& di) {
+void FIDamageable::TakeDamage(FDamageInfo& di) {
     //possibly ignore this damage
     if (!ShouldTakeDamage(di)) {
         return;
     }
 
-    AFPSBaseCharacter* pVictim = dynamic_cast<AFPSBaseCharacter*>(m_pVictim);
+    AFPSBaseCharacter* pVictim = dynamic_cast<AFPSBaseCharacter*>(di.GetVictim());
     if (pVictim) {
         //TODO apply hitbox multipliers!
     }
@@ -89,7 +90,7 @@ void IDamageable::TakeDamage(DamageInfo& di) {
 
     //if we were healed, dispatch that event
     //and we can safely ignore everything else
-    if (di.GetDamage( < 0)) {
+    if (di.GetDamage() < 0) {
         OnHealed(di);
         return;
     }
@@ -113,24 +114,25 @@ void IDamageable::TakeDamage(DamageInfo& di) {
 
     //Dispatch death event if we're dead now
     if (IsDead()) {
-        OnDeath();
+        OnDeath(di);
     }
 }
 
-void DmgEvents::DmgExplosion(const FVector& src, int damage, int radius, IDamageable** pIgnoredActors, AActor* pAttacker, AActor* pWeapon, WeaponDef* pWeapon) {
+extern UWorld* g_pCurrentWorld;
+void UDamageEvents::DmgExplosion(const FVector& src, int damage, int radius, FIDamageable** pIgnoredActors, AActor* pAttacker, AActor* pWeapon, WeaponDef* pWeaponDef) {
     int r2 = radius*radius; //using the square of the radius avoids using square roots later
     
     //iterate through all actors to find close enough actor
     //TODO make this more efficient?
-    for (FActorIterator itr<AActor>(()); itr; itr++) {
-        AActor* act = itr.Get();
+    for (TActorIterator<AActor> itr(g_pCurrentWorld); itr; ++itr) {
+        AActor* act = itr.operator->();
 
-        IDamageable* pVictim = dynamic_cast<IDamageable*>(act);
+        FIDamageable* pVictim = dynamic_cast<FIDamageable*>(act);
         if (!pVictim)
             continue;
         
         //ensure we're close enough
-        vec dist2 = DistanceBetweenSqr(act, src);
+        vec dist2 = UVectorTools::DistanceBetweenSqr(act, src);
         if (dist2 < r2)
             continue;
 
@@ -157,14 +159,14 @@ void DmgEvents::DmgExplosion(const FVector& src, int damage, int radius, IDamage
         //build damage object and apply it
         //calc damage amount based on distance compared to radius
         damage *= (dist2 / r2); //quadratic damage dropoff, in the real world it'd be cubic
-        DamageInfo di = DamageInfo(
+        FDamageInfo di = FDamageInfo(
             damage,
             pVictim,
             DMG_EXPLOSION | DMG_STUN,
             pAttacker,
             pWeapon,
-            pWeapon
-        )
+            pWeaponDef
+        );
         di.ApplyToVictim();
 
         //TODO do a physics explosion too?

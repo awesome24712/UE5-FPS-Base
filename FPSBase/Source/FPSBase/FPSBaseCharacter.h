@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Util/JSON/PropertyBinder.h"
+#include "PODT/DamageInfo.h"
 //#include "Profiles/WeaponSystemProfile.h"
 #include "FPSBaseCharacter.generated.h"
 
@@ -23,7 +24,7 @@ AFPSBaseCharacter* GetLocalPlayer();
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUseItem);
 
 UCLASS(config=Game)
-class AFPSBaseCharacter : public ACharacter, public IJsonBindable
+class AFPSBaseCharacter : public ACharacter, public IJsonBindable, public FIDamageable
 {
 	GENERATED_BODY()
 
