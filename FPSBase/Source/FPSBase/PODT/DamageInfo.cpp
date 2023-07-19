@@ -1,6 +1,7 @@
 #include "DamageInfo.h"
 #include "../FPSBaseCharacter.h"
 #include "BVector.h"
+#include "../GameModeCvars.h"
 #include "EngineUtils.h"
 
 FDamageInfo::FDamageInfo(
@@ -48,9 +49,6 @@ FIDamageable::FIDamageable(int health, int maxHealth, int ignoredDamageTypes) {
 }
 
 
-extern ConVar* gr_friendlyfire;
-extern ConVar* gr_friendlyfire_grenades;
-extern ConVar* gr_friendlyfire_cannon;
 bool FIDamageable::ShouldTakeDamage(const FDamageInfo& di) {
     //ignore if we're already dead
     if (IsDead()) {
@@ -58,12 +56,12 @@ bool FIDamageable::ShouldTakeDamage(const FDamageInfo& di) {
     }
     
     //check ff first
-    bool ff = gr_friendlyfire->GetValueBool();
+    bool ff = gr_friendlyfire.GetValueBool();
     if (!ff) {
         if (!di.IsFriendlyFire()) {
             goto postFFCheck;
         }
-        bool ffg = gr_friendlyfire_grenades->GetValueBool();
+        bool ffg = gr_friendlyfire_grenades.GetValueBool();
         if (!ffg && !(di.GetDamageTypes() & DMG_FRIENDLY_OVERRIDE)) {
             return false;
         }
@@ -74,16 +72,15 @@ postFFCheck:
     return !!leftoverDamage;
 }
 
-void FIDamageable::TakeDamage(FDamageInfo& di) {
+void FIDamageable::TakeDamage(FDamageInfo& di, bool bSkipChecks) {
     //possibly ignore this damage
-    if (!ShouldTakeDamage(di)) {
+    if (!bSkipChecks && !ShouldTakeDamage(di)) {
         return;
     }
 
-    AFPSBaseCharacter* pVictim = dynamic_cast<AFPSBaseCharacter*>(di.GetVictim());
-    if (pVictim) {
-        //TODO apply hitbox multipliers!
-    }
+    //Filter damage, example player has hitbox multipliers
+    //or objects can decide to receive less damage from certain types of damage
+    FilterDamage(di);
 
     //actually subtract the damage
     m_iHealth -= di.GetDamage();

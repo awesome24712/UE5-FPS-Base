@@ -292,3 +292,19 @@ skins. These are used dynamically to randomly pick a skin within the corrent ran
 #define SKIN_AMER_REG_ALT		8
 #define SKIN_AMER_REG_ALT2		16
 #endif
+
+#define	HITGROUP_GENERIC	0
+#define	HITGROUP_HEAD		1
+#define HITGROUP_NECK		2
+#define	HITGROUP_CHEST		3
+#define	HITGROUP_STOMACH	4
+#define HITGROUP_LEFTLEG	5
+#define HITGROUP_RIGHTLEG	6
+#define HITGROUP_LEFTFOOT	7
+#define HITGROUP_RIGHTFOOT	8
+
+//upper limbs come last so we can do a >= HITGROUP_LEFTARM comparison
+#define HITGROUP_LEFTARM	9	
+#define HITGROUP_RIGHTARM	10
+#define HITGROUP_LEFTHAND	11	
+#define HITGROUP_RIGHTHAND	12

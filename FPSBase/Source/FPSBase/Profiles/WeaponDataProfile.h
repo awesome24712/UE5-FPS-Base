@@ -26,7 +26,7 @@ struct WeaponAttackInfo : public IJsonBindable {
 		//m_iAttackActivityEmpty;
 	bool 	m_bFiresUnderwater;
 
-	float	m_flRange;
+	float	m_flRange; //used as max range for melee and for non simulated bullets
 	int		m_iDamage;
 	float	m_flRecoil,	
 			// - melee only

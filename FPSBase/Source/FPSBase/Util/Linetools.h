@@ -6,9 +6,15 @@
 
  // contains parameters used for drawing lines and splines in the world
 struct SLineDrawParams {
-    FColor Color;
-    float  Thickness;
-    ftime  Duration;
+    FColor m_Color;
+    float  m_Thickness;
+    ftime  m_Duration;
+
+    SLineDrawParams(FColor color, float thickness, ftime duration)
+        : m_Color(color),
+        m_Thickness(thickness),
+        m_Duration(duration);
+    {}
 };
 
 /*
@@ -16,9 +22,8 @@ struct SLineDrawParams {
  * and max distance, performs a ray cast and stores the result in the given
  * FHitResult
  */
-void UTIL_TraceLine(FHitResult& t, const FVector& start, FVector direction,
-    AActor** ppIgnoredActors = NULL,
-    float    maxDistance = (float)INT32_MAX);
+void UTIL_TraceLine(FHitResult& t, const FVector& start, const FVector& end,
+    AActor** ppIgnoredActors = NULL);
 
 /* Given a start position, direction, force, and maximum number of iterations
  * performs a spline cast and stores the result in the given FHitResult.

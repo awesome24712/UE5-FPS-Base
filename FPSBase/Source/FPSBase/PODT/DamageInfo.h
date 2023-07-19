@@ -98,9 +98,10 @@ public:
     //extendable boolean for whether or not to receive a given damage
     virtual bool ShouldTakeDamage(const FDamageInfo& di);
 
-    void TakeDamage(FDamageInfo& di); //does the math and calls events
+    void TakeDamage(FDamageInfo& di, bool bSkipChecks = false); //does the math and calls events
 
     //Overridables called by TakeDamage(...)
+    virtual void FilterDamage(FDamageInfo& di) {} //called first, gives chance to modify damage before receiving it
     virtual void OnTakeDamage(const FDamageInfo& di) {}
     virtual void OnDeath(const FDamageInfo& di) {}
     virtual void OnTakeDamageDeathBlocked(const FDamageInfo& di) {} //called when we receive non-fatal damage that would have otherwise killed us
@@ -111,6 +112,8 @@ public:
 UCLASS()
 class UDamageEvents : public UObject {
     GENERATED_BODY()
+
+
     void DmgExplosion(
         const FVector& src,
         int damage,

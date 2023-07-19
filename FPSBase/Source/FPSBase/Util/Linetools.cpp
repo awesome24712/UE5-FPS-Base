@@ -35,13 +35,11 @@ inline FCollisionQueryParams GetDefaultTraceParams(AActor** ppIgnored) {
 
 inline bool LineToolsReady() { return GetLocalPlayer() && GetLocalPlayer()->GetWorld(); }
 
-void UTIL_TraceLine(FHitResult& t, const FVector& start, FVector direction,
-    AActor** ppIgnoredActors, float maxDistance) {
+void UTIL_TraceLine(FHitResult& t, const FVector& start, const FVector& end,
+    AActor** ppIgnoredActors) {
     if (!LineToolsReady()) return;
 
     t.Init();
-    FVector end = start;
-    end += direction.GetClampedToSize(maxDistance, maxDistance);
     GetLocalPlayer()->GetWorld()->LineTraceSingleByObjectType(
         t, start, end, g_coqpDefault, GetDefaultTraceParams(ppIgnoredActors));
 }
@@ -77,8 +75,8 @@ void UTIL_TraceSpline(FHitResult& t, const FVector& start, FVector direction,
         while (iterations <= maxIterations && t.Time > 0.9999f) {
             pfTraceOp();
             GetLocalPlayer()->GetWorld()->LineBatcher->DrawLine(
-                t.TraceStart, t.TraceEnd, rendered->Color, SDPG_World,
-                rendered->Thickness, rendered->Duration);
+                t.TraceStart, t.TraceEnd, rendered->m_Color, SDPG_World,
+                rendered->m_Thickness, rendered->m_Duration);
         }
     }
     else {
@@ -90,9 +88,9 @@ void UTIL_TraceSpline(FHitResult& t, const FVector& start, FVector direction,
 
 void UTIL_DrawLine(FVector start, FVector end, SLineDrawParams* rendered) {
     if (!LineToolsReady() || !GetLocalPlayer()->GetWorld()->LineBatcher) return;
-    GetLocalPlayer()->GetWorld()->LineBatcher->DrawLine(start, end, rendered->Color,
-        SDPG_World, rendered->Thickness,
-        rendered->Duration);
+    GetLocalPlayer()->GetWorld()->LineBatcher->DrawLine(start, end, rendered->m_Color,
+        SDPG_World, rendered->m_Thickness,
+        rendered->m_Duration);
 }
 
 void UTIL_DrawSpline(FVector start, FVector end, FVector force, FColor c,
@@ -127,8 +125,8 @@ void UTIL_DrawCircle(FVector loc, vec radius, SLineDrawParams* rendered) {
     FVector     next = rotationIncrement.RotateVector(previous);
 
     for (uint8 i = 0; i < NUM_ARCS + 1; i++) {
-        lb->DrawLine(loc + previous, loc + next, rendered->Color, SDPG_World,
-            rendered->Thickness, rendered->Duration);
+        lb->DrawLine(loc + previous, loc + next, rendered->m_Color, SDPG_World,
+            rendered->m_Thickness, rendered->m_Duration);
         previous = next;
         next = rotationIncrement.RotateVector(next);
     }

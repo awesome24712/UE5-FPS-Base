@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Util/JSON/PropertyBinder.h"
 #include "PODT/DamageInfo.h"
+#include "Systems/PermissionSystem.h"
 //#include "Profiles/WeaponSystemProfile.h"
 #include "FPSBaseCharacter.generated.h"
 
@@ -27,6 +28,8 @@ UCLASS(config=Game)
 class AFPSBaseCharacter : public ACharacter, public IJsonBindable, public FIDamageable
 {
 	GENERATED_BODY()
+
+	EPermissionLevel m_ePermissionLevel = EPermissionLevel::PUBBER;
 
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
 	UPROPERTY(VisibleDefaultsOnly, Category=Mesh)

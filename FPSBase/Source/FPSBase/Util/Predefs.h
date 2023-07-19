@@ -34,3 +34,6 @@ typedef FString FactionLangFlavor;
 #define BF(shiftAmount) (1 << shiftAmount)
 
 FORCEINLINE bool CharIsNumber(TCHAR c) { return c <= '9' && c >= '0'; }
+
+#define FCOLOR_WHITE FColor(255, 255, 255)
+#define FCOLOR_RED FColor(255, 0, 0)
