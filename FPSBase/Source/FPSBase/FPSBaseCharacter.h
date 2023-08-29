@@ -29,7 +29,7 @@ class AFPSBaseCharacter : public ACharacter, public IJsonBindable, public FIDama
 {
 	GENERATED_BODY()
 
-	EPermissionLevel m_ePermissionLevel = EPermissionLevel::PUBBER;
+	E_BG3_PermissionLevel m_ePermissionLevel = E_BG3_PermissionLevel::PUBBER;
 
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
 	UPROPERTY(VisibleDefaultsOnly, Category=Mesh)

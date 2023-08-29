@@ -12,7 +12,7 @@ namespace PermissionSystem {
 	}
 
 	//Changes permissions of player to the given permission level, and saves the change to file
-	void AssignNewPermissionToPlayer(EPermissionLevel perm, FPSBaseCharacter* pRequestor, FPSBaseCharacter* pAssignee) {
+	void AssignNewPermissionToPlayer(E_BG3_PermissionLevel perm, FPSBaseCharacter* pRequestor, FPSBaseCharacter* pAssignee) {
 
 	}
 

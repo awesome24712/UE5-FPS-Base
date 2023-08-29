@@ -13,7 +13,7 @@ struct SLineDrawParams {
     SLineDrawParams(FColor color, float thickness, ftime duration)
         : m_Color(color),
         m_Thickness(thickness),
-        m_Duration(duration);
+        m_Duration(duration)
     {}
 };
 

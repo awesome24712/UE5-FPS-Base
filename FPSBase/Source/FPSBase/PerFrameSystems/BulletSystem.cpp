@@ -23,6 +23,8 @@ ConVar sr_simulatedbullets("sr_simulatedbullets", BULLET_FLAGS, false,
 //ConVar sr_arcscanbullets("sr_arcscanbullets", "1", FCVAR_NOTIFY | FCVAR_REPLICATED | FCVAR_DEMO,
 	//"Like regular hitscan bullets, only traced along the same arc a sr_simulatedbullets bullet would take.");
 
+ConVar sr_gravity("sr_gravity", BULLET_FLAGS, 9.8f, "Gravity in meters per second squared");
+
 ConVar sr_simulatedbullets_drag("sr_simulatedbullets_drag", BULLET_FLAGS, 0.00003f, 
 	"Tweak this value to affect how fast the speed and thus damage of bullets drop off with distance.\n\tLower values => more damage over distance");
 
@@ -261,6 +263,7 @@ bool SimulatedBullet::DoHit(FHitResult& tr, float speed) {
 
 		return false; //pretend that we hit nothing
 	}
+	return true; //we did hit
 }
 
 /**
@@ -302,6 +305,7 @@ void BulletSystem::Init() {
 
 }
 
+//Returns true if we hit something
 bool BulletSystem::SpawnSimpleBullet(const SimpleBullet& bullet) {
 	//simple bullets aren't simulated, trace and do damage right away
 	FHitResult tr;
@@ -335,6 +339,8 @@ bool BulletSystem::SpawnSimpleBullet(const SimpleBullet& bullet) {
 	//TODO positional blood effects
 	
 	//TODO going through glass
+
+	return true; //we did hit something
 }
 
 void BulletSystem::SpawnSimulatedBullet(SimulatedBullet&& bullet)

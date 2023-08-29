@@ -1,6 +1,7 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "PerFrameSystemManager.h"
+#include "../PODT/DamageInfo.h"
 
 class FPSBaseCharacter;
 class WeaponDef;
@@ -24,7 +25,7 @@ public:
 };
 
 class SimulatedBullet {
-	friend BulletSystem;
+	friend class BulletSystem;
 public:
 	FVector				m_vPosition;
 	FQuat				m_angle;

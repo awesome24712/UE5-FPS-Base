@@ -76,6 +76,6 @@ extern Faction* g_FactionAttacker;
 extern Faction* g_FactionDefender;
 extern Faction* g_FactionBystander;
 
-extern ConVar* gr_friendlyfire;
-extern ConVar* gr_friendlyfire_grenades;
-extern ConVar* gr_friendlyfire_cannon;
+extern ConVar gr_friendlyfire;
+extern ConVar gr_friendlyfire_grenades;
+extern ConVar gr_friendlyfire_cannon;
