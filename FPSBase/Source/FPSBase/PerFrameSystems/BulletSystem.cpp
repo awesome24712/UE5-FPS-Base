@@ -299,7 +299,7 @@ void SimulatedBullet::TraceThroughArms(FHitResult* tr) {
 }
 
 static TArray<SimulatedBullet> activeBullets;
-static const float step = 1.f / BULLET_SIMULATION_FREQUENCY;
+#define step 1.f / BULLET_SIMULATION_FREQUENCY
 
 void BulletSystem::Init() {
 
