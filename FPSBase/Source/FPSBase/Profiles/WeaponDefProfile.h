@@ -3,7 +3,7 @@
 #include "../Util.h"
 #define DAMAGE_OVER_RANGE_GRAPH_RANGE_MAX 401
 
-enum {
+enum EAttackType : uint8 {
 	ATTACKTYPE_NONE = 0,
 	ATTACKTYPE_STAB,
 	ATTACKTYPE_SLASH,
@@ -21,9 +21,8 @@ enum {
 // Purpose: Outlines stats for a left or right mouse button attack.
 //-----------------------------------------------------------------------------
 struct WeaponAttackInfo : public IJsonBindable {
-	int			m_iAttacktype;
-	//Activity	m_iAttackActivity,
-		//m_iAttackActivityEmpty;
+	EAttackType		m_iAttacktype;
+	
 	bool 	m_bFiresUnderwater;
 
 	float	m_flRange; //used as max range for melee and for non simulated bullets
@@ -37,14 +36,8 @@ struct WeaponAttackInfo : public IJsonBindable {
 	int		m_iStaminaDrain;			//stamina drained by attack
 
 	//cone values.. firearms only
-	float	m_flStandMoving,
-			m_flStandStill,
-			m_flCrouchMoving,
-			m_flCrouchStill,
-			// For iron sights. -HairyPotter
-			m_flStandAimStill,
-			m_flCrouchAimStill,
-			//
+	float	m_flBaseAccuracy,
+
 			m_flConstantDamageRange,	//how long until we start losing damage?
 			m_flRelativeDrag;			//how does the drag on this bullet compare to a musket's?
 

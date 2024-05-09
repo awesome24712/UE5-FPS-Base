@@ -1,11 +1,11 @@
-#include "WeaponDataProfile.h"
+#include "WeaponDefProfile.h"
 #include "../Util.h"
 
 WeaponAttackInfo::WeaponAttackInfo() {
 
 	//Bindings
 	JT_START_BINDING("weaponAttackInfo", WeaponAttackInfo);
-	JT_BIND_INT(m_iAttacktype, "attackType", true);
+	JT_BIND_BYTE(m_iAttacktype, "attackType", true);
 	JT_BIND_BOOLEAN(m_bFiresUnderwater, "firesUnderwater", true);
 	JT_BIND_FLOAT(m_flRange, "range", true);
 	JT_BIND_INT(m_iDamage, "damage", true);
@@ -16,12 +16,7 @@ WeaponAttackInfo::WeaponAttackInfo() {
 	JT_BIND_FLOAT(m_flAttackrate, "attackRate", false);
 	JT_BIND_INT(m_iStaminaDrain, "staminaDrain", true);
 	//accuracies
-	JT_BIND_FLOAT(m_flStandMoving, "unaimedStandMoving", false);
-	JT_BIND_FLOAT(m_flStandStill, "unaimedStandStill", false);
-	JT_BIND_FLOAT(m_flCrouchMoving, "unaimedCrouchMoving", false);
-	JT_BIND_FLOAT(m_flCrouchStill, "unaimedCrouchStill", false);
-	JT_BIND_FLOAT(m_flStandAimStill, "aimedStandStill", false);
-	JT_BIND_FLOAT(m_flCrouchAimStill, "aimedCrouchStill", false);
+	JT_BIND_FLOAT(m_flBaseAccuracy, "baseAccuracy", false);
 
 	JT_BIND_FLOAT(m_flConstantDamageRange, "constantDamageRange", false);
 	JT_BIND_FLOAT(m_flRelativeDrag, "dragMultiplier", false);

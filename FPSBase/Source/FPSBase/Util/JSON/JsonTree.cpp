@@ -7,7 +7,7 @@ FString JsonTree::s_noKeyDefinedWarning = "NO KEY DEFINED";
 FString JsonTree::s_typeNotStringWarning = "TYPE NOT JNT_STRING";
 
 JsonTree::JsonTree(JsonTree* pParent, int iNumChildren, EJsonNodeType type, FString key) {
-	Log("Creating tree at address %p with key %s\n", this, TCHAR_TO_ANSI(*key));
+	//Log("Creating tree at address %p with key %s\n", this, TCHAR_TO_ANSI(*key));
 	m_parent = pParent;
 	m_iNumChildren = iNumChildren;
 	m_eType = type;

@@ -11,6 +11,7 @@ class FString;
 typedef unsigned char		byte;
 typedef unsigned short		ushort;
 typedef unsigned int		uint;
+typedef unsigned int		bf;
 typedef unsigned short		uint16;
 typedef unsigned long long	ulong;
 typedef float				ftime; // time

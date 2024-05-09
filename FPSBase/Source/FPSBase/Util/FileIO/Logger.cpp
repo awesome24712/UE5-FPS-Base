@@ -29,12 +29,18 @@ namespace NLogger {
 
 		if (g_pLogFile) {
 			fwrite(pszMsg, 1, strnlen_s(pszMsg, 100), g_pLogFile);
+            fclose(g_pLogFile);
         }
         else {
-            Fatal("Could not open log file for writing!");
+            static bool bHasReportedLogFileError = false;
+            //Fatal("Could not open log file for writing!");
+            //Don't call Fatal here bcs Fatal calls this function, stackoverflow possible
+            if (GEngine && !bHasReportedLogFileError) {
+                GEngine->AddOnScreenDebugMessage(-1, 50.f, FColor::Red, "Could not open log file for writing!");
+                bHasReportedLogFileError = true;
+            }
         }
-
-        fclose(g_pLogFile);
+        
         g_pLogFile = NULL;
 	}
 

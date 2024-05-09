@@ -44,22 +44,22 @@ void UTIL_TraceLine(FHitResult& t, const FVector& start, const FVector& end,
         t, start, end, g_coqpDefault, GetDefaultTraceParams(ppIgnoredActors));
 }
 
-void UTIL_TraceSpline(FHitResult& t, const FVector& start, FVector direction,
+void UTIL_TraceSpline(FHitResult& t, const FVector& start, FVector splineDirection,
     FVector force, uint16 maxIterations, SLineDrawParams* rendered,
     AActor** ppIgnoredActors) {
     if (!LineToolsReady()) return;
 
     t.Init();
     uint16 iterations = 1;
-    direction = direction.GetClampedToSize(SPLINE_STEP, SPLINE_STEP);
-    FVector step = direction;
+    splineDirection = splineDirection.GetClampedToSize(SPLINE_STEP, SPLINE_STEP);
+    FVector splineStep = splineDirection;
     FVector origForce = force;
     FVector next;
     FVector previous = start;
 
     auto pfTraceOp = [&]() {
         t.Reset();
-        next = start + direction + force;
+        next = start + splineDirection + force;
 
         GetLocalPlayer()->GetWorld()->LineTraceSingleByObjectType(
             t, previous, next, g_coqpDefault,
@@ -68,7 +68,7 @@ void UTIL_TraceSpline(FHitResult& t, const FVector& start, FVector direction,
 
         iterations++;
         force += origForce * iterations;
-        direction += step;
+        splineDirection += splineStep;
     };
 
     if (rendered) {
@@ -101,16 +101,16 @@ void UTIL_DrawSpline(FVector start, FVector end, FVector force, FColor c,
 
     FVector displacement = end - start;
     vec     len = displacement.Size();
-    vec     step = 0.0f;
+    vec     splineStep = 0.0f;
     FVector vectorStep = start;
     FVector previousStep = vectorStep;
-    while (step < len) {
-        float forceScale = 1.0f - 4 * sqr((step / len) - 0.5f);
-        vectorStep = start + displacement * step / len;
+    while (splineStep < len) {
+        float forceScale = 1.0f - 4 * sqr((splineStep / len) - 0.5f);
+        vectorStep = start + displacement * splineStep / len;
         vectorStep += force * forceScale;
         lb->DrawLine(previousStep, vectorStep, c, SDPG_World, thickness, life);
         previousStep = vectorStep;
-        step += SPLINE_STEP;
+        splineStep += SPLINE_STEP;
     }
 }
 

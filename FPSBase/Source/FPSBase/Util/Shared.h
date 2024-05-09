@@ -1,7 +1,7 @@
 #pragma once
 
-enum {
-	TEAM_ATTACKER = 2,
+enum : unsigned char {
+	TEAM_ATTACKER = 0,
 	TEAM_DEFENDER,
 	TEAM_SPECTATOR,
 	//BG2 - Tjoppen - NUM_TEAMS is useful

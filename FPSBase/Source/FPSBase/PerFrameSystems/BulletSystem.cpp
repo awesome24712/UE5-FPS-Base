@@ -2,7 +2,7 @@
 #include "../Util.h"
 #include "../PODT/DamageInfo.h"
 #include "../FPSBaseCharacter.h"
-#include "../Profiles/WeaponDataProfile.h"
+#include "../Profiles/WeaponDefProfile.h"
 
 #define BULLET_FLAGS CVAR_ADMIN | CVAR_REPLICATED | CVAR_NOTIFY
 
@@ -299,7 +299,7 @@ void SimulatedBullet::TraceThroughArms(FHitResult* tr) {
 }
 
 static TArray<SimulatedBullet> activeBullets;
-#define step 1.f / BULLET_SIMULATION_FREQUENCY
+#define bulletStep 1.f / BULLET_SIMULATION_FREQUENCY
 
 void BulletSystem::Init() {
 
@@ -353,7 +353,7 @@ void BulletSystem::SpawnSimulatedBullet(SimulatedBullet&& bullet)
 	float targetTime = 
 	float delta = g_globals->curtime - targetTime;
 
-	float curStep = step;
+	float curStep = bulletStep;
 	if (flex)
 		curStep = 1.0 / sr_simulatedbullets_freq.GetValueFloat();
 
@@ -390,9 +390,9 @@ void BulletSystem::Tick(float deltaSeconds) {
 	// BG2 - VisualMelon - Timing
 	//double startTime = Plat_FloatTime();
 
-	//double step = 1.0 / sr_simulatedbullets_freq.GetValueFloat(); // don't use for production
+	//double bulletStep = 1.0 / sr_simulatedbullets_freq.GetValueFloat(); // don't use for production
 
-	float curStep = step;
+	float curStep = bulletStep;
 	if (flex)
 		curStep = 1.0 / sr_simulatedbullets_freq.GetValueFloat();
 

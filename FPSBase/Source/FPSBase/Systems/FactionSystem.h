@@ -10,7 +10,7 @@ extern Faction* g_FactionAttacker;
 extern Faction* g_FactionDefender;
 extern Faction* g_FactionBystander;
 
-enum EFactionNumber : int {
+enum EFactionNumber : uint8 {
 	FN_AmericanClassic,
 	FN_BritishClassic,
 	FN_AmericanPure,
@@ -46,10 +46,17 @@ public:
 
 	//-- Global faction handling functions
 	static const TArray<Faction*>* GetAllFactions();
-	static void SetAttackerFaction(Faction* pFaction) { FactionSwap(&g_FactionAttacker, pFaction); };
-	static void SetDefenderFaction(Faction* pFaction) { FactionSwap(&g_FactionDefender, pFaction); };
-	static void SetBystanderFaction(Faction* pFaction) { FactionSwap(&g_FactionBystander, pFaction); };
+	static void SetAttacker(Faction* pFaction) { FactionSwap(&g_FactionAttacker, pFaction); };
+	static void SetDefender(Faction* pFaction) { FactionSwap(&g_FactionDefender, pFaction); };
+	static void SetBystander(Faction* pFaction) { FactionSwap(&g_FactionBystander, pFaction); };
 
+	static EFactionNumber GetAttackerNum();
+	static EFactionNumber GetDefenderNum();
+	static EFactionNumber GetBystanderNum();
+
+	static Faction* GetAttacker();
+	static Faction* GetDefender();
+	static Faction* GetBystander();
 
 
 

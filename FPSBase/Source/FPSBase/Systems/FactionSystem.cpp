@@ -49,3 +49,23 @@ const TArray<Faction*>* Faction::GetAllFactions() {
 Faction* g_FactionAttacker = NULL; // Factions::g_AmericanClassic;
 Faction* g_FactionDefender = NULL; // Factions::g_AmericanClassic;
 Faction* g_FactionBystander = NULL; // Factions::g_CivilianSpectator;
+
+EFactionNumber Faction::GetAttackerNum() {
+	return g_FactionAttacker->GetFactionNumber();
+}
+EFactionNumber Faction::GetDefenderNum() {
+	return g_FactionDefender->GetFactionNumber();
+}
+EFactionNumber Faction::GetBystanderNum() {
+	return g_FactionBystander->GetFactionNumber();
+}
+
+Faction* Faction::GetAttacker() {
+	return g_FactionAttacker;
+}
+Faction* Faction::GetDefender() {
+	return g_FactionDefender;
+}
+Faction* Faction::GetBystander() {
+	return g_FactionBystander;
+}

@@ -1,6 +1,6 @@
 #pragma once
 #include "../Util.h"
-#include "WeaponDataProfile.h"
+#include "WeaponDefProfile.h"
 
 /*
 PLAYER-MODELS LIST
