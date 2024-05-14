@@ -1,7 +1,7 @@
 #include "BulletSystem.h"
 #include "../Util.h"
 #include "../PODT/DamageInfo.h"
-#include "../FPSBaseCharacter.h"
+#include "../BGPlayer.h"
 #include "../Profiles/WeaponDefProfile.h"
 
 #define BULLET_FLAGS CVAR_ADMIN | CVAR_REPLICATED | CVAR_NOTIFY

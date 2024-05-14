@@ -1,7 +1,7 @@
 #include "linetools.h"
 #include "Components/LineBatchComponent.h"
 //#include "System/system.h"
-#include "../FPSBaseCharacter.h"
+#include "../BGPlayer.h"
 #include "UnrealEngine.h"
 
 #define sqr(a)      ((a) * (a))

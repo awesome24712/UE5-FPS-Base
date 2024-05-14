@@ -1,6 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "FPSBaseCharacter.h"
+#include "BGPlayer.h"
 #include "FPSBaseProjectile.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
@@ -11,16 +11,16 @@
 #include "GameFramework/InputSettings.h"
 #include "Util/FileIO/Logger.h"
 
-static AFPSBaseCharacter* g_pLocalPlayer;
-AFPSBaseCharacter* GetLocalPlayer() {
+static ABGPlayer* g_pLocalPlayer;
+ABGPlayer* GetLocalPlayer() {
 	return g_pLocalPlayer;
 }
 
 
 //////////////////////////////////////////////////////////////////////////
-// AFPSBaseCharacter
+// ABGPlayer
 
-AFPSBaseCharacter::AFPSBaseCharacter()
+ABGPlayer::ABGPlayer()
 {
 	g_pLocalPlayer = this;
 
@@ -43,13 +43,13 @@ AFPSBaseCharacter::AFPSBaseCharacter()
 	Mesh1P->SetRelativeLocation(FVector(-0.5f, -4.4f, -155.7f));
 
 
-	JT_START_BINDING_UCLASS("Hunter", AFPSBaseCharacter);
+	JT_START_BINDING_UCLASS("Hunter", ABGPlayer);
 	JT_BIND_DOUBLE(m_jumpSpeed, "jumpSpeed", false);
 	JT_BIND_DOUBLE(m_runSpeed, "runSpeed", false);
 	JT_FINISH_BINDING();
 }
 
-void AFPSBaseCharacter::BeginPlay()
+void ABGPlayer::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
@@ -63,21 +63,21 @@ void AFPSBaseCharacter::BeginPlay()
 
 //////////////////////////////////////////////////////////////////////////// Input
 
-void AFPSBaseCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
+void ABGPlayer::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
 
 	// Bind jump events
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AFPSBaseCharacter::CustomJump);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ABGPlayer::CustomJump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	// Bind fire event
-	PlayerInputComponent->BindAction("PrimaryAction", IE_Pressed, this, &AFPSBaseCharacter::OnPrimaryAction);
+	PlayerInputComponent->BindAction("PrimaryAction", IE_Pressed, this, &ABGPlayer::OnPrimaryAction);
 
 	// Bind movement events
-	PlayerInputComponent->BindAxis("Move Forward / Backward", this, &AFPSBaseCharacter::MoveForward);
-	PlayerInputComponent->BindAxis("Move Right / Left", this, &AFPSBaseCharacter::MoveRight);
+	PlayerInputComponent->BindAxis("Move Forward / Backward", this, &ABGPlayer::MoveForward);
+	PlayerInputComponent->BindAxis("Move Right / Left", this, &ABGPlayer::MoveRight);
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "Mouse" versions handle devices that provide an absolute delta, such as a mouse.
@@ -86,7 +86,7 @@ void AFPSBaseCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 	PlayerInputComponent->BindAxis("Look Up / Down Mouse", this, &APawn::AddControllerPitchInput);
 }
 
-void AFPSBaseCharacter::OnPrimaryAction()
+void ABGPlayer::OnPrimaryAction()
 {
 	// Trigger the OnItemUsed Event
 	OnUseItem.Broadcast();
@@ -94,7 +94,7 @@ void AFPSBaseCharacter::OnPrimaryAction()
 
 
 
-void AFPSBaseCharacter::MoveForward(float Value)
+void ABGPlayer::MoveForward(float Value)
 {
 	if (Value != 0.0f)
 	{
@@ -103,7 +103,7 @@ void AFPSBaseCharacter::MoveForward(float Value)
 	}
 }
 
-void AFPSBaseCharacter::MoveRight(float Value)
+void ABGPlayer::MoveRight(float Value)
 {
 	if (Value != 0.0f)
 	{
@@ -112,7 +112,7 @@ void AFPSBaseCharacter::MoveRight(float Value)
 	}
 }
 
-void AFPSBaseCharacter::CustomJump()
+void ABGPlayer::CustomJump()
 {
 	Jump();
 }

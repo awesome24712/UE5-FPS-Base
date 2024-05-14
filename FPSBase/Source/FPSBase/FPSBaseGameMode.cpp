@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "FPSBaseGameMode.h"
-#include "FPSBaseCharacter.h"
+#include "BGPlayer.h"
 #include "UObject/ConstructorHelpers.h"
 
 UWorld* g_pCurrentWorld;

@@ -8,7 +8,7 @@
 #include "PODT/DamageInfo.h"
 #include "Systems/PermissionSystem.h"
 //#include "Profiles/WeaponSystemProfile.h"
-#include "FPSBaseCharacter.generated.h"
+#include "BGPlayer.generated.h"
 
 class UInputComponent;
 class USkeletalMeshComponent;
@@ -17,15 +17,15 @@ class UCameraComponent;
 class UAnimMontage;
 class USoundBase;
 
-class AFPSBaseCharacter;
-AFPSBaseCharacter* GetLocalPlayer();
+class ABGPlayer;
+ABGPlayer* GetLocalPlayer();
 
 // Declaration of the delegate that will be called when the Primary Action is triggered
 // It is declared as dynamic so it can be accessed also in Blueprints
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUseItem);
 
 UCLASS(config=Game)
-class AFPSBaseCharacter : public ACharacter, public IJsonBindable, public FIDamageable
+class ABGPlayer : public ACharacter, public IJsonBindable, public FIDamageable
 {
 	GENERATED_BODY()
 
@@ -44,7 +44,7 @@ class AFPSBaseCharacter : public ACharacter, public IJsonBindable, public FIDama
 	//WeaponSystemProfile* m_pActiveWeaponSystemProfile;
 
 public:
-	AFPSBaseCharacter();
+	ABGPlayer();
 
 protected:
 	virtual void BeginPlay();

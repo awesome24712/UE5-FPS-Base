@@ -13,7 +13,7 @@ public:
 	static void InitAll();
 	static void TickAll(float deltaSeconds);
 
-	virtual ~PerFrameSystem() = 0;
+	virtual ~PerFrameSystem() {};
 };
 
 

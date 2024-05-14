@@ -1,6 +1,6 @@
 #pragma once
 
-enum : unsigned char {
+enum ETeamNumber : unsigned char {
 	TEAM_ATTACKER = 0,
 	TEAM_DEFENDER,
 	TEAM_SPECTATOR,

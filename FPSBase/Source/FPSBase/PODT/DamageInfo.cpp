@@ -1,5 +1,5 @@
 #include "DamageInfo.h"
-#include "../FPSBaseCharacter.h"
+#include "../BGPlayer.h"
 #include "BVector.h"
 #include "../GameModeCvars.h"
 #include "EngineUtils.h"
@@ -31,8 +31,8 @@ bool FDamageInfo::IsNominallyFatal() const {
 bool FDamageInfo::IsFriendlyFire() const {
     bool result = false;
     if (m_pAttacker) {
-        AFPSBaseCharacter* pAttacker = dynamic_cast<AFPSBaseCharacter*>(m_pAttacker);
-        AFPSBaseCharacter* pVictim = dynamic_cast<AFPSBaseCharacter*>(m_pVictim);
+        ABGPlayer* pAttacker = dynamic_cast<ABGPlayer*>(m_pAttacker);
+        ABGPlayer* pVictim = dynamic_cast<ABGPlayer*>(m_pVictim);
         if (pVictim && pAttacker) {
             //TODO access assigned factions
             //result = pVictim->GetFaction() == pAttacker->GetFaction();

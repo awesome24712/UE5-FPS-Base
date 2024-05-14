@@ -4,31 +4,31 @@
 #include "DamageInfo.generated.h"
 
 enum EDamageType : int {
-    DMG_GENERIC     = BF(0),
-    DMG_STAB        = BF(1), //bayonets
-    DMG_SLASH       = BF(2),  //swords
-    DMG_CRUSH       = BF(3), //axes and clubs
-    DMG_EXPLOSION   = BF(4), //grenades, world explosions
-    DMG_BULLET      = BF(5), //get pointblanked
-    DMG_STUN        = BF(6), //add extra stun effect/debuff
+    DMG_GENERIC             = BF(0),
+    DMG_STAB                = BF(1), //bayonets
+    DMG_SLASH               = BF(2),  //swords
+    DMG_CRUSH               = BF(3), //axes and clubs
+    DMG_EXPLOSION           = BF(4), //grenades, world explosions
+    DMG_BULLET              = BF(5), //get pointblanked
+    DMG_STUN                = BF(6), //add extra stun effect/debuff
 
-    DMG_BURN        = BF(7), //player on fire or near fire
-    DMG_DROWN       = BF(8), //underwater for too long
-    DMG_GRAVITY     = BF(9), //turn the gravity generators back on!
+    DMG_BURN                = BF(7), //player on fire or near fire
+    DMG_DROWN               = BF(8), //underwater for too long
+    DMG_GRAVITY             = BF(9), //turn the gravity generators back on!
 
-    DMG_BLEED       = BF(10), //I need a medic!
+    DMG_BLEED               = BF(10), //I need a medic!
 
-    DMG_VOID        = BF(11), //Player fell out of map
-    DMG_TRIGGER_DESERTER = BF(12), //For "You are abandoning the battle!" edge of map triggers
-    DMG_TRIGGER     = BF(13), //Generic trigger damage
+    DMG_VOID                = BF(11), //Player fell out of map
+    DMG_TRIGGER_DESERTER    = BF(12), //For "You are abandoning the battle!" edge of map triggers
+    DMG_TRIGGER             = BF(13), //Generic trigger damage
 
-    DMG_NONFATAL    = BF(14), //take away health, but leave at least 1 hp
-    DMG_FRIENDLY_OVERRIDE = BF(15) //damage which can apply even if the normal ff is off
+    DMG_NONFATAL            = BF(14), //take away health, but leave at least 1 hp
+    DMG_FRIENDLY_OVERRIDE   = BF(15) //damage which can apply even if the normal ff is off
 };
 
 class AActor;
 class ABaseCharacter;
-class AFPSBaseCharacter;
+class ABGPlayer;
 class WeaponDef;
 struct FIDamageable;
 class Faction;

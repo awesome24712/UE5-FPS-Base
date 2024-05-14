@@ -6,7 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "TP_WeaponComponent.generated.h"
 
-class AFPSBaseCharacter;
+class ABGPlayer;
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class FPSBASE_API UTP_WeaponComponent : public UActorComponent
@@ -35,7 +35,7 @@ public:
 
 	/** Attaches the actor to a FirstPersonCharacter */
 	UFUNCTION(BlueprintCallable, Category="Weapon")
-	void AttachWeapon(AFPSBaseCharacter* TargetCharacter);
+	void AttachWeapon(ABGPlayer* TargetCharacter);
 
 	/** Make the weapon Fire a Projectile */
 	UFUNCTION(BlueprintCallable, Category="Weapon")
@@ -51,5 +51,5 @@ protected:
 
 private:
 	/** The Character holding this weapon*/
-	AFPSBaseCharacter* Character;
+	ABGPlayer* Character;
 };

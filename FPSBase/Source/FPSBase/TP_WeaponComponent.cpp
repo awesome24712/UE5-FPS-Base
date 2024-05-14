@@ -2,7 +2,7 @@
 
 
 #include "TP_WeaponComponent.h"
-#include "FPSBaseCharacter.h"
+#include "BGPlayer.h"
 #include "FPSBaseProjectile.h"
 #include "GameFramework/PlayerController.h"
 #include "Camera/PlayerCameraManager.h"
@@ -76,7 +76,7 @@ void UTP_WeaponComponent::BeginPlay()
 	
 }
 
-void UTP_WeaponComponent::AttachWeapon(AFPSBaseCharacter* TargetCharacter)
+void UTP_WeaponComponent::AttachWeapon(ABGPlayer* TargetCharacter)
 {
 	Character = TargetCharacter;
 	if(Character != nullptr)
