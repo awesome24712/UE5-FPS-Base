@@ -4,6 +4,7 @@
 #include "../PODT/BColor.h"
 
 class PlayerClass;
+class BGPlayer;
 class Faction;
 
 extern Faction* g_FactionAttacker;
@@ -22,17 +23,24 @@ enum EFactionNumber : uint8 {
 	FN_Civilian,
 };
 
+//General iteratorables for players
+const TArray<BGPlayer*>& GetPlayers();
+const TArray<BGPlayer*>& GetAttackingPlayers();
+const TArray<BGPlayer*>& GetDefendingPlayers();
+const TArray<BGPlayer*>& GetTeammatesForPlayer(BGPlayer* pPlayer);
+
 //Faction system - note that faction != team, i.e. different factions can be assigned to different teams
 class Faction : public IJsonBindable {
 private:
 	EFactionNumber m_factionNumber; //shorthand identifier for faction
 
 	const char* m_pszCodeName; //name as it appears in console and logs, unlocalized
-	FString m_sDisplayName; //name as to be shown to users in generic cases, localized
+	FName m_sDisplayName; //name as to be shown to users in generic cases, localized
 	BColor m_cColor; //color representation for this team
-	TArray<FString> m_aIncludedClasses; //array of class codeNames to load into m_pClasses
+	TArray<FName> m_aIncludedClasses; //array of class codeNames to load into m_pClasses
 
 	TArray<const PlayerClass*> m_pClasses;
+	TArray<BGPlayer*> m_pPlayers;
 
 	static TArray<Faction*> s_allFactions;
 	static void FactionSwap(Faction** ppTarget, Faction* pNewFaction);
@@ -41,7 +49,7 @@ public:
 	Faction();
 
 	EFactionNumber GetFactionNumber() const { return m_factionNumber; }
-	const FString& GetDisplayName() const { return m_sDisplayName; }
+	const FName& GetDisplayName() const { return m_sDisplayName; }
 	const FColor& GetColor() const { return m_cColor; }
 
 	//-- Global faction handling functions
@@ -57,6 +65,8 @@ public:
 	static Faction* GetAttacker();
 	static Faction* GetDefender();
 	static Faction* GetBystander();
+
+	static Faction* AssignPlayerToFaction(BGPlayer* pPlayer, ETeamNumber tn);
 
 
 

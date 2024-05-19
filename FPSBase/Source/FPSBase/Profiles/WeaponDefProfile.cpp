@@ -24,7 +24,7 @@ WeaponAttackInfo::WeaponAttackInfo() {
 }
 
 //Maps weapon names to their weapon defs - for external usage
-TMap<FString, WeaponDef*> g_dictWeaponDefs;
+TMap<FName, WeaponDef*> g_dictWeaponDefs;
 
 //-----------------------------------------------------------------------------
 // Purpose: Puts any weapon def into the dictionary
@@ -100,7 +100,7 @@ WeaponDef::WeaponDef() {
 	JT_BIND_FLOAT(m_fHolsterTime, "holsterTime", true);
 	JT_BIND_FLOAT(m_flLockTime, "lockTime", false);
 	JT_BIND_FLOAT(m_flRandomAdditionalLockTimeMax, "randomAdditionalLockTime", false);
-	JT_BIND_STRING(m_weaponName, "weaponName", true);
+	//JT_BIND_STRING(m_weaponName, "weaponName", true);
 	JT_FINISH_BINDING();
 
 }
@@ -122,13 +122,13 @@ const WeaponDef* WeaponDef::GetDefault() {
 //		For external usage; instantiated weapons should get their weapon def in
 //		their own constructors.
 //-----------------------------------------------------------------------------
-const WeaponDef* WeaponDef::GetDefForWeapon(const FString& weaponName) {
+const WeaponDef* WeaponDef::GetDefForWeapon(const FName& weaponName) {
 	return g_dictWeaponDefs[weaponName];
 }
 
 
 CON_COMMAND(weapon_list, 0, "Lists all standard BG3 weapons, excluding grenades") {
 	for (auto pair : g_dictWeaponDefs) {
-		Msg("%s\n", CStr(pair.Value->m_weaponName));
+		Msg("%s\n", NAME_TO_ANSI(pair.Value->GetCodeName()));
 	}
 }

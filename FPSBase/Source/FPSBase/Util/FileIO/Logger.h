@@ -28,3 +28,5 @@ void					Msg(const char* pszFormat, ...);
 void					Log(const char* pszFormat, ...);
 void					Msg(const wchar_t* pszFormat, ...);
 inline void				Msg(const FString& str) { Msg(WCStr(str)); }
+
+#define NAME_TO_ANSI(name) TCHAR_TO_ANSI(*(name.GetPlainNameString()))

@@ -153,9 +153,9 @@ namespace NJsonParser {
 
 		//consume a key if we have one. We might be in an array where keys aren't required
 		//also don't confuse a string within an array as a key
-		FString key = "";
+		FName key = "";
 		if (bParsingObject && tks[0].m_char == '"') {
-			key = ParseString();
+			key = FName(ParseString());
 			VerifyToken(':');
 		}
 		else if (bParsingObject) {
@@ -181,8 +181,8 @@ namespace NJsonParser {
 			result = ParseArray(key);
 		}
 		else if (c == '"') {
-			FString s = ParseString();
-			result = new JsonTree(NULL, 0, JNT_STRING, key);
+			FName s = FName(ParseString());
+			result = new JsonTree(NULL, 0, JNT_NAME, key);
 			result->SetValue(s);
 		}
 		else if (CharIsNumber(c)) {
@@ -203,7 +203,7 @@ namespace NJsonParser {
 
 	//assumes next token is the opening curly bracket
 	//or the first " of this object's key
-	JsonTree* ParseObject(FString key) {
+	JsonTree* ParseObject(FName key) {
 		VerifyNonEmpty();
 		//Log("Parsing object with key %s\n", TCHAR_TO_ANSI(*key));
 		
@@ -242,7 +242,7 @@ namespace NJsonParser {
 	}
 
 	//assumes next token is the opening square bracket
-	JsonTree* ParseArray(FString key) {
+	JsonTree* ParseArray(FName key) {
 		VerifyNonEmpty();
 		TArray<JsonTree*> children;
 
@@ -350,7 +350,7 @@ JsonTree* JsonTreeHandle::CreateParentlessTreeFromPath(const FString& path) {
 	//now that we have all the info we need about child files and directories, build our parent level node
 	JsonTree* parentNode = nullptr;
 	if (foundChildren.Num() > 0) {
-		parentNode = new JsonTree(nullptr, foundChildren.Num(), JNT_FOLDER, path);
+		parentNode = new JsonTree(nullptr, foundChildren.Num(), JNT_FOLDER, FName(path));
 		for (int i = 0; i < foundChildren.Num(); i++) {
 			parentNode->SetChild(i, foundChildren[i]);
 		}

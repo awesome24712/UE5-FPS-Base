@@ -10,11 +10,13 @@ void AFlag::BeginPlay() {
 
 void AFlag::SetEnabled(bool bEnabled) {
 	//do nothing if nothing happens
-	if (m_bEnabled == bEnabled) {
+	if (IsActorTickEnabled() == bEnabled) {
 		return;
 	}
 
-	m_bEnabled = bEnabled;
+	SetActorTickEnabled(bEnabled);
+
+	//TODO toggle visibility
 
 
 }

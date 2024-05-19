@@ -35,22 +35,17 @@ protected:
 
 	float m_flBotNoticeRange; //range at which bots should spot this flag
 
-	bool m_bEnabled;
-
 public:
 	AFlag();
 
 	virtual void BeginPlay();
 
 	void Tick(float deltaSeconds) override {
-		if (IsEnabled()) {
-			Think();
-		}
+		
 	} 
 
-	virtual void Think() {}
 
-	bool IsEnabled() const { return m_bEnabled; }
+	bool IsEnabled() const { return IsActorTickEnabled(); }
 	void SetEnabled(bool bEnabled);
 
 	void PlayWaveSound(); //flag billowing in wind

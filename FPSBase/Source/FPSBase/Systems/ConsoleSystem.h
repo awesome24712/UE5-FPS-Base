@@ -11,24 +11,22 @@
 #define CVAR_NOTIFY		1 << 6 //notify players in chat when variable changes, log it too
 #define CVAR_REPORTED	1 << 7 //variable controlled by player in their cfg, but value is known to server
 
-class FString;
-
 enum class EConVarType {
 	INT = 0,
-	STRING = 1,
+	NAME = 1,
 	BOOL = 2,
 	FLOAT = 3
 };
 
 class ConVar {
 private:
-	static TMap<FString, ConVar*> s_stringToCvar;
+	static TMap<FName, ConVar*> s_stringToCvar;
 	static void RegisterCvar(ConVar* cvar);
 
 	int m_iFlags;
 
-	FString m_cvarName;
-	FString m_tooltip;
+	FName m_cvarName;
+	FText m_tooltip;
 	
 	EConVarType m_eType;
 	union {
@@ -40,7 +38,7 @@ private:
 
 	//For freeing string memory from the heap when necessary
 	void CheckDeleteStringValue() {
-		if (m_eType == EConVarType::STRING) {
+		if (m_eType == EConVarType::NAME) {
 			delete[] m_pszVal;
 		}
 	}
@@ -89,7 +87,7 @@ public:
 			return;
 		}
 		CheckDeleteStringValue();
-		m_eType = EConVarType::STRING;
+		m_eType = EConVarType::NAME;
 
 		int len = strlen(psz);
 		m_pszVal = new char[len + 1]; // +1 for null terminator
@@ -97,8 +95,12 @@ public:
 		m_pszVal[len] = 0;
 	}
 
+	void SetValue(const FName& str) {
+		SetValue(NAME_TO_ANSI(str));
+	}
+
 	void SetValue(const FString& str) {
-		SetValue(TCHAR_TO_ANSI(*str));
+		SetValue(CStr(str));
 	}
 
 	void SetValue(int value) {
@@ -117,26 +119,26 @@ public:
 	}
 
 	//Constructors - each adds the constructed ConVar to a global map
-	ConVar(const FString& name, int flags, const char* pszVal, const FString& tooltip);
-	ConVar(const FString& name, int flags, int val, const FString& tooltip);
-	ConVar(const FString& name, int flags, float val, const FString& tooltip);
-	ConVar(const FString& name, int flags, bool val, const FString& tooltip);
+	ConVar(const FName& name, int flags, const char* pszVal, const FString& tooltip);
+	ConVar(const FName& name, int flags, int val, const FString& tooltip);
+	ConVar(const FName& name, int flags, float val, const FString& tooltip);
+	ConVar(const FName& name, int flags, bool val, const FString& tooltip);
 
 	//Global accessors
-	static ConVar* FindCvarByName(const FString& str);
+	static ConVar* FindCvarByName(const FName& str);
 
-	static void GetAllCvars(TArray<TPair<FString, ConVar*>>& out);
+	static void GetAllCvars(TArray<TPair<FName, ConVar*>>& out);
 };
 
 class ConCommand {
 protected:
-	static TMap<FString, ConCommand*> s_stringToCommand;
+	static TMap<FName, ConCommand*> s_stringToCommand;
 	static void RegisterCommand(ConCommand* cmd);
 
 	int m_iFlags;
 
-	FString m_cmdName;
-	FString m_tooltip;
+	FName m_cmdName;
+	FText m_tooltip;
 	
 	virtual void RunCommandActual(int argc, TArray<char*> args) = 0;
 
@@ -144,9 +146,9 @@ public:
 	static void ExecuteCommand(const char* cmd); //runs a command as if entered into console
 	static void ExecuteCommand(int argc, TArray<char*> args); //runs a command as if entered into console
 
-	static ConCommand* FindCommandByName(const FString& str);
+	static ConCommand* FindCommandByName(const FName& str);
 
-	ConCommand(const FString& name, int flags, const FString& tooltip);
+	ConCommand(const FName& name, int flags, const FString& tooltip);
 	virtual ~ConCommand() {}
 };
 

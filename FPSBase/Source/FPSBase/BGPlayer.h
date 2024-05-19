@@ -7,6 +7,7 @@
 #include "Util/JSON/PropertyBinder.h"
 #include "PODT/DamageInfo.h"
 #include "Systems/PermissionSystem.h"
+#include "Systems/FactionSystem.h"
 //#include "Profiles/WeaponSystemProfile.h"
 #include "BGPlayer.generated.h"
 
@@ -16,6 +17,9 @@ class USceneComponent;
 class UCameraComponent;
 class UAnimMontage;
 class USoundBase;
+
+class KitAccessoryProfile;
+class WeaponDefProfile;
 
 class ABGPlayer;
 ABGPlayer* GetLocalPlayer();
@@ -42,6 +46,21 @@ class ABGPlayer : public ACharacter, public IJsonBindable, public FIDamageable
 	double m_jumpSpeed = 100.0;
 	double m_runSpeed = 100;
 	//WeaponSystemProfile* m_pActiveWeaponSystemProfile;
+
+	//Player-configurable options - class, weapon, etc.
+	EFactionNumber m_iFaction;
+	ETeamNumber m_iTeam;
+	const PlayerClass* m_pClass;
+	WeaponDefProfile* m_pPrimaryWeaponSelection;
+	WeaponDefProfile* m_pSecondaryWeaponSelection;
+	WeaponDefProfile* m_pTertiaryWeaponSelection;
+
+	KitAccessoryProfile* m_pPrimaryWeaponPerk;
+	KitAccessoryProfile* m_pSecondaryWeaponPerk;
+
+	KitAccessoryProfile* m_pClassSpecificPerk;
+	KitAccessoryProfile* m_pPrimaryClassPerk;
+	KitAccessoryProfile* m_pSecondaryClassPerk;
 
 public:
 	ABGPlayer();

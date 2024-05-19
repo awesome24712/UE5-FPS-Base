@@ -28,7 +28,7 @@ void Faction::FactionSwap(Faction** ppTarget, Faction* pNewFaction) {
 	//actually set the faction pointer
 	*ppTarget = pNewFaction;
 
-	Msg("Faction %s has changed to %s", CStr(pOldFaction->GetDisplayName()), CStr(pNewFaction->GetDisplayName()));
+	Msg("Faction %s has changed to %s", NAME_TO_ANSI(pOldFaction->GetDisplayName()), NAME_TO_ANSI(pNewFaction->GetDisplayName()));
 }
 
 Faction::Faction() {
@@ -37,9 +37,9 @@ Faction::Faction() {
 
 	JT_START_BINDING("faction", Faction);
 	JT_BIND_INT(m_factionNumber, "factionNumber", true);
-	JT_BIND_STRING(m_sDisplayName, "displayName", true);
+	JT_BIND_NAME(m_sDisplayName, "displayName", true);
 	JT_BIND_OBJECT(m_cColor, "color", true);
-	JT_BIND_STRING_ARRAY(m_aIncludedClasses, "includedClasses", true);
+	JT_BIND_NAME_ARRAY(m_aIncludedClasses, "includedClasses", true);
 }
 
 const TArray<Faction*>* Faction::GetAllFactions() {

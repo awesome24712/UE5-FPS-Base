@@ -4,6 +4,7 @@ enum ETeamNumber : unsigned char {
 	TEAM_ATTACKER = 0,
 	TEAM_DEFENDER,
 	TEAM_SPECTATOR,
+	TEAM_UNASSIGNED,
 	//BG2 - Tjoppen - NUM_TEAMS is useful
 	NUM_TEAMS,	//!! must be last !!
 };
@@ -19,14 +20,23 @@ enum {
 	CLASS_TAKEN_FULL,		//the requesting player already is the class in question, and it's full
 };
 
+enum EClassNumber : unsigned int {
+	CLASS_INFANTRY = 0,
+	CLASS_OFFICER,
+	CLASS_SNIPER,
+	CLASS_SKIRMISHER,
+	CLASS_LINF,
+	CLASS_GRENADIER
+};
+
 //BG2 - Tjoppen - class system - don't change these
 #if 1
-#define	ROLE_INFANTRY			(1 << 0) //musket and bayonet
-#define	ROLE_OFFICER			(1 << 1) //leadership weapons, buffs
-#define	ROLE_SNIPER				(1 << 2) //sniper rifles, special weapons
-#define	ROLE_SKIRMISHER			(1 << 3) //fast movement, axes
-#define	ROLE_LIGHT_INFANTRY		(4 << 4) //special movement, special weapons
-#define ROLE_GRENADIER			(5 << 5) //greandes, built different
+#define	ROLE_INFANTRY			(1 << (unsigned int)CLASS_INFANTRY) //musket and bayonet
+#define	ROLE_OFFICER			(1 << (unsigned int)CLASS_OFFICER) //leadership weapons, buffs
+#define	ROLE_SNIPER				(1 << (unsigned int)CLASS_SNIPER) //sniper rifles, special weapons
+#define	ROLE_SKIRMISHER			(1 << (unsigned int)CLASS_SKIRMISHER) //fast movement, axes
+#define	ROLE_LIGHT_INFANTRY		(1 << (unsigned int)CLASS_LINF) //special movement, special weapons
+#define ROLE_GRENADIER			(1 << (unsigned int)CLASS_GRENADIER) //greandes, built different
 
 #define ABBREV_INF inf
 #define ABBREV_OFF off
@@ -46,7 +56,7 @@ enum {
 
 
 /*
-//PLAYER SPEEDS - used in hl2mp_player_shared.cpp
+//PLAYER SPEEDS
 */
 #if 1
 #define SPEED_INFANTRY		195

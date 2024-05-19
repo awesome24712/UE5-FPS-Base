@@ -1,6 +1,7 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "../Util.h"
+#include "KitAccessoryProfile.h"
 #define DAMAGE_OVER_RANGE_GRAPH_RANGE_MAX 401
 
 enum EAttackType : uint8 {
@@ -57,6 +58,8 @@ bool WeaponAttackInfo::HasMelee() const {
 //-----------------------------------------------------------------------------
 class WeaponDef : public IJsonBindable {
 public:
+	EAccessoryFilter	m_eAvailabilityFilter; //defines availability between classes, weapon combination logic, and weapon attachment availability
+
 	//Two attackinfos for the two modes of attack
 	WeaponAttackInfo	m_Attackinfos[2];
 	const char*			m_pBayonetDeathNotice;
@@ -99,11 +102,11 @@ public:
 	//float	m_flApproximateReloadTime; //approximate because the actual time used is based on the animation. These values need to be kept up-to-date with animation times
 
 
-	FString m_weaponName;
+	//FString m_weaponName;
 	//const char* m_pszWeaponDefName;
 	WeaponDef();
 
-	static const WeaponDef* GetDefForWeapon(const FString& pszWeaponName);
+	static const WeaponDef* GetDefForWeapon(const FName& pszWeaponName);
 	static const WeaponDef* GetDefault(); //for non-standard weapons, to avoid crashing
 	inline bool HasMelee() const { return m_Attackinfos[0].HasMelee() || m_Attackinfos[1].HasMelee(); }
 

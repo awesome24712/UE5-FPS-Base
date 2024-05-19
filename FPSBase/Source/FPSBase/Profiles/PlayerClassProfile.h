@@ -27,9 +27,9 @@ class GunKit : public IJsonBindable {
 public:
 	GunKit();
 
-	FString m_weaponPrimaryName;
-	FString m_weaponSecondaryName;
-	FString m_weaponTertiaryName;
+	//FName m_weaponPrimaryName;
+	//FName m_weaponSecondaryName;
+	//FName m_weaponTertiaryName;
 
 
 	bool	m_bAllowBuckshot = false;
@@ -47,20 +47,20 @@ public:
 	//inline bool ProgressionLocked() const { return m_iControllingBit != 0; }
 
 //#ifdef CLIENT_DLL
-	FString GetLocalizedName() const { return m_pLocalizedName; }
-	FString GetLocalizedDesc() const { return m_pLocalizedDesc; }
+	FName GetLocalizedName() const { return m_pLocalizedName; }
+	FText GetLocalizedDesc() const { return m_pLocalizedDesc; }
 
 	bool	AvailableForCurrentYear() const;
 
 public:
-	void	SetLocalizedName(const FString& token) { m_pszLocalizedNameOverride = token; }
-	void	SetLocalizedDesc(const FString& token) { m_pszLocalizedDescOverride = token; }
+	void	SetLocalizedName(const FName& token) { m_pszLocalizedNameOverride = token; }
+	void	SetLocalizedDesc(const FText& token) { m_pszLocalizedDescOverride = token; }
 
 private:
-	mutable FString m_pszLocalizedNameOverride = "";
-	mutable FString m_pszLocalizedDescOverride = "";
-	mutable FString m_pLocalizedName;
-	mutable FString m_pLocalizedDesc;
+	mutable FName m_pszLocalizedNameOverride = "";
+	mutable FText m_pszLocalizedDescOverride = FText::GetEmpty();
+	mutable FName m_pLocalizedName;
+	mutable FText m_pLocalizedDesc;
 //#endif
 };
 
@@ -100,8 +100,8 @@ public:
 	//const char*		m_pszPlayerModel;
 	//const char*		m_pszJoinName = nullptr;
 
-#define				NUM_POSSIBLE_WEAPON_KITS 9
-	GunKit			m_aWeapons[NUM_POSSIBLE_WEAPON_KITS];
+//#define				NUM_POSSIBLE_WEAPON_KITS 9
+	TArray<GunKit*>	m_aWeapons;
 private:
 	mutable uint8	m_iChooseableKits;
 public:

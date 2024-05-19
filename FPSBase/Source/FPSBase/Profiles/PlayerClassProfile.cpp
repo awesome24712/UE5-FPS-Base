@@ -5,7 +5,7 @@ ConVar mp_year_accuracy("mp_year_accuracy", CVAR_MOD | CVAR_NOTIFY, false, "Cont
 
 GunKit::GunKit() {
 	JT_START_BINDING("gunkit", GunKit);
-	JT_BIND_STRING(m_weaponPrimaryName, "weaponPrimaryName", true);
+	//JT_BIND_NAME(m_weaponPrimaryName, "weaponPrimaryName", true);
 	JT_BIND_BOOLEAN(m_bAllowBuckshot, "allowBuckshot", false);
 	JT_BIND_BYTE(m_iAmmoOverrideCount, "ammoOverrideCount", false);
 	JT_BIND_BYTE(m_iMovementSpeedModifier, "movementSpeedModifier", false);
@@ -46,7 +46,7 @@ PlayerClass::PlayerClass() {
 	JT_BIND_FLOAT(m_flBaseSpeedOriginal, "baseSpeed", true);
 	JT_BIND_FLOAT(m_flFlagWeightMultiplier, "flagWeightMultiplier", true);
 	//weapon kits
-	JT_BIND_OBJECT(m_aWeapons[0], "kit0", true);
+	/*JT_BIND_OBJECT(m_aWeapons[0], "kit0", true);
 	JT_BIND_OBJECT(m_aWeapons[1], "kit1", false);
 	JT_BIND_OBJECT(m_aWeapons[2], "kit2", false);
 	JT_BIND_OBJECT(m_aWeapons[3], "kit3", false);
@@ -54,7 +54,7 @@ PlayerClass::PlayerClass() {
 	JT_BIND_OBJECT(m_aWeapons[5], "kit5", false);
 	JT_BIND_OBJECT(m_aWeapons[6], "kit6", false);
 	JT_BIND_OBJECT(m_aWeapons[7], "kit7", false);
-	JT_BIND_OBJECT(m_aWeapons[8], "kit8", false);
+	JT_BIND_OBJECT(m_aWeapons[8], "kit8", false);*/
 	JT_BIND_BOOLEAN(m_bDefaultRandomUniform, "defaultRandomUniform", true);
 	JT_BIND_BOOLEAN(m_bCanDoVcommBuffs, "canDoVcommBuffs", false);
 	JT_BIND_BOOLEAN(m_bHasImplicitDamageResistance, "hasImplicitDamageResistance", true);
@@ -66,25 +66,18 @@ PlayerClass::PlayerClass() {
 void PlayerClass::postClassConstruct(PlayerClass* pClass) {
 
 	pClass->m_flBaseSpeedCalculated = pClass->m_flBaseSpeedOriginal;
-
-	//count number of chooseable weapons
-	const GunKit* pKit = pClass->m_aWeapons;
-	int chooseable = 0;
-	for (int i = 0; i < NUM_POSSIBLE_WEAPON_KITS; i++) {
-		if (!pKit[i].m_weaponPrimaryName.IsEmpty())
-			chooseable++;
-	}
-	pClass->m_iChooseableKits = chooseable;
+	
+	pClass->m_iChooseableKits = pClass->m_aWeapons.Num(); //TODO sort out construction order
 }
 
 void PlayerClass::getWeaponDef(byte iKit, const WeaponDef** ppPrimary, const WeaponDef** ppSecondary, const WeaponDef** ppTertiary) const {
 	//we always have a primary
-	*ppPrimary = WeaponDef::GetDefForWeapon(m_aWeapons[iKit].m_weaponPrimaryName);
-	const FString& second = m_aWeapons[iKit].m_weaponSecondaryName;
-	const FString& third = m_aWeapons[iKit].m_weaponTertiaryName;
-	if (!second.IsEmpty()) {
+	/**ppPrimary = WeaponDef::GetDefForWeapon(m_aWeapons[iKit].m_weaponPrimaryName);
+	const FName& second = m_aWeapons[iKit].m_weaponSecondaryName;
+	const FName& third = m_aWeapons[iKit].m_weaponTertiaryName;
+	if (!second.IsNone()) {
 		*ppSecondary = WeaponDef::GetDefForWeapon(second);
-		if (!third.IsEmpty()) {
+		if (!third.IsNone()) {
 			*ppTertiary = WeaponDef::GetDefForWeapon(third);
 		}
 		else {
@@ -94,5 +87,5 @@ void PlayerClass::getWeaponDef(byte iKit, const WeaponDef** ppPrimary, const Wea
 	else {
 		*ppSecondary = nullptr;
 		*ppTertiary = nullptr;
-	}
+	}*/
 }
