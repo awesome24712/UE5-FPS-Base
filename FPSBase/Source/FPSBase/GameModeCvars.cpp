@@ -3,7 +3,7 @@
 
 #define CVAR_FLAGS (CVAR_MOD | CVAR_REPLICATED | CVAR_NOTIFY)
 
-ConVar gr_fullcap_bonus("gr_fullcap_bonus", CVAR_FLAGS, 300, "Number of points to deliver on fullcap");
+ConVar gr_fullcap_bonus("gr_fullcap_bonus", CVAR_FLAGS, 200, "Number of points to deliver on fullcap");
 
 ConVar gr_friendlyfire("gr_friendlyfire", CVAR_FLAGS, true, "Whether or not to allow friendly fire");
 ConVar gr_friendlyfire_grenades("gr_friendlyfire_grenades", CVAR_FLAGS, true, "Whether or not to allow friendly fire, grenade specific");

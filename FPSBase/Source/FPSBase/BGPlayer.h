@@ -62,6 +62,13 @@ class ABGPlayer : public ACharacter, public IJsonBindable, public FIDamageable
 	KitAccessoryProfile* m_pPrimaryClassPerk;
 	KitAccessoryProfile* m_pSecondaryClassPerk;
 
+	uint8 m_iAmmoIncrement; //5 shots per increment, adds weight too
+
+	//per-life stats
+	uint8 m_iHealth;
+	uint8 m_iStamina;
+	uint8 m_iBandages;
+
 public:
 	ABGPlayer();
 
