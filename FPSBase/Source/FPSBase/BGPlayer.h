@@ -33,6 +33,8 @@ class ABGPlayer : public ACharacter, public IJsonBindable, public FIDamageable
 {
 	GENERATED_BODY()
 
+	friend class Faction;
+
 	E_BG3_PermissionLevel m_ePermissionLevel = E_BG3_PermissionLevel::PUBBER;
 
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
@@ -107,5 +109,8 @@ public:
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
 	//WeaponSystemProfile* GetActiveWeaponSystemProfile() const { return m_pActiveWeaponSystemProfile; }
+
+	Faction* GetFaction() const;
+	FString GetPlayerName() const { return ""; }
 };
 

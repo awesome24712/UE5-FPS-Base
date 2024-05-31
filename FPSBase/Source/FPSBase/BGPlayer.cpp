@@ -10,6 +10,7 @@
 //#include "Components/MovementComponent.h"
 #include "GameFramework/InputSettings.h"
 #include "Util/FileIO/Logger.h"
+#include "Systems/FactionSystem.h"
 
 static ABGPlayer* g_pLocalPlayer;
 ABGPlayer* GetLocalPlayer() {
@@ -115,4 +116,8 @@ void ABGPlayer::MoveRight(float Value)
 void ABGPlayer::CustomJump()
 {
 	Jump();
+}
+
+Faction* ABGPlayer::GetFaction() const {
+	return FactionFromTeamNumber(m_iTeam);
 }

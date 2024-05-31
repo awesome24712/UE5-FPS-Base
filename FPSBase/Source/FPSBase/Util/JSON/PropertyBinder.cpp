@@ -73,6 +73,13 @@ void JTClassBindingSet::__FinishBinding() {
 	}
 }
 
+void JTClassBindingSet::__FinishBinding(void (*postLoadCallback)(IJsonBindable*)) {
+	if (g_pCurrentBindingSet) {
+		g_pCurrentBindingSet->m_pPostLoadCallback = postLoadCallback;
+	}
+	__FinishBinding();
+}
+
 JTClassBindingSet* JTClassBindingSet::FindBindingSet(const FName& name) {
 	JTClassBindingSet** pSet = g_classNameBindingSets.Find(name);
 	if (pSet) {
@@ -260,6 +267,11 @@ void IJsonBindable::LoadBindingsFromJson(const JsonTree* pTree) {
 		else {
 			m_bindingSet->m_factoryMap.Add(m_codeName, this);
 		}
+	}
+
+	//everything else is done -- call post-load callback if we have one
+	if (m_bindingSet->m_pPostLoadCallback) {
+		m_bindingSet->m_pPostLoadCallback(this);
 	}
 }
 

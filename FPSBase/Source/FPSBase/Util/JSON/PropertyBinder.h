@@ -53,6 +53,8 @@ private:
 	TMap<FName, IJsonBindable*> m_factoryMap; //every object with a codename
 	TArray<IJsonBindable*> m_factoryList; //every object regardless of codename presence
 
+	void (*m_pPostLoadCallback)(IJsonBindable*); //function to call on object after loading from JSON
+
 	JTClassBindingSet(FName name, IJsonBindableFactoryBase* pFactoryOnHeap, UClass* pClass);
 	~JTClassBindingSet() { delete m_pFactory; }
 public:
@@ -66,11 +68,16 @@ public:
 
 	static void __FinishBinding();
 
+	static void __FinishBinding(void (*postLoadCallback)(IJsonBindable*));
+
 	FName GetName() const { return m_name; }
 
 	static JTClassBindingSet* FindBindingSet(const FName& name);
 
 	virtual IJsonBindable* Create() { return m_pFactory ? m_pFactory->Create() : nullptr; };
+
+	const TArray<IJsonBindable*>& GetAll() { return m_factoryList; }
+	const TMap<FName, IJsonBindable*>& GetAllNamed() { return m_factoryMap; }
 
 	/*
 	* Deletes objects created with this binding set from memory.
@@ -111,7 +118,8 @@ public:
 
 	inline FName GetCodeName() const { return m_codeName; }
 
-	const TMap<FName, IJsonBindable*>* GetAllOfThisType() const { return &m_bindingSet->m_factoryMap; };
+	const TMap<FName, IJsonBindable*>& GetAllNamedOfThisType() const { return m_bindingSet->m_factoryMap; };
+	const TArray<IJsonBindable*>& GetAllOfThisType() const { return m_bindingSet->m_factoryList; };
 };
 
 #ifndef JT_CALC_MEMORY_OFFSET
@@ -147,5 +155,6 @@ public:
 #define JT_BIND_BOOLEAN(member, bindingName, required) JTClassBindingSet::__CreateBinding(JT_CALC_MEMORY_OFFSET(member), bindingName, JNT_BOOLEAN, required)
 
 #define JT_FINISH_BINDING() JTClassBindingSet::__FinishBinding();
+#define JT_FINISH_BINDING_WITH_CALLBACK(func) JTClassBindingSet::__FinishBinding(func);
 
 #endif
