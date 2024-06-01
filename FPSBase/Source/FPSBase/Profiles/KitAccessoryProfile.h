@@ -1,6 +1,7 @@
 #pragma once
 #include "CoreMinimal.h"
 #include "../Util.h"
+#include "KitAccessoryProfile.generated.h"
 
 class WeaponDef;
 
@@ -47,8 +48,10 @@ enum class EAccessoryUniqueFlags {
 	POISONED_EDGE = BF(2),
 	WATER_RESISTANT_FUSE = BF(3),
 	ATTACK_DURING_SPRINT = BF(4),
-	MELEE_UNDERWATER = BF(5)
+	MELEE_UNDERWATER = BF(5),
+	DAMAGE_NOT_STAMINA = BF(6), //no stamina drain from hit
 };
+typedef EAccessoryUniqueFlags EAUF;
 
 //Each Kit Accessory profile has their own values for these
 //Each player has one of these too, acummulating all modifiers so we don't have to do as much math each frame
@@ -110,3 +113,28 @@ public:
 	bool AccessibleToWeapon(const WeaponDef* pWeapon);
 };
 
+//--------------------------------------------------------------------
+// This struct represents loadout selection in a networkable way
+//--------------------------------------------------------------------
+USTRUCT()
+struct FKitLoadout {
+	GENERATED_BODY()
+
+	//indexes into factory lists, i.e. the arrays returned by JTClassBindingSet::GetAll()
+	//these indexes can change as profiles are added to the game
+	uint8 m_iClass;
+
+	uint8 m_iWeapon1;
+	int8 m_iWeapon2; //-1 for none
+	int8 m_iWeapon3;
+
+	uint8 m_iWeaponPerk1;
+	uint8 m_iWeaponPerk2;
+
+	uint8 m_iPerk1;
+	uint8 m_iPerk2;
+	uint8 m_iPerk3;
+
+	//Updates variables inside pPlayer to match these indexes
+	void LoadOntoPlayer(ABGPlayer* pPlayer);
+};

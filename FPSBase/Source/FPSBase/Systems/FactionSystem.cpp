@@ -71,7 +71,13 @@ TArray<Faction*> Faction::s_allFactions;
 void Faction::FactionSwap(Faction** ppTarget, Faction* pNewFaction) {
 	Faction* pOldFaction = *ppTarget;
 
-	//TODO swap players to their new classes
+	//TODO swap players to the new faction
+	pNewFaction->m_players = pOldFaction->m_players;
+	pOldFaction->m_players = TArray<ABGPlayer*>();
+
+	for (auto pPlayer : pNewFaction->m_players) {
+		pPlayer->SwapToPlayerClass(pNewFaction->m_classes[0], true);
+	}
 
 	//actually set the faction pointer
 	*ppTarget = pNewFaction;

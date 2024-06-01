@@ -8,6 +8,8 @@
 #include "PODT/DamageInfo.h"
 #include "Systems/PermissionSystem.h"
 #include "Systems/FactionSystem.h"
+#include "Profiles/KitAccessoryProfile.h"
+#include "Profiles/PlayerClassProfile.h"
 //#include "Profiles/WeaponSystemProfile.h"
 #include "BGPlayer.generated.h"
 
@@ -19,14 +21,10 @@ class UAnimMontage;
 class USoundBase;
 
 class KitAccessoryProfile;
-class WeaponDefProfile;
+class WeaponDef;
 
 class ABGPlayer;
 ABGPlayer* GetLocalPlayer();
-
-// Declaration of the delegate that will be called when the Primary Action is triggered
-// It is declared as dynamic so it can be accessed also in Blueprints
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnUseItem);
 
 UCLASS(config=Game)
 class ABGPlayer : public ACharacter, public IJsonBindable, public FIDamageable
@@ -34,6 +32,7 @@ class ABGPlayer : public ACharacter, public IJsonBindable, public FIDamageable
 	GENERATED_BODY()
 
 	friend class Faction;
+	friend struct FKitLoadout;
 
 	E_BG3_PermissionLevel m_ePermissionLevel = E_BG3_PermissionLevel::PUBBER;
 
@@ -52,10 +51,12 @@ class ABGPlayer : public ACharacter, public IJsonBindable, public FIDamageable
 	//Player-configurable options - class, weapon, etc.
 	EFactionNumber m_iFaction;
 	ETeamNumber m_iTeam;
+	UPROPERTY() FKitLoadout m_loadout;
+	bool m_bLoadoutChangePending = false;
 	const PlayerClass* m_pClass;
-	WeaponDefProfile* m_pPrimaryWeaponSelection;
-	WeaponDefProfile* m_pSecondaryWeaponSelection;
-	WeaponDefProfile* m_pTertiaryWeaponSelection;
+	WeaponDef* m_pPrimaryWeaponSelection;
+	WeaponDef* m_pSecondaryWeaponSelection;
+	WeaponDef* m_pTertiaryWeaponSelection;
 
 	KitAccessoryProfile* m_pPrimaryWeaponPerk;
 	KitAccessoryProfile* m_pSecondaryWeaponPerk;
@@ -64,26 +65,26 @@ class ABGPlayer : public ACharacter, public IJsonBindable, public FIDamageable
 	KitAccessoryProfile* m_pPrimaryClassPerk;
 	KitAccessoryProfile* m_pSecondaryClassPerk;
 
+	KitAccessoryModifiers m_accumulatedPerks;
+
 	uint8 m_iAmmoIncrement; //5 shots per increment, adds weight too
 
 	//per-life stats
-	uint8 m_iHealth;
+	//uint8 m_iHealth; //health is defined by FIDamageable
 	uint8 m_iStamina;
+	uint32 m_iRallyFlags;
+
+	//bleeding mechanic variables
 	uint8 m_iBandages;
+	uint8 m_iHealthToLose; //losing 1 per second
+	uint8 m_iHealthLostToBleeding; //to be healed with bandages
+
 
 public:
 	ABGPlayer();
 
 protected:
 	virtual void BeginPlay();
-
-public:
-
-	/** Delegate to whom anyone can subscribe to receive this event */
-	UPROPERTY(BlueprintAssignable, Category = "Interaction")
-	FOnUseItem OnUseItem;
-
-protected:
 	
 	/** Fires a projectile. */
 	void OnPrimaryAction();
@@ -103,6 +104,48 @@ protected:
 
 
 public:
+
+
+	//------------------------------------------------------------------
+	// player management functions
+	//------------------------------------------------------------------
+	void SwapToPlayerClass(const PlayerClass* pClass, bool bForceNow);
+
+
+	//------------------------------------------------------------------
+	// per-life functions
+	//------------------------------------------------------------------
+	void Spawn(bool bForce);
+
+	void AccumulatePerks(); //updates m_accumulatedPerks
+
+	void GiveSpawnWeapons();
+
+	void GiveAmmoFull();
+
+	void SetCosmetics(); //ensure we have the right player model
+
+	//------------------------------------------------------------------
+	// FIDamageable overrides
+	//------------------------------------------------------------------
+	virtual void FilterDamage(FDamageInfo& di) override; //called first, gives chance to modify damage before receiving it
+	virtual void OnTakeDamage(const FDamageInfo& di) override;
+	virtual void OnDeath(const FDamageInfo& di) override;
+	virtual void OnTakeDamageDeathBlocked(const FDamageInfo& di) override; //called when we receive non-fatal damage that would have otherwise killed us
+	virtual void OnHealed(const FDamageInfo& di) override; //called when damage is negative
+	virtual void OnStunned(const FDamageInfo& di) override; //called when hit with stun damage
+
+	//------------------------------------------------------------------
+	// movement functions
+	//------------------------------------------------------------------
+	float GetMaxSpeed(); //big calculation
+
+	void DrainStamina(int drain);
+
+
+	//------------------------------------------------------------------
+	// const getters
+	//------------------------------------------------------------------
 	/** Returns Mesh1P subobject **/
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	/** Returns FirstPersonCameraComponent subobject **/
@@ -112,5 +155,11 @@ public:
 
 	Faction* GetFaction() const;
 	FString GetPlayerName() const { return ""; }
+	float GetWeight() const { return m_accumulatedPerks.m_flWeight; }
+	float GetWeightCapacity() const { return m_pClass->m_flWeightCapacity; }
+	bool IsAmmoFull() const;
+	bool HasAccessoryUniqueFlag(EAUF flag) const {
+		return (m_accumulatedPerks.m_iUniqueFlags & (int)flag);
+	}
 };
 

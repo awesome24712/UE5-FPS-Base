@@ -132,6 +132,8 @@ public:
 	bool			m_bHasImplicitDamageWeakness = false;
 	bool			m_bNerfResistance = false;
 
+	float			m_flWeightCapacity;
+
 	//Functions
 	//inline bool		isAmerican() const { return m_iDefaultTeam == TEAM_AMERICANS; }
 	//inline bool		isBritish() const { return m_iDefaultTeam == TEAM_BRITISH; }
@@ -142,8 +144,6 @@ public:
 	const WeaponDef*	getWeaponDef(uint8 iKit) const;
 	void				getWeaponDef(uint8 iKit, const WeaponDef** ppPrimary, const WeaponDef** ppSecondary, const WeaponDef** ppTertiary) const;
 	const GunKit*		getWeaponKitChooseable(uint8 iWeapon) const; //indexes choosable weapons, skipping over non-choosable ones.
-
-
 
 #ifdef CLIENT_DLL
 	bool		shouldHaveWeaponSelectionMenu() const;

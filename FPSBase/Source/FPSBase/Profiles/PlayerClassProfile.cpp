@@ -60,6 +60,7 @@ PlayerClass::PlayerClass() {
 	JT_BIND_BOOLEAN(m_bHasImplicitDamageResistance, "hasImplicitDamageResistance", true);
 	JT_BIND_BOOLEAN(m_bHasImplicitDamageWeakness, "hasImplicitDamageWeakness", true);
 	JT_BIND_BOOLEAN(m_bNerfResistance, "nerfResistance", true);
+	JT_BIND_FLOAT(m_flWeightCapacity, "weightCapacity", true);
 	JT_FINISH_BINDING();
 }
 

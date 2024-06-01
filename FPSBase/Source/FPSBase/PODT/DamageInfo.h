@@ -93,7 +93,7 @@ public:
     inline void SetHealth(int health) { m_iHealth = health; } //bypasses overridable events
 
     inline bool IsDead() const { return m_iHealth <= 0; };
-    inline bool isAlive() const { return m_iHealth > 0; };
+    inline bool IsAlive() const { return m_iHealth > 0; };
 
     //extendable boolean for whether or not to receive a given damage
     virtual bool ShouldTakeDamage(const FDamageInfo& di);

@@ -59,6 +59,7 @@ bool WeaponAttackInfo::HasMelee() const {
 class WeaponDef : public IJsonBindable {
 public:
 	EAccessoryFilter	m_eAvailabilityFilter; //defines availability between classes, weapon combination logic, and weapon attachment availability
+	float				m_flWeight;
 
 	//Two attackinfos for the two modes of attack
 	WeaponAttackInfo	m_Attackinfos[2];

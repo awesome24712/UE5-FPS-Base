@@ -1,5 +1,6 @@
 #include "KitAccessoryProfile.h"
 #include "WeaponDefProfile.h"
+#include "../BGPlayer.h"
 
 KitAccessoryModifiers::KitAccessoryModifiers() {
 	//general
@@ -50,4 +51,26 @@ bool KitAccessoryProfile::AccessibleToWeapon(const WeaponDef* pWeapon) {
 	uint32 f = (uint32)m_eFilter;
 	uint32 a = (uint32)pWeapon->m_eAvailabilityFilter;
 	return (all & f & a);
+}
+
+void FKitLoadout::LoadOntoPlayer(ABGPlayer* pPlayer) {
+
+	const TArray<IJsonBindable*>& classes = JTClassBindingSet::FindBindingSet("playerclass")->GetAll();
+	const TArray<IJsonBindable*>& weapons = JTClassBindingSet::FindBindingSet("WeaponDef")->GetAll();
+	const TArray<IJsonBindable*>& accessories = JTClassBindingSet::FindBindingSet("kitAccessory")->GetAll();
+
+	ABGPlayer& p = *pPlayer;
+
+	p.m_pClass = (PlayerClass*)classes[m_iClass];
+
+	p.m_pPrimaryWeaponSelection = (WeaponDef*)weapons[m_iWeapon1];
+	p.m_pSecondaryWeaponSelection = m_iWeapon2 != -1 ? (WeaponDef*)weapons[m_iWeapon2] : NULL;
+	p.m_pTertiaryWeaponSelection = m_iWeapon3 != -1 ? (WeaponDef*)weapons[m_iWeapon3] : NULL;
+
+	p.m_pPrimaryWeaponPerk = (KitAccessoryProfile*)accessories[m_iWeaponPerk1];
+	p.m_pSecondaryWeaponPerk = (KitAccessoryProfile*)accessories[m_iWeaponPerk2];
+
+	p.m_pClassSpecificPerk = (KitAccessoryProfile*)accessories[m_iPerk1];
+	p.m_pPrimaryClassPerk = (KitAccessoryProfile*)accessories[m_iPerk2];
+	p.m_pSecondaryClassPerk = (KitAccessoryProfile*)accessories[m_iPerk3];
 }
