@@ -67,13 +67,13 @@ void BG4Gamerules::FullcapThink() {
 		Faction *pWinner, *pLoser;
 
 		if (fullCapCheckResult == 1) {
-			pWinner = Faction::GetAttacker();
-			pLoser = Faction::GetDefender();
+			pWinner = GetAttacker();
+			pLoser = GetDefender();
 			m_iScoreA += winBonus;
 		}
 		else {
-			pWinner = Faction::GetDefender();
-			pLoser = Faction::GetAttacker();
+			pWinner = GetDefender();
+			pLoser = GetAttacker();
 			m_iScoreD += winBonus;
 		}
 	}

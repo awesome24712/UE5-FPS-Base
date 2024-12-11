@@ -67,7 +67,7 @@ void UTP_WeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	if(Character != nullptr)
 	{
 		// Unregister from the OnUseItem Event
-		Character->OnUseItem.RemoveDynamic(this, &UTP_WeaponComponent::Fire);
+		//Character->OnUseItem.RemoveDynamic(this, &UTP_WeaponComponent::Fire);
 	}
 }
 
@@ -86,7 +86,7 @@ void UTP_WeaponComponent::AttachWeapon(ABGPlayer* TargetCharacter)
 		GetOwner()->AttachToComponent(Character->GetMesh1P(),AttachmentRules, FName(TEXT("GripPoint")));
 
 		// Register so that Fire is called every time the character tries to use the item being held
-		Character->OnUseItem.AddDynamic(this, &UTP_WeaponComponent::Fire);
+		//Character->OnUseItem.AddDynamic(this, &UTP_WeaponComponent::Fire);
 	}
 }
 

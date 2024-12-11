@@ -91,14 +91,11 @@ public:
 	static EFactionNumber GetDefenderNum();
 	static EFactionNumber GetBystanderNum();
 
-	static Faction* GetAttacker();
-	static Faction* GetDefender();
-	static Faction* GetBystander();
-
-
-
-
 };
+
+Faction* GetAttacker();
+Faction* GetDefender();
+Faction* GetBystander();
 
 extern Faction* g_FactionAttacker;
 extern Faction* g_FactionDefender;

@@ -20,15 +20,15 @@ const TArray<ABGPlayer*>& GetPlayers() {
 }
 
 const TArray<ABGPlayer*>& GetAttackingPlayers() {
-	return Faction::GetAttacker()->GetPlayers();
+	return GetAttacker()->GetPlayers();
 }
 
 const TArray<ABGPlayer*>& GetDefendingPlayers() {
-	return Faction::GetDefender()->GetPlayers();
+	return GetDefender()->GetPlayers();
 }
 
 const TArray<ABGPlayer*>& GetBystandingPlayers() {
-	return Faction::GetBystander()->GetPlayers();
+	return GetBystander()->GetPlayers();
 }
 
 const TArray<ABGPlayer*>& GetTeammatesForPlayer(ABGPlayer* pPlayer) {
@@ -200,13 +200,13 @@ EFactionNumber Faction::GetBystanderNum() {
 	return g_FactionBystander->GetFactionNumber();
 }
 
-Faction* Faction::GetAttacker() {
+Faction* GetAttacker() {
 	return g_FactionAttacker;
 }
-Faction* Faction::GetDefender() {
+Faction* GetDefender() {
 	return g_FactionDefender;
 }
-Faction* Faction::GetBystander() {
+Faction* GetBystander() {
 	return g_FactionBystander;
 }
 
