@@ -3,11 +3,11 @@
 ConVar sr_cheats("sr_cheats", CVAR_ADMIN | CVAR_NOTIFY | CVAR_REPLICATED, false, "Whether or not to allow built-in cheats on the server.");
 ConVar sr_goofy("sr_goofy", CVAR_MOD | CVAR_NOTIFY | CVAR_REPLICATED, false, "Whether or not to allow goofy commands on the server.");
 
-TMap<FName, ConVar*> ConVar::s_stringToCvar;
+TMap<FString, ConVar*> ConVar::s_stringToCvar;
 
 void ConVar::RegisterCvar(ConVar* cvar) {
 	if (s_stringToCvar.Contains(cvar->m_cvarName)) {
-		NLogger::Fatal("DUPLICATE cvar %s", NAME_TO_ANSI(cvar->m_cvarName));
+		NLogger::Fatal("DUPLICATE cvar %s", WCStr(cvar->m_cvarName));
 	}
 	else {
 		s_stringToCvar.Add(cvar->m_cvarName, cvar);
@@ -34,26 +34,26 @@ void ConVar::CheckNotifyChange(bool value) {
 
 void ConVar::CheckNotifyChange(int value) {
 	if (m_iFlags & CVAR_NOTIFY) {
-		Msg("Cvar %s has changed to %i", NAME_TO_ANSI(m_cvarName), value);
-		Log("Cvar %s has changed to %i", NAME_TO_ANSI(m_cvarName), value);
+		Msg("Cvar %s has changed to %i", WCStr(m_cvarName), value);
+		Log("Cvar %s has changed to %i", WCStr(m_cvarName), value);
 	}
 }
 
 void ConVar::CheckNotifyChange(float value) {
 	if (m_iFlags & CVAR_NOTIFY) {
-		Msg("Cvar %s has changed to %f", NAME_TO_ANSI(m_cvarName), value);
-		Log("Cvar %s has changed to %f", NAME_TO_ANSI(m_cvarName), value);
+		Msg("Cvar %s has changed to %f", WCStr(m_cvarName), value);
+		Log("Cvar %s has changed to %f", WCStr(m_cvarName), value);
 	}
 }
 
 void ConVar::CheckNotifyChange(const char* psz) {
 	if (m_iFlags & CVAR_NOTIFY) {
-		Msg("Cvar %s has changed to %s", NAME_TO_ANSI(m_cvarName), psz);
-		Log("Cvar %s has changed to %s", NAME_TO_ANSI(m_cvarName), psz);
+		Msg("Cvar %s has changed to %s", WCStr(m_cvarName), psz);
+		Log("Cvar %s has changed to %s", WCStr(m_cvarName), psz);
 	}
 }
 
-ConVar::ConVar(const FName& name, int flags, const char* pszVal, const FString& tooltip) {
+ConVar::ConVar(const FString& name, int flags, const char* pszVal, const FString& tooltip) {
 	m_cvarName = name;
 	m_iFlags = flags;
 	m_tooltip = FText::FromString(tooltip);
@@ -67,7 +67,7 @@ ConVar::ConVar(const FName& name, int flags, const char* pszVal, const FString& 
 	RegisterCvar(this);
 }
 
-ConVar::ConVar(const FName& name, int flags, int val, const FString& tooltip) {
+ConVar::ConVar(const FString& name, int flags, int val, const FString& tooltip) {
 	m_cvarName = name;
 	m_iFlags = flags;
 	m_tooltip = FText::FromString(tooltip);
@@ -78,7 +78,7 @@ ConVar::ConVar(const FName& name, int flags, int val, const FString& tooltip) {
 	RegisterCvar(this);
 }
 
-ConVar::ConVar(const FName& name, int flags, float val, const FString& tooltip) {
+ConVar::ConVar(const FString& name, int flags, float val, const FString& tooltip) {
 	m_cvarName = name;
 	m_iFlags = flags;
 	m_tooltip = FText::FromString(tooltip);
@@ -89,7 +89,7 @@ ConVar::ConVar(const FName& name, int flags, float val, const FString& tooltip) 
 	RegisterCvar(this);
 }
 
-ConVar::ConVar(const FName& name, int flags, bool val, const FString& tooltip) {
+ConVar::ConVar(const FString& name, int flags, bool val, const FString& tooltip) {
 	m_cvarName = name;
 	m_iFlags = flags;
 	m_tooltip = FText::FromString(tooltip);
@@ -100,7 +100,7 @@ ConVar::ConVar(const FName& name, int flags, bool val, const FString& tooltip) {
 	RegisterCvar(this);
 }
 
-ConVar* ConVar::FindCvarByName(const FName& str) {
+ConVar* ConVar::FindCvarByName(const FString& str) {
 	if (s_stringToCvar.Contains(str)) {
 		return s_stringToCvar[str];
 	}
@@ -109,7 +109,7 @@ ConVar* ConVar::FindCvarByName(const FName& str) {
 	}
 }
 
-void ConVar::GetAllCvars(TArray<TPair<FName, ConVar*>>& out) {
+void ConVar::GetAllCvars(TArray<TPair<FString, ConVar*>>& out) {
 	out = s_stringToCvar.Array();
 }
 
@@ -146,7 +146,7 @@ void ConCommand::ExecuteCommand(const char* cmd) {
 	buffer[BUF_SIZE - 1] = 0;
 
 	//the name of our command is the first arg
-	FName scmd = args[0];
+	FString scmd = args[0];
 	if (s_stringToCommand.Contains(scmd)) {
 		ConCommand* cmdObject = s_stringToCommand[scmd];
 	} else {
@@ -154,7 +154,7 @@ void ConCommand::ExecuteCommand(const char* cmd) {
 	}
 }
 
-ConCommand* ConCommand::FindCommandByName(const FName& str) {
+ConCommand* ConCommand::FindCommandByName(const FString& str) {
 	if (s_stringToCommand.Contains(str)) {
 		return s_stringToCommand[str];
 	}
@@ -163,18 +163,18 @@ ConCommand* ConCommand::FindCommandByName(const FName& str) {
 	}
 }
 
-TMap<FName, ConCommand*> ConCommand::s_stringToCommand;
+TMap<FString, ConCommand*> ConCommand::s_stringToCommand;
 
 void ConCommand::RegisterCommand(ConCommand* cvar) {
 	if (s_stringToCommand.Contains(cvar->m_cmdName)) {
-		NLogger::Fatal("DUPLICATE cvar %s", NAME_TO_ANSI(cvar->m_cmdName));
+		NLogger::Fatal("DUPLICATE cvar %s", WCStr(cvar->m_cmdName));
 	}
 	else {
 		s_stringToCommand.Add(cvar->m_cmdName, cvar);
 	}
 }
 
-ConCommand::ConCommand(const FName& name, int flags, const FString& tooltip) {
+ConCommand::ConCommand(const FString& name, int flags, const FString& tooltip) {
 	m_cmdName = name;
 	m_iFlags = flags;
 	m_tooltip = FText::FromString(tooltip);

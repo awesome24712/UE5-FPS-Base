@@ -3,10 +3,10 @@
 #include "InputCoreTypes.h"
 #include "../FileIO/Logger.h"
 
-FName JsonTree::s_noKeyDefinedWarning = "NO KEY DEFINED";
-FName JsonTree::s_typeNotStringWarning = "TYPE NOT JNT_STRING";
+FString JsonTree::s_noKeyDefinedWarning = "NO KEY DEFINED";
+FString JsonTree::s_typeNotStringWarning = "TYPE NOT JNT_STRING";
 
-JsonTree::JsonTree(JsonTree* pParent, int iNumChildren, EJsonNodeType type, FName key) {
+JsonTree::JsonTree(JsonTree* pParent, int iNumChildren, EJsonNodeType type, FString key) {
 	//Log("Creating tree at address %p with key %s\n", this, TCHAR_TO_ANSI(*key));
 	m_parent = pParent;
 	m_iNumChildren = iNumChildren;
@@ -51,9 +51,9 @@ void JsonTree::SetChild(int index, JsonTree* child) {
 
 void JsonTree::ReserveChildren(int numChildren) {
 	if (m_eType != JNT_ARRAY
-	&& m_eType != JNT_NAME_ARRAY
+	&& m_eType != JNT_STRING_ARRAY
 	&& m_eType != JNT_OBJECT) {
-		NLogger::Fatal("JsonTree::ReserveChildren call FAILED, node %s is not of parent type", NAME_TO_ANSI(m_key));
+		NLogger::Fatal("JsonTree::ReserveChildren call FAILED, node %s is not of parent type", WCStr(m_key));
 	}
 
 	if (numChildren < m_iNumChildren) {
@@ -79,7 +79,7 @@ void JsonTree::ReserveChildren(int numChildren) {
 	m_iNumChildren = numChildren;
 }
 
-JsonTree* JsonTree::AddChild(const FName& key, EJsonNodeType type) {
+JsonTree* JsonTree::AddChild(const FString& key, EJsonNodeType type) {
 	//First let's create the new child
 	JsonTree* newChild = new JsonTree(this, 0, type, key);
 
@@ -105,7 +105,7 @@ JsonTree* JsonTree::AddChild(const FName& key, EJsonNodeType type) {
 	return newChild;
 }
 
-void JsonTree::SetValue(const FName& value) {
+void JsonTree::SetValue(const FString& value) {
 	m_sValue = value;
 }
 void JsonTree::SetValue(bool value) {
@@ -130,7 +130,7 @@ const JsonTree* JsonTree::GetLastChild() const {
 	return m_children[m_iNumChildren - 1];
 }
 
-const JsonTree* JsonTree::GetChild(const FName& key) const {
+const JsonTree* JsonTree::GetChild(const FString& key) const {
 	const JsonTree* result = NULL;
 	for (int i = 0; i < m_iNumChildren; i++) {
 		if (m_children[i]->Key() == key) {
@@ -166,14 +166,14 @@ FString JsonTree::ToString(int depth) const {
 
 	//append key if available
 	if (HasKey()) {
-		result = result + '"' + Key().ToString() + "\" : ";
+		result = result + '"' + Key() + "\" : ";
 	}
 
 	char buffer[32];
 
 	//next depends on type
-	if (m_eType == JNT_NAME) {
-		result = result + '"' + GetValueName().ToString() + '"';
+	if (m_eType == JNT_STRING) {
+		result = result + '"' + GetValueString() + '"';
 	}
 	else if (m_eType == JNT_DOUBLE || m_eType == JNT_DOUBLE_TO_FLOAT) {
 		sprintf_s(buffer, "%f", GetValueDouble());
@@ -197,7 +197,7 @@ FString JsonTree::ToString(int depth) const {
 	else if (m_eType == JNT_NONEXISTANT) {
 		result = result + "null";
 	}
-	else if (m_eType == JNT_OBJECT) {
+	else if (m_eType == JNT_OBJECT || m_eType == JNT_FOLDER || m_eType == JNT_FILE) {
 		result = result + "{\n";
 		for (int i = 0; i < m_iNumChildren; i++) {
 			result += GetChild(i)->ToString(depth + 1);

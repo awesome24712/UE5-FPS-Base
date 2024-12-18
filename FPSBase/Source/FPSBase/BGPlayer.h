@@ -26,6 +26,8 @@ class WeaponDef;
 class ABGPlayer;
 ABGPlayer* GetLocalPlayer();
 
+inline ABGPlayer* ToPlayer(AActor* pActor) { return dynamic_cast<ABGPlayer*>(pActor); }
+
 UCLASS(config=Game)
 class ABGPlayer : public ACharacter, public IJsonBindable, public FIDamageable
 {
@@ -96,6 +98,9 @@ protected:
 	void MoveRight(float Val);
 
 	void CustomJump();
+
+public:
+	FVector GetAimDirection() const;
 	
 protected:
 	// APawn interface
@@ -153,6 +158,7 @@ public:
 
 	//WeaponSystemProfile* GetActiveWeaponSystemProfile() const { return m_pActiveWeaponSystemProfile; }
 
+	bool IsBot() const { return false; }
 	Faction* GetFaction() const;
 	FString GetPlayerName() const { return ""; }
 	float GetWeight() const { return m_accumulatedPerks.m_flWeight; }

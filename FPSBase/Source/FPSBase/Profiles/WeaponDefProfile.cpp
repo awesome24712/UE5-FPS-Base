@@ -129,6 +129,6 @@ const WeaponDef* WeaponDef::GetDefForWeapon(const FName& weaponName) {
 
 CON_COMMAND(weapon_list, 0, "Lists all standard BG3 weapons, excluding grenades") {
 	for (auto pair : g_dictWeaponDefs) {
-		Msg("%s\n", NAME_TO_ANSI(pair.Value->GetCodeName()));
+		Msg("%s\n", WCStr(pair.Value->GetCodeName()));
 	}
 }

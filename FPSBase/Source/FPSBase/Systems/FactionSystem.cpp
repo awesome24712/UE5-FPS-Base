@@ -168,7 +168,7 @@ Faction::Faction() {
 	JT_BIND_NAME_ARRAY(m_aIncludedClasses, "includedClasses", true);
 	JT_FINISH_BINDING_WITH_CALLBACK([](IJsonBindable* pObj) {
 		//assign to globals if they aren't assigned already
-		Faction* pFaction = (Faction*) pObj;
+		/*Faction* pFaction = (Faction*) pObj;
 		int attacker = sr_faction_attackers.GetValueInt();
 		int defender = sr_faction_defenders.GetValueInt();
 		int bystander = sr_faction_bystanders.GetValueInt();
@@ -181,7 +181,7 @@ Faction::Faction() {
 		}
 		else if (pFaction->m_factionNumber == bystander) {
 			g_FactionBystander = pFaction;
-		}
+		}*/
 	});
 }
 

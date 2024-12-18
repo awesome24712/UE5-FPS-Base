@@ -2,21 +2,22 @@
 
 using namespace NJsonPropertyBinding;
 
-JTClassBindingSet::JTClassBindingSet(FName name, IJsonBindableFactoryBase* pFactoryOnHeap, UClass* pClass) {
+JTClassBindingSet::JTClassBindingSet(FString name, IJsonBindableFactoryBase* pFactoryOnHeap, UClass* pClass) {
 	m_bindings = TArray<Binding>();
 	m_pClass = pClass;
 	m_name = name;
 	m_pFactory = pFactoryOnHeap;
+	m_pPostLoadCallback = nullptr;
 }
 
-static TMap<FName, JTClassBindingSet*> g_classNameBindingSets;
+static TMap<FString, JTClassBindingSet*> g_classNameBindingSets;
 
 static JTClassBindingSet* g_pCurrentBindingSet;
 
-JTClassBindingSet* JTClassBindingSet::__CreateBindingSet(FName name, IJsonBindableFactoryBase* pFactoryOnHeap, UClass* pClass) {
+JTClassBindingSet* JTClassBindingSet::__CreateBindingSet(FString name, IJsonBindableFactoryBase* pFactoryOnHeap, UClass* pClass) {
 
 	if (g_pCurrentBindingSet) {
-		NLogger::Fatal("Creating new binding set but %s is still the active one", NAME_TO_ANSI(g_pCurrentBindingSet->m_name));
+		NLogger::Fatal("Creating new binding set but %s is still the active one", WCStr(g_pCurrentBindingSet->m_name));
 		return NULL;
 	}
 
@@ -31,21 +32,26 @@ JTClassBindingSet* JTClassBindingSet::__CreateBindingSet(FName name, IJsonBindab
 		g_pCurrentBindingSet->m_factoryMap = oldSet->m_factoryMap;
 		g_pCurrentBindingSet->m_factoryList = oldSet->m_factoryList;
 
+		//update all objects to point at the new binding set
+		for (auto ijb : g_pCurrentBindingSet->m_factoryList) {
+			ijb->m_bindingSet = g_pCurrentBindingSet;
+		}
+
 		delete oldSet;
-		Msg("Deleting old duplicate bindingset %s", NAME_TO_ANSI(name));
+		//Msg("Deleting old duplicate bindingset %s", WCStr(name));
 	}
 
 	return g_classNameBindingSets.Add(name, g_pCurrentBindingSet);
 }
 
-void JTClassBindingSet::__CreateBinding(size_t offset, FName bindingName, EJsonNodeType type, bool bRequired) {
+void JTClassBindingSet::__CreateBinding(size_t offset, FString bindingName, EJsonNodeType type, bool bRequired) {
 	//if we are creating a set which already exists, delete and remove the old one!
 	if (g_pCurrentBindingSet) {
 		JTClassBindingSet* bs = g_pCurrentBindingSet;
 		//verify this binding does not already exist
 		for (int i = 0; i < bs->m_bindings.Num(); i++) {
 			if (bs->m_bindings[i].m_bindingName == bindingName) {
-				NLogger::Fatal("Duplicate binding %s on class %s", NAME_TO_ANSI(bindingName), NAME_TO_ANSI(bs->m_name));
+				NLogger::Fatal("Duplicate binding %s on class %s", WCStr(bindingName), WCStr(bs->m_name));
 				return;
 			}
 		}
@@ -54,17 +60,17 @@ void JTClassBindingSet::__CreateBinding(size_t offset, FName bindingName, EJsonN
 		bs->m_bindings.Emplace(Binding{
 			offset, type, bindingName, bRequired
 		});
-		Msg("Created binding for with bindingName %s", NAME_TO_ANSI(bindingName));
+		//Msg("Created binding for with bindingName %s", WCStr(bindingName));
 	}
 	else {
-		NLogger::Fatal("Failed to bind json field %s", NAME_TO_ANSI(bindingName));
+		NLogger::Fatal("Failed to bind json field %s", WCStr(bindingName));
 	}
 }
 
 void JTClassBindingSet::__FinishBinding() {
 	if (g_pCurrentBindingSet) {
 		if (g_pCurrentBindingSet->m_bindings.Num() == 0) {
-			NLogger::Warning("Finishing binding %s with 0 bindings, is this right?", NAME_TO_ANSI(g_pCurrentBindingSet->m_name));
+			NLogger::Warning("Finishing binding %s with 0 bindings, is this right?", WCStr(g_pCurrentBindingSet->m_name));
 		}
 		g_pCurrentBindingSet = NULL;
 	}
@@ -80,7 +86,7 @@ void JTClassBindingSet::__FinishBinding(void (*postLoadCallback)(IJsonBindable*)
 	__FinishBinding();
 }
 
-JTClassBindingSet* JTClassBindingSet::FindBindingSet(const FName& name) {
+JTClassBindingSet* JTClassBindingSet::FindBindingSet(const FString& name) {
 	JTClassBindingSet** pSet = g_classNameBindingSets.Find(name);
 	if (pSet) {
 		return *pSet;
@@ -90,11 +96,11 @@ JTClassBindingSet* JTClassBindingSet::FindBindingSet(const FName& name) {
 	}
 }
 
-void JTClassBindingSet::DeleteObjectsOfBindingSet(const FName& name) {
+void JTClassBindingSet::DeleteObjectsOfBindingSet(const FString& name) {
 	JTClassBindingSet* pSet = FindBindingSet(name);
 
 	if (!pSet) {
-		NLogger::Fatal("Could not find binding set %s while attempting to delete objects of that type", NAME_TO_ANSI(name));
+		NLogger::Fatal("Could not find binding set %s while attempting to delete objects of that type", WCStr(name));
 		return;
 	}
 
@@ -106,10 +112,10 @@ void JTClassBindingSet::DeleteObjectsOfBindingSet(const FName& name) {
 }
 
 void IJsonBindable::LoadBindingsFromJson(const JsonTree* pTree) {
-	Msg(__FUNCTION__);
+	//Msg(__FUNCTION__);
 
 	if (!m_bindingSet) {
-		NLogger::Fatal("Cannot load JsonTree with key %s because BindingSet is missing!", NAME_TO_ANSI(pTree->Key()));
+		NLogger::Fatal("Cannot load JsonTree with key %s because BindingSet is missing!", WCStr(pTree->Key()));
 		return;
 	}
 
@@ -120,23 +126,23 @@ void IJsonBindable::LoadBindingsFromJson(const JsonTree* pTree) {
 	m_bindingSet->m_factoryList.Push(this);
 
 	if (m_bindingSet->m_bindings.Num() == 0) {
-		NLogger::Fatal("Cannot load JsonTree bindings because bindingSet %s has zero bindings defined", NAME_TO_ANSI(m_bindingSet->GetName()));
+		NLogger::Fatal("Cannot load JsonTree bindings because bindingSet %s has zero bindings defined", WCStr(m_bindingSet->GetName()));
 		return;
 	}
 
 	//bind to our codename if one is providing
 	const JsonTree* pCodeNameTree = pTree->GetChild("codeName");
-	if (pCodeNameTree && pCodeNameTree->GetType() == JNT_NAME) {
-		m_codeName = pCodeNameTree->GetValueName();
+	if (pCodeNameTree && pCodeNameTree->GetType() == JNT_STRING) {
+		m_codeName = pCodeNameTree->GetValueString();
 	}
 	else if (pCodeNameTree) {
-		NLogger::Warning("JsonTree with key %s has invalid value type for codeName", NAME_TO_ANSI(pTree->Key()));
+		NLogger::Warning("JsonTree with key %s has invalid value type for codeName", WCStr(pTree->Key()));
 	}
 	else if (pTree->HasKey()) {
 		m_codeName = pTree->Key();
 	}
 	else {
-		NLogger::Message("Missing both codeName and key for JsonTree, is this intentional?", NAME_TO_ANSI(pTree->Key()));
+		NLogger::Message("Missing both codeName and key for JsonTree, is this intentional?", WCStr(pTree->Key()));
 	}
 
 	//Loop through all our bindings and load them from the tree
@@ -154,25 +160,25 @@ void IJsonBindable::LoadBindingsFromJson(const JsonTree* pTree) {
 			|| (pChildNode->GetType() != b.m_jnt 
 				&& !(b.m_jnt == JNT_DOUBLE_TO_INT 
 					&& pChildNode->GetType() == JNT_DOUBLE)
-				&& !(b.m_jnt == JNT_NAME_ARRAY
+				&& !(b.m_jnt == JNT_STRING_ARRAY
 					&& pChildNode->GetType() == JNT_ARRAY)
 				)
 			)
 		{
 			//report error for missing child that is required
 			if (!pChildNode && b.m_bRequired) {
-				NLogger::Fatal("Required field %s is missing from json!", NAME_TO_ANSI(b.m_bindingName));
+				NLogger::Fatal("Required field %s is missing from json!", WCStr(b.m_bindingName));
 			}
 			else if (pChildNode && pChildNode->GetType() != b.m_jnt) {
-				NLogger::Fatal("Unexpected value type for field %s in json!", NAME_TO_ANSI(b.m_bindingName));
+				NLogger::Fatal("Unexpected value type for field %s in json!", WCStr(b.m_bindingName));
 			}
 			continue;
 		}
 
 		IJsonBindable* pObject;
 		TArray<IJsonBindable*>* pArray;
-		TArray<FName>* pStringArray;
-		FName* pString;
+		TArray<FString>* pStringArray;
+		FString* pString;
 		int* pInt;
 		double* pDouble;
 		bool* pBool;
@@ -185,28 +191,28 @@ void IJsonBindable::LoadBindingsFromJson(const JsonTree* pTree) {
 			pObject = reinterpret_cast<IJsonBindable*>(pBoundLocation);
 			pObject->LoadBindingsFromJson(pChildNode);
 			break;
-		case JNT_NAME:
-			pString = reinterpret_cast<FName*>(pBoundLocation);
-			*pString = pChildNode->GetValueName();
+		case JNT_STRING:
+			pString = reinterpret_cast<FString*>(pBoundLocation);
+			*pString = pChildNode->GetValueString();
 			break;
 		case JNT_ARRAY:
 			pArray = reinterpret_cast<TArray<IJsonBindable*>*>(pBoundLocation);
 			if (pChildNode->NumChildren() >= 2) {
 				//get binding set name for object type from the first entry in the array, ensure it is string
-				if (pChildNode->GetChild(0)->GetType() != JNT_NAME) {
-					NLogger::Fatal("Object array %s missing binding set name as first entry!", NAME_TO_ANSI(b.m_bindingName));
+				if (pChildNode->GetChild(0)->GetType() != JNT_STRING) {
+					NLogger::Fatal("Object array %s missing binding set name as first entry!", WCStr(b.m_bindingName));
 					break;
 				}
-				JTClassBindingSet* bs = FindBindingSet(pChildNode->GetChild(0)->GetValueName());
+				JTClassBindingSet* bs = FindBindingSet(pChildNode->GetChild(0)->GetValueString());
 				if (!bs) {
-					NLogger::Fatal("Object array %s has unknown binding set %s!", NAME_TO_ANSI(b.m_bindingName), NAME_TO_ANSI(pChildNode->GetChild(0)->GetValueName()));
+					NLogger::Fatal("Object array %s has unknown binding set %s!", WCStr(b.m_bindingName), WCStr(pChildNode->GetChild(0)->GetValueString()));
 					break;
 				}
 
 				//index starts at one because the first entry was a string with the binding set name
 				for (int j = 1; j < pChildNode->NumChildren(); j++) {
 					if (pChildNode->GetChild(j)->GetType() != JNT_OBJECT) {
-						NLogger::Warning("Unexpected non-object in object array %s, skipping!", NAME_TO_ANSI(b.m_bindingName));
+						NLogger::Warning("Unexpected non-object in object array %s, skipping!", WCStr(b.m_bindingName));
 						break;
 					}
 					IJsonBindable* pObj = bs->Create();
@@ -215,18 +221,18 @@ void IJsonBindable::LoadBindingsFromJson(const JsonTree* pTree) {
 				}
 			}
 			else {
-				NLogger::Warning("Skipping too-short object array %s!", NAME_TO_ANSI(b.m_bindingName));
+				NLogger::Warning("Skipping too-short object array %s!", WCStr(b.m_bindingName));
 			}
 
 			break;
-		case JNT_NAME_ARRAY:
-			pStringArray = reinterpret_cast<TArray<FName>*>(pBoundLocation);
+		case JNT_STRING_ARRAY:
+			pStringArray = reinterpret_cast<TArray<FString>*>(pBoundLocation);
 			for (int j = 0; j < pChildNode->NumChildren(); j++) {
-				if (pChildNode->GetType() == JNT_NAME) {
-					pStringArray->Push(pChildNode->GetValueName());
+				if (pChildNode->GetType() == JNT_STRING) {
+					pStringArray->Push(pChildNode->GetValueString());
 				}
 				else {
-					NLogger::Warning("Unexpected non-string in string array %s, skipping!", NAME_TO_ANSI(b.m_bindingName));
+					NLogger::Warning("Unexpected non-string in string array %s, skipping!", WCStr(b.m_bindingName));
 				}
 			}
 		case JNT_DOUBLE_TO_INT:
@@ -253,15 +259,15 @@ void IJsonBindable::LoadBindingsFromJson(const JsonTree* pTree) {
 	}
 
 	//if we have a codename, add ourselves to the list of objects created with this binding set
-	if (m_codeName.GetStringLength() > 0) {
+	if (m_codeName.Len() > 0) {
 		IJsonBindable** ppExisting = m_bindingSet->m_factoryMap.Find(m_codeName);
 		if (ppExisting) {
 			if (*ppExisting == this) {
-				NLogger::Blurp("Binding pre-existing IJsonBindable with codeName %s", NAME_TO_ANSI(m_codeName));
+				NLogger::Blurp("Binding pre-existing IJsonBindable with codeName %s", WCStr(m_codeName));
 			}
 			else {
 				NLogger::Warning("IJsonBindable of type %s found with duplicate codeName %s, skipping!", 
-					NAME_TO_ANSI(m_bindingSet->m_name), NAME_TO_ANSI(m_codeName));
+					WCStr(m_bindingSet->m_name), WCStr(m_codeName));
 			}
 		}
 		else {

@@ -32,6 +32,8 @@ void AMoveUpActor::BeginPlay()
 {
 	Super::BeginPlay();
 
+	Msg("AMoveUpActor::BeginPlay()\n");
+
 	//NLogger::Fatal("double variable location at %p\n", &m_moveUpDelta);
 
 	LoadBindingsFromJson("moveup.json");

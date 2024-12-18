@@ -27,8 +27,8 @@ KitAccessoryModifiers::KitAccessoryModifiers() {
 	JT_BIND_FLOAT(m_iMeleeRangeExtension, "meleeRangeExtension", false);
 
 	//other
-	JT_BIND_FLOAT(m_flMeleeIntervalModifier, "meleeIntervalModifier", false);
-	JT_BIND_FLOAT(m_iMeleeRangeExtension, "meleeRangeExtension", false);
+	JT_BIND_FLOAT(m_flFuseLengthModifier, "fuseLengthModifier", false);
+	JT_BIND_FLOAT(m_flGrenadeSpeedModifier, "grenadeSpeedModifier", false);
 
 	JT_FINISH_BINDING();
 }

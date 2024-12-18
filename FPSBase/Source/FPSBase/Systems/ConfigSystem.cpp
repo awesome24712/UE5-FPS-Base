@@ -5,8 +5,8 @@
 namespace ConfigSystem {
 
 	//Modifies the give TArray to include all persistent cvars
-	void GetArchivableCvars(TArray<TPair<FName, ConVar*>>& out) {
-		TArray<TPair<FName, ConVar*>> all; 
+	void GetArchivableCvars(TArray<TPair<FString, ConVar*>>& out) {
+		TArray<TPair<FString, ConVar*>> all; 
 		ConVar::GetAllCvars(all);
 		out.Empty();
 		for (auto e : all) {
@@ -41,12 +41,12 @@ namespace ConfigSystem {
 				case JNT_DOUBLE_TO_INT:
 					cvar->SetValue((int)child->GetValueDouble());
 					break;
-				case JNT_NAME:
-					cvar->SetValue(child->GetValueName());
+				case JNT_STRING:
+					cvar->SetValue(child->GetValueString());
 					break;
 				default:
 					NLogger::Warning("While loading a config cvar %s set to bad type %i, skipping...", 
-						NAME_TO_ANSI(child->Key()), 
+						WCStr(child->Key()), 
 						(int)child->GetType());
 				}
 			}
@@ -54,7 +54,7 @@ namespace ConfigSystem {
 				
 			}
 			else {
-				NLogger::Warning("Unknown variable or command %s, skipping...", NAME_TO_ANSI(child->Key()));
+				NLogger::Warning("Unknown variable or command %s, skipping...", WCStr(child->Key()));
 			}
 		}
 	}
@@ -67,7 +67,7 @@ namespace ConfigSystem {
 	void WriteConfigToDisk() {
 
 		//get a list of all cvars
-		TArray<TPair<FName, ConVar*>> vars;
+		TArray<TPair<FString, ConVar*>> vars;
 		ConVar::GetAllCvars(vars);
 
 		//remove all non-persistent cvars from the list
@@ -91,8 +91,8 @@ namespace ConfigSystem {
 				child->SetType(JNT_DOUBLE_TO_INT);
 				break;
 			case EConVarType::NAME:
-				child->SetValue(FName(pair.Value->GetValuePszString()));
-				child->SetType(JNT_NAME);
+				child->SetValue(FString(pair.Value->GetValuePszString()));
+				child->SetType(JNT_STRING);
 				break;
 			case EConVarType::BOOL:
 				child->SetValue(pair.Value->GetValueBool());

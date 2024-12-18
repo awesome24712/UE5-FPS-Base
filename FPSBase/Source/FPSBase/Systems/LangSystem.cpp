@@ -93,7 +93,7 @@ namespace LangSystem {
 
 		//First create the map in the right place, then add to it.
 		//This is more efficient than creating it and then copying it into place
-		const FString& folderName = pFile->GetParent()->Key().ToString();
+		const FString& folderName = pFile->GetParent()->Key();
 		bool unflavored = (folderName == "Lang");
 
 

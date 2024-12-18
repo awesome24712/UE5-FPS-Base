@@ -44,7 +44,7 @@ ABGPlayer::ABGPlayer()
 	Mesh1P->SetRelativeLocation(FVector(-0.5f, -4.4f, -155.7f));
 
 
-	JT_START_BINDING_UCLASS("Hunter", ABGPlayer);
+	JT_START_BINDING_UCLASS("BGPlayer", ABGPlayer);
 	JT_BIND_DOUBLE(m_jumpSpeed, "jumpSpeed", false);
 	JT_BIND_DOUBLE(m_runSpeed, "runSpeed", false);
 	JT_FINISH_BINDING();
@@ -59,7 +59,27 @@ void ABGPlayer::BeginPlay()
 	GetCharacterMovement()->JumpZVelocity = m_jumpSpeed;
 	GetCharacterMovement()->MaxWalkSpeed = m_runSpeed;
 
-	JsonTreeHandle::CreateFromDirectory("");
+	Msg("Loading from directory!");
+	auto jst = JsonTreeHandle::CreateFromDirectory("");
+
+	//auto str = jst.Get()->ToString();
+
+	Log(L"Hello world");
+	Log("\n");
+	Log(*FString("Hello world"));
+	Log("\n");
+	Log(CStr(FString("Hello world")));
+	Log("\n");
+	Log(WCStr(FString("Hello world")));
+	Log("\n");
+	Log(StringCast<char>(*FString("Hello world")).Get());
+	Log("\n");
+	Log(StringCast<wchar_t>(*FString("Hello world")).Get());
+	
+
+	//Log("Hello world!\n");
+	//Msg(jst->GetChild(0)->ToString());
+	//Log(CStr(jst->GetChild(0)->ToString()));
 }
 
 //////////////////////////////////////////////////////////////////////////// Input
@@ -115,6 +135,11 @@ void ABGPlayer::MoveRight(float Value)
 void ABGPlayer::CustomJump()
 {
 	Jump();
+}
+
+FVector ABGPlayer::GetAimDirection() const {
+	const FRotator rotation = GetBaseAimRotation();
+	return rotation.RotateVector(FVector::ForwardVector);
 }
 
 
@@ -215,7 +240,7 @@ void ABGPlayer::AccumulatePerks() {
 	if (m_pSecondaryWeaponSelection) p.m_flWeight += m_pSecondaryWeaponSelection->m_flWeight;
 	if (m_pTertiaryWeaponSelection) p.m_flWeight += m_pTertiaryWeaponSelection->m_flWeight;
 
-
+	//TODO include ammo
 }
 
 void ABGPlayer::GiveSpawnWeapons() {

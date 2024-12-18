@@ -4,6 +4,7 @@
 #include "KitAccessoryProfile.generated.h"
 
 class WeaponDef;
+class ABGPlayer;
 
 //Represents anything chosen in the classmenu 
 //which isn't a weapon manually swapped too

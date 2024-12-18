@@ -20,12 +20,12 @@ enum class EConVarType {
 
 class ConVar {
 private:
-	static TMap<FName, ConVar*> s_stringToCvar;
+	static TMap<FString, ConVar*> s_stringToCvar;
 	static void RegisterCvar(ConVar* cvar);
 
 	int m_iFlags;
 
-	FName m_cvarName;
+	FString m_cvarName;
 	FText m_tooltip;
 	
 	EConVarType m_eType;
@@ -95,13 +95,10 @@ public:
 		m_pszVal[len] = 0;
 	}
 
-	void SetValue(const FName& str) {
-		SetValue(NAME_TO_ANSI(str));
-	}
-
 	void SetValue(const FString& str) {
 		SetValue(CStr(str));
 	}
+
 
 	void SetValue(int value) {
 		if (!CheckCanChange()) {
@@ -119,25 +116,25 @@ public:
 	}
 
 	//Constructors - each adds the constructed ConVar to a global map
-	ConVar(const FName& name, int flags, const char* pszVal, const FString& tooltip);
-	ConVar(const FName& name, int flags, int val, const FString& tooltip);
-	ConVar(const FName& name, int flags, float val, const FString& tooltip);
-	ConVar(const FName& name, int flags, bool val, const FString& tooltip);
+	ConVar(const FString& name, int flags, const char* pszVal, const FString& tooltip);
+	ConVar(const FString& name, int flags, int val, const FString& tooltip);
+	ConVar(const FString& name, int flags, float val, const FString& tooltip);
+	ConVar(const FString& name, int flags, bool val, const FString& tooltip);
 
 	//Global accessors
-	static ConVar* FindCvarByName(const FName& str);
+	static ConVar* FindCvarByName(const FString& str);
 
-	static void GetAllCvars(TArray<TPair<FName, ConVar*>>& out);
+	static void GetAllCvars(TArray<TPair<FString, ConVar*>>& out);
 };
 
 class ConCommand {
 protected:
-	static TMap<FName, ConCommand*> s_stringToCommand;
+	static TMap<FString, ConCommand*> s_stringToCommand;
 	static void RegisterCommand(ConCommand* cmd);
 
 	int m_iFlags;
 
-	FName m_cmdName;
+	FString m_cmdName;
 	FText m_tooltip;
 	
 	virtual void RunCommandActual(int argc, TArray<char*> args) = 0;
@@ -146,9 +143,9 @@ public:
 	static void ExecuteCommand(const char* cmd); //runs a command as if entered into console
 	static void ExecuteCommand(int argc, TArray<char*> args); //runs a command as if entered into console
 
-	static ConCommand* FindCommandByName(const FName& str);
+	static ConCommand* FindCommandByName(const FString& str);
 
-	ConCommand(const FName& name, int flags, const FString& tooltip);
+	ConCommand(const FString& name, int flags, const FString& tooltip);
 	virtual ~ConCommand() {}
 };
 

@@ -24,11 +24,11 @@ namespace NLogger {
 	}
 
 	void Log(const char* pszMsg) {
-        const char* buffer = "C:/Users/Mica/source/Unreal/FPSBase/Mods/log.log";
+        const char* buffer = "C:/Users/latru/source/UE5-FPS-Base/FPSBase/Mods/log.log";
         fopen_s(&g_pLogFile, buffer, "a");
 
 		if (g_pLogFile) {
-			fwrite(pszMsg, 1, strnlen_s(pszMsg, 100), g_pLogFile);
+			fwrite(pszMsg, 1, strnlen_s(pszMsg, 100000), g_pLogFile);
             fclose(g_pLogFile);
         }
         else {
@@ -44,6 +44,27 @@ namespace NLogger {
         g_pLogFile = NULL;
 	}
 
+    void Log(const wchar_t* pszMsg) {
+        const char* buffer = "C:/Users/latru/source/UE5-FPS-Base/FPSBase/Mods/log.log";
+        fopen_s(&g_pLogFile, buffer, "a");
+
+        if (g_pLogFile) {
+            fwrite(pszMsg, sizeof(wchar_t), wcsnlen_s(pszMsg, 100000), g_pLogFile);
+            fclose(g_pLogFile);
+        }
+        else {
+            static bool bHasReportedLogFileError = false;
+            //Fatal("Could not open log file for writing!");
+            //Don't call Fatal here bcs Fatal calls this function, stackoverflow possible
+            if (GEngine && !bHasReportedLogFileError) {
+                GEngine->AddOnScreenDebugMessage(-1, 50.f, FColor::Red, "Could not open log file for writing!");
+                bHasReportedLogFileError = true;
+            }
+        }
+
+        g_pLogFile = NULL;
+    }
+
 	void CloseLogFile() {
 		/*g_bHasClosedLogFile = true;
 
@@ -53,7 +74,7 @@ namespace NLogger {
 		}*/
 	}
 
-#define BUFFER_SIZE 512
+#define BUFFER_SIZE 2000000
 
     //-------------------------------------------------------------------------------------
     // Implementation functions
@@ -122,11 +143,11 @@ namespace NLogger {
         va_end(args);
     }
 
-    void Fatal(const FString& str) { MsgMaster(FColor::Red, 50.0f, str); }
+    void Fatal(const FString& str) { MsgMaster(FColor::Red, 500.0f, str); }
     void Fatal(const char* pszFormat, ...) {
         va_list args;
         va_start(args, pszFormat);
-        VMsgMaster(FColor::Red, 50.0f, pszFormat, args);
+        VMsgMaster(FColor::Red, 500.0f, pszFormat, args);
         VLogMaster(pszFormat, args);
         va_end(args);
     }
@@ -143,6 +164,13 @@ void Log(const char* pszFormat, ...) {
     va_start(args, pszFormat);
     vsnprintf_s(NLogger::buffer, BUFFER_SIZE, BUFFER_SIZE - 1, pszFormat, args);
     NLogger::Log(NLogger::buffer);
+    va_end(args);
+}
+void Log(const wchar_t* pszFormat, ...) {
+    va_list args;
+    va_start(args, pszFormat);
+    vswprintf_s(NLogger::wbuffer, BUFFER_SIZE, pszFormat, args);
+    NLogger::Log(NLogger::wbuffer);
     va_end(args);
 }
 void Msg(const wchar_t* pszFormat, ...) {

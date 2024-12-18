@@ -153,9 +153,9 @@ namespace NJsonParser {
 
 		//consume a key if we have one. We might be in an array where keys aren't required
 		//also don't confuse a string within an array as a key
-		FName key = "";
+		FString key = "";
 		if (bParsingObject && tks[0].m_char == '"') {
-			key = FName(ParseString());
+			key = FString(ParseString());
 			VerifyToken(':');
 		}
 		else if (bParsingObject) {
@@ -181,8 +181,8 @@ namespace NJsonParser {
 			result = ParseArray(key);
 		}
 		else if (c == '"') {
-			FName s = FName(ParseString());
-			result = new JsonTree(NULL, 0, JNT_NAME, key);
+			FString s = FString(ParseString());
+			result = new JsonTree(NULL, 0, JNT_STRING, key);
 			result->SetValue(s);
 		}
 		else if (CharIsNumber(c)) {
@@ -203,7 +203,7 @@ namespace NJsonParser {
 
 	//assumes next token is the opening curly bracket
 	//or the first " of this object's key
-	JsonTree* ParseObject(FName key) {
+	JsonTree* ParseObject(FString key) {
 		VerifyNonEmpty();
 		//Log("Parsing object with key %s\n", TCHAR_TO_ANSI(*key));
 		
@@ -242,7 +242,7 @@ namespace NJsonParser {
 	}
 
 	//assumes next token is the opening square bracket
-	JsonTree* ParseArray(FName key) {
+	JsonTree* ParseArray(FString key) {
 		VerifyNonEmpty();
 		TArray<JsonTree*> children;
 
@@ -310,19 +310,23 @@ JsonTreeHandle JsonTreeHandle::CreateFromFile(const FString& path) {
 	return JsonTreeHandle(CreateParentlessTreeFromTokens(tokens));
 }
 
-JsonTree* JsonTreeHandle::CreateParentlessTreeFromPath(const FString& path) {
+JsonTree* JsonTreeHandle::CreateParentlessTreeFromPath(const FString& path, const FString& rootKeyOverride) {
+	Log(__FUNCTION__ "\n");
 	namespace fs = std::filesystem;
 
 	TArray<JsonTree*> foundChildren;
 
 	for (const auto& entry : fs::directory_iterator(WCStr(path))) {
 		JsonTree* child = nullptr;
-
+		Log("looking at %s ", entry.path().filename().string().c_str());
 		bool isDirectory = entry.is_directory();
 		if (isDirectory) {
-			child = CreateParentlessTreeFromPath(path + "/" + entry.path().filename().string().c_str());
+			Log("is directory\n");
+			child = CreateParentlessTreeFromPath(path + "/" + entry.path().filename().string().c_str(), "");
+			//child->SetKey(entry.path().filename().string().c_str());
 		}
 		else {
+			Log("is file\n");
 			FString extension = entry.path().extension().string().c_str();
 			if (extension == FString(".json")) {
 				TArray<NTokenizer::Token> tokens;
@@ -350,10 +354,17 @@ JsonTree* JsonTreeHandle::CreateParentlessTreeFromPath(const FString& path) {
 	//now that we have all the info we need about child files and directories, build our parent level node
 	JsonTree* parentNode = nullptr;
 	if (foundChildren.Num() > 0) {
-		parentNode = new JsonTree(nullptr, foundChildren.Num(), JNT_FOLDER, FName(path));
+		parentNode = new JsonTree(nullptr, foundChildren.Num(), JNT_FOLDER, FString(path));
 		for (int i = 0; i < foundChildren.Num(); i++) {
 			parentNode->SetChild(i, foundChildren[i]);
 		}
+		if (rootKeyOverride.Len()) {
+			parentNode->SetKey(rootKeyOverride);
+		}
+		Log("Creating json tree with %i children\n", parentNode->NumChildren());
+	}
+	else {
+		NLogger::Warning("Failed to load directory %s for json dataset");
 	}
 
 
@@ -362,6 +373,8 @@ JsonTree* JsonTreeHandle::CreateParentlessTreeFromPath(const FString& path) {
 
 JsonTreeHandle JsonTreeHandle::CreateFromDirectory(const FString& pathRelativeToMods) {
 	
-	return JsonTreeHandle(CreateParentlessTreeFromPath(FPaths::ProjectModsDir() + pathRelativeToMods));
+	auto jth = JsonTreeHandle(CreateParentlessTreeFromPath(FPaths::ProjectModsDir() + pathRelativeToMods, "root"));
+
+	return jth;
 		
 }

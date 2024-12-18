@@ -11,15 +11,15 @@
 class JsonTree;
 namespace NJsonParser {
 	JsonTree* ParseLine(bool bParsingObject);
-	JsonTree* ParseObject(FName key);
-	JsonTree* ParseArray(FName key);
+	JsonTree* ParseObject(FString key);
+	JsonTree* ParseArray(FString key);
 }
 
 enum EJsonNodeType {
 	JNT_FOLDER, //name of folder containing jsons, used for determining json-to-class mappings
 	JNT_FILE, //an top-level json file, the name of the file (excluding extension) is the key
 	JNT_OBJECT,
-	JNT_NAME,
+	JNT_STRING,
 	JNT_ARRAY,
 	JNT_DOUBLE,
 	JNT_BOOLEAN,
@@ -29,7 +29,7 @@ enum EJsonNodeType {
 	JNT_DOUBLE_TO_FLOAT, //used only by bindings to indicate that a double from the JSON should be converted to a float in memory
 	JNT_DOUBLE_TO_BYTE, //used only by bindings to indicate that a double from the JSON should be converted to a byte in memory
 	JNT_DOUBLE_TO_USHORT, //used only by bindings to indicate that a double from the JSON should be converted to a uint16 in memory
-	JNT_NAME_ARRAY //used only by bindings to indicate that an array from JSON should be converted to TArray<String>
+	JNT_STRING_ARRAY //used only by bindings to indicate that an array from JSON should be converted to TArray<String>
 };
 
 //Handler helps with memory management and creating JsonTree's
@@ -39,12 +39,12 @@ class JsonTree {
 private:
 	friend class JsonTreeHandle;
 	friend JsonTree* NJsonParser::ParseLine(bool bParsingObject);
-	friend JsonTree* NJsonParser::ParseObject(FName key);
-	friend JsonTree* NJsonParser::ParseArray(FName key);
+	friend JsonTree* NJsonParser::ParseObject(FString key);
+	friend JsonTree* NJsonParser::ParseArray(FString key);
 
 	//static JsonTree* CreateFromPath(FString path);
 
-	JsonTree(JsonTree* pParent, int iNumChildren, EJsonNodeType type, FName key);
+	JsonTree(JsonTree* pParent, int iNumChildren, EJsonNodeType type, FString key);
 	FORCENOINLINE ~JsonTree();
 	void SetChild(int index, JsonTree* child);
 	
@@ -53,38 +53,38 @@ private:
 	JsonTree** m_children;
 	int m_iNumChildren;
 	
-	FName m_key;
+	FString m_key;
 
 	EJsonNodeType m_eType;
 
 	//possible value types
-	FName m_sValue;
+	FString m_sValue;
 	double m_dValue;
 	bool m_bValue;
 
-	static FName s_noKeyDefinedWarning;
-	static FName s_typeNotStringWarning;
+	static FString s_noKeyDefinedWarning;
+	static FString s_typeNotStringWarning;
 
 public:
 	const JsonTree* GetParent() const { return m_parent; };
 	int				NumChildren() const { return m_iNumChildren; };
 	const JsonTree* GetChild(int index) const;
 	const JsonTree* GetLastChild() const;
-	const JsonTree* GetChild(const FName& key) const;
+	const JsonTree* GetChild(const FString& key) const;
 	bool			AllChildrenOfType(EJsonNodeType type) const;
 
 	//Functions for modifying JsonTrees from elsewhere
 	void			ReserveChildren(int numChildren); //reserves slots of more efficiently adding children. All slots must be filled
-	JsonTree*		AddChild(const FName& key, EJsonNodeType type = JNT_NAME);
-	void			SetValue(const FName& value);
+	JsonTree*		AddChild(const FString& key, EJsonNodeType type = JNT_STRING);
+	void			SetValue(const FString& value);
 	void			SetValue(bool value);
 	void			SetValue(double value);
-	void			SetKey(const FName& key) { m_key = key; }
+	void			SetKey(const FString& key) { m_key = key; }
 	void			SetType(EJsonNodeType jnt) { m_eType = jnt; }
 
 
-	bool HasKey() const { return m_key.GetStringLength() > 0; }; //Elements within arrays won't have keys
-	const FName& Key() const {
+	bool HasKey() const { return m_key.Len() > 0; }; //Elements within arrays won't have keys
+	const FString& Key() const {
 		if (HasKey())
 			return m_key;
 		else
@@ -96,8 +96,8 @@ public:
 	/*
 	* Getters for accessing value as different types
 	*/
-	const FName& GetValueName() const {
-		if (m_eType == JNT_NAME)
+	const FString& GetValueString() const {
+		if (m_eType == JNT_STRING)
 			return m_sValue;
 		else
 			return s_typeNotStringWarning;
@@ -111,7 +111,7 @@ public:
 	}
 
 	bool GetValueBool() const {
-		if (m_eType == JNT_NAME)
+		if (m_eType == JNT_STRING)
 			return m_bValue;
 		else
 			return false;
@@ -148,7 +148,7 @@ private:
 	static JsonTree* CreateParentlessTreeFromTokens(TArray<NTokenizer::Token>& );
 
 	//This is recursively called 
-	static JsonTree* CreateParentlessTreeFromPath(const FString& path);
+	static JsonTree* CreateParentlessTreeFromPath(const FString& path, const FString& rootKeyOverride);
 public:
 
 	static JsonTreeHandle CreateEmptyForEditing();
