@@ -88,8 +88,10 @@ public:
 protected:
 	virtual void BeginPlay();
 	
-	/** Fires a projectile. */
+	/** Primary attack, stab/shoot */
 	void OnPrimaryAction();
+
+	void OnSecondaryAction();
 
 	/** Handles moving forward/backward */
 	void MoveForward(float Val);
@@ -106,6 +108,8 @@ protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 	// End of APawn interface
+
+	void SetupFPV_MeshComponent();
 
 
 public:
@@ -149,12 +153,15 @@ public:
 
 
 	//------------------------------------------------------------------
-	// const getters
+	// helper getters
 	//------------------------------------------------------------------
 	/** Returns Mesh1P subobject **/
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
+
+	inline APlayerController& PC() { return *((APlayerController*)Controller.Get()); }
+
 
 	//WeaponSystemProfile* GetActiveWeaponSystemProfile() const { return m_pActiveWeaponSystemProfile; }
 
@@ -166,6 +173,13 @@ public:
 	bool IsAmmoFull() const;
 	bool HasAccessoryUniqueFlag(EAUF flag) const {
 		return (m_accumulatedPerks.m_iUniqueFlags & (int)flag);
+	}
+
+	//------------------------------------------------------------------
+	// UI interaction
+	//------------------------------------------------------------------
+	bool WantsCursor() {
+		return GetVelocity().Z > 1;
 	}
 };
 

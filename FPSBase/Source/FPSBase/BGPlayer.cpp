@@ -11,6 +11,7 @@
 #include "GameFramework/InputSettings.h"
 #include "Util/FileIO/Logger.h"
 #include "Systems/FactionSystem.h"
+#include "UI/UIConductor.h"
 
 static ABGPlayer* g_pLocalPlayer;
 ABGPlayer* GetLocalPlayer() {
@@ -25,6 +26,8 @@ ABGPlayer::ABGPlayer()
 {
 	g_pLocalPlayer = this;
 
+	//PC().GetHUD()->ShowHUD();
+
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
 
@@ -34,14 +37,7 @@ ABGPlayer::ABGPlayer()
 	FirstPersonCameraComponent->SetRelativeLocation(FVector(-39.56f, 1.75f, 64.f)); // Position the camera
 	FirstPersonCameraComponent->bUsePawnControlRotation = true;
 
-	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
-	Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
-	Mesh1P->SetOnlyOwnerSee(true);
-	Mesh1P->SetupAttachment(FirstPersonCameraComponent);
-	Mesh1P->bCastDynamicShadow = false;
-	Mesh1P->CastShadow = false;
-	Mesh1P->SetRelativeRotation(FRotator(1.9f, -19.19f, 5.2f));
-	Mesh1P->SetRelativeLocation(FVector(-0.5f, -4.4f, -155.7f));
+	SetupFPV_MeshComponent();
 
 
 	JT_START_BINDING_UCLASS("BGPlayer", ABGPlayer);
@@ -59,27 +55,6 @@ void ABGPlayer::BeginPlay()
 	GetCharacterMovement()->JumpZVelocity = m_jumpSpeed;
 	GetCharacterMovement()->MaxWalkSpeed = m_runSpeed;
 
-	Msg("Loading from directory!");
-	auto jst = JsonTreeHandle::CreateFromDirectory("");
-
-	//auto str = jst.Get()->ToString();
-
-	Log(L"Hello world");
-	Log("\n");
-	Log(*FString("Hello world"));
-	Log("\n");
-	Log(CStr(FString("Hello world")));
-	Log("\n");
-	Log(WCStr(FString("Hello world")));
-	Log("\n");
-	Log(StringCast<char>(*FString("Hello world")).Get());
-	Log("\n");
-	Log(StringCast<wchar_t>(*FString("Hello world")).Get());
-	
-
-	//Log("Hello world!\n");
-	//Msg(jst->GetChild(0)->ToString());
-	//Log(CStr(jst->GetChild(0)->ToString()));
 }
 
 //////////////////////////////////////////////////////////////////////////// Input
@@ -89,12 +64,15 @@ void ABGPlayer::SetupPlayerInputComponent(class UInputComponent* PlayerInputComp
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
 
+	Msg("Creating input component!");
+
 	// Bind jump events
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ABGPlayer::CustomJump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	// Bind fire event
 	PlayerInputComponent->BindAction("PrimaryAction", IE_Pressed, this, &ABGPlayer::OnPrimaryAction);
+	PlayerInputComponent->BindAction("SecondaryAction", IE_Pressed, this, &ABGPlayer::OnSecondaryAction);
 
 	// Bind movement events
 	PlayerInputComponent->BindAxis("Move Forward / Backward", this, &ABGPlayer::MoveForward);
@@ -107,9 +85,24 @@ void ABGPlayer::SetupPlayerInputComponent(class UInputComponent* PlayerInputComp
 	PlayerInputComponent->BindAxis("Look Up / Down Mouse", this, &APawn::AddControllerPitchInput);
 }
 
+void ABGPlayer::SetupFPV_MeshComponent() {
+	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
+	Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
+	Mesh1P->SetOnlyOwnerSee(true);
+	Mesh1P->SetupAttachment(FirstPersonCameraComponent);
+	Mesh1P->bCastDynamicShadow = false;
+	Mesh1P->CastShadow = false;
+	Mesh1P->SetRelativeRotation(FRotator(1.9f, -19.19f, 5.2f));
+	Mesh1P->SetRelativeLocation(FVector(-0.5f, -4.4f, -155.7f));
+}
+
 void ABGPlayer::OnPrimaryAction()
 {
 	Msg("Primary attack");
+}
+
+void ABGPlayer::OnSecondaryAction() {
+	Msg("Secondary attack");
 }
 
 
@@ -134,6 +127,7 @@ void ABGPlayer::MoveRight(float Value)
 
 void ABGPlayer::CustomJump()
 {
+	Msg("Jump!");
 	Jump();
 }
 

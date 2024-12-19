@@ -7,7 +7,12 @@
 		{
 			"Name": "FPSBase",
 			"Type": "Runtime",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine",
+				"Slate",
+				"SlateCore"
+			]
 		}
 	],
 	"Plugins": [

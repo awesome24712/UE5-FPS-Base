@@ -3,6 +3,8 @@
 #include "FPSBaseGameMode.h"
 #include "BGPlayer.h"
 #include "UObject/ConstructorHelpers.h"
+#include "BGController.h"
+#include "UI/UIConductor.h"
 
 UWorld* g_pCurrentWorld;
 
@@ -10,9 +12,13 @@ AFPSBaseGameMode::AFPSBaseGameMode()
 	: Super()
 {
 	// set default pawn class to our Blueprinted character
-	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnClassFinder(TEXT("/Game/FirstPerson/Blueprints/BP_FirstPersonCharacter"));
-	DefaultPawnClass = PlayerPawnClassFinder.Class;
+	//static ConstructorHelpers::FClassFinder<APawn> PlayerPawnClassFinder(TEXT("/Game/FirstPerson/Blueprints/BP_FirstPersonCharacter"));
+	//DefaultPawnClass = PlayerPawnClassFinder.Class;
 
+	DefaultPawnClass = ABGPlayer::StaticClass();
+	DefaultPlayerName = FText::FromString("Unknown Soldier");
+	HUDClass = AUIConductor::StaticClass();
+	PlayerControllerClass = ABGController::StaticClass();
 }
 
 void AFPSBaseGameMode::InitGame(const FString& mapName, const FString& options, FString& errorMessage) {
