@@ -79,6 +79,7 @@ void ABGController::SetupInputComponent() {
 void ABGController::SetupUIConductor() {
 	ClientSetHUD(AUIConductor::StaticClass());
 	m_uiConductor = Cast<AUIConductor>(MyHUD);// TObjectPtr<AUIConductor>(MyHUD);
+	m_uiConductor->Setup();
 }
 
 bool ABGController::IsInMenu() const {

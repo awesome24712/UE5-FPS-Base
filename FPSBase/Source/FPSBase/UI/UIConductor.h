@@ -19,6 +19,8 @@ class FPSBASE_API AUIConductor : public AHUD
 public:
 	AUIConductor();
 
+	void Setup();
+
 	void ShowHUD() override;
 
 	void PostInitializeComponents() override;
@@ -45,7 +47,16 @@ public:
 	 */
 	void OnLostFocusPause(bool bEnable) override;
 
-	bool WantsCursor();
 
-	ABGPlayer* GetPlayer();
+	/** 
+	* Getters
+	* 
+	*/
+	bool WantsCursor() const;
+
+	ABGPlayer* GetPlayer() const;
+
+	int			ScreenHeight() const;
+	int			ScreenWidth() const;
+	FIntPoint	ScreenSize() const;
 };

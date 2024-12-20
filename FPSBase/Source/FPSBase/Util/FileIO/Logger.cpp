@@ -127,11 +127,17 @@ namespace NLogger {
         va_end(args);
     }
 
-    void Blurp(const FString& str) { MsgMaster(FColor::Cyan, 0.2f, str); }
+    void Blurp(const FString& str) {
+        if (GFrameCounter % 1000 == 0) {
+            MsgMaster(FColor::Cyan, 0.2f, str);
+        }
+    }
     void Blurp(const char* pszFormat, ...) {
         va_list args;
         va_start(args, pszFormat);
-        VMsgMaster(FColor::Cyan, 0.3f, pszFormat, args);
+        if (GFrameCounter % 1000 == 0) {
+            VMsgMaster(FColor::Cyan, 0.3f, pszFormat, args);
+        }
         va_end(args);
     }
 
