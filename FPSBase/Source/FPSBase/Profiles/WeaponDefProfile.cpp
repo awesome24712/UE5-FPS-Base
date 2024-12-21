@@ -1,6 +1,8 @@
 #include "WeaponDefProfile.h"
 #include "../Util.h"
 
+TArray<WeaponDef*> g_allWeapons;
+
 WeaponAttackInfo::WeaponAttackInfo() {
 
 	//Bindings
@@ -115,6 +117,14 @@ WeaponDef::WeaponDef() {
 const WeaponDef* WeaponDef::GetDefault() {
 	//return &g_Def_weapon_default;
 	return NULL;
+}
+
+void WeaponDef::LoadWeaponProfilesFromDisk() {
+	NTreeManager::LoadBindablesFromFolder(g_allWeapons, "Weapons");
+}
+
+const TArray<WeaponDef*>& WeaponDef::GetAllWeapons() {
+	return g_allWeapons;
 }
 
 //-----------------------------------------------------------------------------

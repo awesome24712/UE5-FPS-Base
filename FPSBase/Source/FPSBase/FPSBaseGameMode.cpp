@@ -23,6 +23,8 @@ AFPSBaseGameMode::AFPSBaseGameMode()
 
 void AFPSBaseGameMode::InitGame(const FString& mapName, const FString& options, FString& errorMessage) {
 	Super::InitGame(mapName, options, errorMessage);
+
+	NTreeManager::LoadTopLevelTree();
 }
 
 void AFPSBaseGameMode::InitGameState() {

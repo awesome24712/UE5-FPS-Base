@@ -6,15 +6,6 @@
 //#include "Engine/EngineTypes.h"
 //#include "Engine/EngineBaseTypes.h"
 
-
-//These lines below are just for letting our parser access JsonTree constructor
-class JsonTree;
-namespace NJsonParser {
-	JsonTree* ParseLine(bool bParsingObject);
-	JsonTree* ParseObject(FString key);
-	JsonTree* ParseArray(FString key);
-}
-
 enum EJsonNodeType {
 	JNT_FOLDER, //name of folder containing jsons, used for determining json-to-class mappings
 	JNT_FILE, //an top-level json file, the name of the file (excluding extension) is the key
@@ -31,6 +22,17 @@ enum EJsonNodeType {
 	JNT_DOUBLE_TO_USHORT, //used only by bindings to indicate that a double from the JSON should be converted to a uint16 in memory
 	JNT_STRING_ARRAY //used only by bindings to indicate that an array from JSON should be converted to TArray<String>
 };
+
+//These lines below are just for letting our parser access JsonTree constructor
+class JsonTree;
+namespace NJsonParser {
+	JsonTree* ParseLine(bool bParsingObject);
+	JsonTree* ParseObject(FString key);
+	JsonTree* ParseArray(FString key);
+
+	extern FString			g_jsonSearchKey;
+	extern EJsonNodeType	g_jsonSearchType;
+}
 
 //Handler helps with memory management and creating JsonTree's
 class JsonTreeHandle;
@@ -118,6 +120,28 @@ public:
 	}
 
 	FString ToString(int depth = 0) const;
+
+	const JsonTree* DFS(bool (*pPredicate)(const JsonTree*)) const;
+
+	const JsonTree* BFS(bool (*pPredicate)(const JsonTree*)) const;
+
+	const JsonTree* DFS(EJsonNodeType type, const FString& key) const {
+		NJsonParser::g_jsonSearchKey = key;
+		NJsonParser::g_jsonSearchType = type;
+
+		return DFS([](const JsonTree* pTree) {
+			return pTree->GetType() == NJsonParser::g_jsonSearchType && pTree->Key() == NJsonParser::g_jsonSearchKey;
+		});
+	}
+
+	const JsonTree* BFS(EJsonNodeType type, const FString& key) const {
+		NJsonParser::g_jsonSearchKey = key;
+		NJsonParser::g_jsonSearchType = type;
+
+		return BFS([](const JsonTree* pTree) {
+			return pTree->GetType() == NJsonParser::g_jsonSearchType && pTree->Key() == NJsonParser::g_jsonSearchKey;
+		});
+	}
 };
 
 class JsonTreeHandle {
@@ -198,3 +222,4 @@ public:
 		return this->m_pTree == other.m_pTree;
 	}
 };
+

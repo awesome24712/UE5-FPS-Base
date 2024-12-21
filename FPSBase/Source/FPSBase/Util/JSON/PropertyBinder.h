@@ -98,6 +98,7 @@ protected:
 	unsigned char* m_pOwnerMemoryOrigin;
 	FString m_codeName = L"";
 
+public:
 	~IJsonBindable() {
 		//find and remove ourselves from the map of objects of this binding set
 		if (m_codeName.Len() > 0 && m_bindingSet) {
@@ -110,7 +111,6 @@ protected:
 		}
 	}
 
-public:
 	void LinkObjectToBindingSet(JTClassBindingSet* bs, unsigned char* self) {
 		m_bindingSet = bs;
 		m_pOwnerMemoryOrigin = self;

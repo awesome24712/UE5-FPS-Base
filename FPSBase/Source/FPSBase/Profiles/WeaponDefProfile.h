@@ -121,6 +121,10 @@ private:
 	mutable float m_aSimulatedDropData[DAMAGE_OVER_RANGE_GRAPH_RANGE_MAX];
 	mutable bool m_bDataSimulated = false;
 #endif
+
+	static void LoadWeaponProfilesFromDisk();
+
+	const TArray<WeaponDef*>& GetAllWeapons();
 };
 
 //Don't use this macro by itself - combine it with DEC_BG3_WEAPON_ENT, unless you know what you're doing

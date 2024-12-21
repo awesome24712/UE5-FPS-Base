@@ -6,6 +6,10 @@
 FString JsonTree::s_noKeyDefinedWarning = "NO KEY DEFINED";
 FString JsonTree::s_typeNotStringWarning = "TYPE NOT JNT_STRING";
 
+FString			NJsonParser::g_jsonSearchKey;
+EJsonNodeType	NJsonParser::g_jsonSearchType;
+
+
 JsonTree::JsonTree(JsonTree* pParent, int iNumChildren, EJsonNodeType type, FString key) {
 	//Log("Creating tree at address %p with key %s\n", this, TCHAR_TO_ANSI(*key));
 	m_parent = pParent;
@@ -218,7 +222,7 @@ FString JsonTree::ToString(int depth) const {
 		result += ']';
 	}
 
-	if (GetParent() 
+	if (GetParent()
 		/* && GetParent()->GetLastChild() != this*/) {
 		//Log("Print parent is at %p\n", GetParent());
 		result += ',';
@@ -226,6 +230,51 @@ FString JsonTree::ToString(int depth) const {
 	result += '\n';
 
 	return result;
+}
+
+const JsonTree* JsonTree::DFS(bool(*pPredicate)(const JsonTree*)) const {
+	//test ourselves first
+	if ((*pPredicate)(this)) {
+		return this;
+	}
+
+	//ask our children to test themselves
+	for (int i = 0; i < NumChildren(); i++) {
+		auto possibleResult = GetChild(i)->DFS(pPredicate);
+		if (possibleResult) {
+			return possibleResult;
+		}
+	}
+
+	//nothing found, return null
+	return nullptr;
+}
+
+const JsonTree* JsonTree::BFS(bool(*pPredicate)(const JsonTree*)) const {
+	//Queue of nodes yet to be tested
+	TQueue<const JsonTree*> queue;
+
+	//add the top level tree node to the queue
+	queue.Enqueue(this);
+	
+	//keep testing for so long as there are trees in the queue
+	while (!queue.IsEmpty()) {
+		const JsonTree* next;
+		queue.Dequeue(next);
+
+		//test it
+		if ((*pPredicate)(next)) {
+			return next;
+		}
+
+		//nothing found, queue in the children
+		for (int i = 0; i < next->NumChildren(); i++) {
+			queue.Enqueue(next->GetChild(i));
+		}
+	}
+
+	//nothing found, return null
+	return nullptr;
 }
 
 JsonTreeHandle::JsonTreeHandle(JsonTree* root) {
