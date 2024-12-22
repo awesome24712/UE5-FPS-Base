@@ -18,9 +18,10 @@ namespace NTokenizer {
 		//Tokenize one character at a time
 		result = TArray<Token>();
 		int lineNumber = 1;
-		FString whiteSpace = " \t\r";
+		FString whiteSpace = " \t\r\f";
 
 		bool bInComment = false;
+		bool bInQuotedString = false;
 		for (int i = 0; i < fileText.Len(); i++) {
 			TCHAR c = fileText[i];
 
@@ -33,13 +34,20 @@ namespace NTokenizer {
 
 			if (bInComment) continue;
 		
-			//first check against whitespace, skip
+			//first check against whitespace, skip, but only if we're not inside a quotation
 			bool bSkipEmplace = false;
-			for (int j = 0; j < whiteSpace.Len(); j++) {
-				if (c == whiteSpace[j]) {
-					bSkipEmplace = true;
-					break;
+			if (!bInQuotedString) {
+				for (int j = 0; j < whiteSpace.Len(); j++) {
+					if (c == whiteSpace[j]) {
+						bSkipEmplace = true;
+						break;
+					}
 				}
+			}
+
+			//check for quote character
+			if (c == '"' && !(i != 0 && fileText[i-1] == '\\')) {
+				bInQuotedString = !bInQuotedString;
 			}
 
 			//also check for comments
@@ -53,8 +61,11 @@ namespace NTokenizer {
 				//okay now build token
 				Token t = { lineNumber, c };
 				result.Emplace(t);
-			}
-			
+			}	
+		}
+
+		if (bInQuotedString) {
+			NLogger::Fatal("ERROR file %s contains unclosed quotation\n", CStr(pathRelativeToMods));
 		}
 	}
 

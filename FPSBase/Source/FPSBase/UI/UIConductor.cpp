@@ -48,7 +48,7 @@ void AUIConductor::PostRender() {
 
 	DrawText(LangSystem::Localize("#ShowPos"), FColor::White, ScreenWidth() - 200, 10);
 	DrawText(v, FColor::White, ScreenWidth() - 200, 30);
-	DrawRect(FColor::White, ScreenWidth() - 200, 30, 30, 30);
+	//DrawRect(FColor::White, ScreenWidth() - 200, 30, 30, 30);
 
 	//c->DrawRect(FColor(255, 0, 0, 128), loc.X, loc.Y, size.X, size.Y);
 
