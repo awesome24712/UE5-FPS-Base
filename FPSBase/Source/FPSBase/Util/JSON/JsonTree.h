@@ -7,7 +7,7 @@
 //#include "Engine/EngineBaseTypes.h"
 
 enum EJsonNodeType {
-	JNT_FOLDER, //name of folder containing jsons, used for determining json-to-class mappings
+	JNT_FOLDER = 0, //name of folder containing jsons, used for determining json-to-class mappings
 	JNT_FILE, //an top-level json file, the name of the file (excluding extension) is the key
 	JNT_OBJECT,
 	JNT_STRING,
@@ -119,7 +119,7 @@ public:
 			return false;
 	}
 
-	FString ToString(int depth = 0) const;
+	FString ToString(bool bHideFilenameForWriting = false, int depth = 0) const;
 
 	const JsonTree* DFS(bool (*pPredicate)(const JsonTree*)) const;
 
@@ -169,7 +169,7 @@ private:
 	}
 
 	//This is called per-file to generate an entire file's JsonTree
-	static JsonTree* CreateParentlessTreeFromTokens(TArray<NTokenizer::Token>& );
+	static JsonTree* CreateParentlessTreeFromTokens(TArray<NTokenizer::Token>& tokens, const FString& fileName);
 
 	//This is recursively called 
 	static JsonTree* CreateParentlessTreeFromPath(const FString& path, const FString& rootKeyOverride);

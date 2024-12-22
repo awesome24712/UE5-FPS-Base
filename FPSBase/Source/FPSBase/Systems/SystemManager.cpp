@@ -1,5 +1,6 @@
 #include "SystemManager.h"
-#include "../Util/JSON/PropertyBinder.h"
+#include "../Util.h"
+#include "./LangSystem.h"
 
 SystemManager* g_pSystems;
 
@@ -17,22 +18,26 @@ SystemManager::~SystemManager() {
 	g_pSystems = this;
 }
 
-void SystemManager::LoadModProfileList()
-{
-	
-}
-
-void SystemManager::LoadSelectedModProfileContent()
-{
-
-}
-
-void SystemManager::SetSelectedModProfileList(const TArray<ModProfile*>& list)
-{
-
-}
+//void SystemManager::LoadModProfileList()
+//{
+//	
+//}
+//
+//void SystemManager::LoadSelectedModProfileContent()
+//{
+//
+//}
+//
+//void SystemManager::SetSelectedModProfileList(const TArray<ModProfile*>& list)
+//{
+//
+//}
 
 void SystemManager::InitializeAllSystems() {
 
+	//load data from disk first
+	NTreeManager::LoadTopLevelTree();
+
+	LangSystem::InitLangSystem();
 }
 

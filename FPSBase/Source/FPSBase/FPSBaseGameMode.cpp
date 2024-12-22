@@ -5,6 +5,7 @@
 #include "UObject/ConstructorHelpers.h"
 #include "BGController.h"
 #include "UI/UIConductor.h"
+#include "Systems/SystemManager.h"
 
 UWorld* g_pCurrentWorld;
 
@@ -24,7 +25,7 @@ AFPSBaseGameMode::AFPSBaseGameMode()
 void AFPSBaseGameMode::InitGame(const FString& mapName, const FString& options, FString& errorMessage) {
 	Super::InitGame(mapName, options, errorMessage);
 
-	NTreeManager::LoadTopLevelTree();
+	g_pSystems->InitializeAllSystems();
 }
 
 void AFPSBaseGameMode::InitGameState() {

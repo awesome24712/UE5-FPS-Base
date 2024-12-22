@@ -10,9 +10,9 @@ namespace LangSystem {
 	//2. Unflavored, localized text
 	//3. Flavored, English text
 	//4. Unflavored, English text
-	const FString* Localize(const FString& token, const FactionLangFlavor* flavor = nullptr);
+	const FString& Localize(const FString& token, const FactionLangFlavor& flavor = "");
 
-	bool FlavorExists(const FactionLangFlavor* flavor);
+	bool FlavorExists(const FactionLangFlavor& flavor);
 
 	void SetCurrentLang(const LangCode& lang);
 

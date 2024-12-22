@@ -157,7 +157,7 @@ bool JsonTree::AllChildrenOfType(EJsonNodeType type) const {
 	return result;
 }
 
-FString JsonTree::ToString(int depth) const {
+FString JsonTree::ToString(bool bHideFilenameForWriting, int depth) const {
 	//Log(__FUNCTION__ ", printing tree at %p with key %s\n", this, TCHAR_TO_ANSI(*Key()));
 
 	const char* pszTab = "    ";
@@ -169,7 +169,9 @@ FString JsonTree::ToString(int depth) const {
 	}
 
 	//append key if available
-	if (HasKey()) {
+	//but sometimes hide it for files
+	if (HasKey()
+		&& !(bHideFilenameForWriting && GetType() == JNT_FILE)) {
 		result = result + '"' + Key() + "\" : ";
 	}
 
@@ -204,7 +206,7 @@ FString JsonTree::ToString(int depth) const {
 	else if (m_eType == JNT_OBJECT || m_eType == JNT_FOLDER || m_eType == JNT_FILE) {
 		result = result + "{\n";
 		for (int i = 0; i < m_iNumChildren; i++) {
-			result += GetChild(i)->ToString(depth + 1);
+			result += GetChild(i)->ToString(bHideFilenameForWriting, depth + 1);
 		}
 		for (int i = 0; i < depth; i++) {
 			result = result + pszTab;
@@ -214,7 +216,7 @@ FString JsonTree::ToString(int depth) const {
 	else if (m_eType == JNT_ARRAY) {
 		result = result + "[\n";
 		for (int i = 0; i < m_iNumChildren; i++) {
-			result += GetChild(i)->ToString(depth + 1);
+			result += GetChild(i)->ToString(bHideFilenameForWriting, depth + 1);
 		}
 		for (int i = 0; i < depth; i++) {
 			result = result + pszTab;

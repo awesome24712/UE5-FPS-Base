@@ -106,7 +106,7 @@ namespace ConfigSystem {
 		}
 
 		//get String representation
-		FString stringRep = jth->ToString();
+		FString stringRep = jth->ToString(true);
 
 		//Write the file
 		FString writePath = FPaths::ProjectModsDir() + "config.json";

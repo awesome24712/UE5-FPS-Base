@@ -46,7 +46,8 @@ void AUIConductor::PostRender() {
 
 	FString v = GetOwningPawn() ? UIHelpers::VectorToString(GetOwningPawn()->GetVelocity()) : "MISSING PAWN";
 
-	DrawText(v, FColor::White, ScreenWidth() - 200, 10);
+	DrawText(LangSystem::Localize("#ShowPos"), FColor::White, ScreenWidth() - 200, 10);
+	DrawText(v, FColor::White, ScreenWidth() - 200, 30);
 	DrawRect(FColor::White, ScreenWidth() - 200, 30, 30, 30);
 
 	//c->DrawRect(FColor(255, 0, 0, 128), loc.X, loc.Y, size.X, size.Y);

@@ -279,7 +279,7 @@ namespace NJsonParser {
 
 using namespace NJsonParser;
 
-JsonTree* JsonTreeHandle::CreateParentlessTreeFromTokens(TArray<Token>& tokens) {
+JsonTree* JsonTreeHandle::CreateParentlessTreeFromTokens(TArray<Token>& tokens, const FString& fileName) {
 	//Log(__FUNCTION__ "\n");
 
 	tks = tokens;
@@ -287,7 +287,8 @@ JsonTree* JsonTreeHandle::CreateParentlessTreeFromTokens(TArray<Token>& tokens) 
 	JsonTree* pResult = nullptr;
 
 	try {
-		pResult = ParseObject("");
+		pResult = ParseObject(fileName);
+		pResult->SetType(JNT_FILE);
 	}
 	catch (JsonParserException e) {
 		NLogger::Fatal(e.m_message);
@@ -307,7 +308,19 @@ JsonTreeHandle JsonTreeHandle::CreateFromFile(const FString& path) {
 		return JsonTreeHandle(NULL);
 	}
 
-	return JsonTreeHandle(CreateParentlessTreeFromTokens(tokens));
+	//calc filename from path
+	FString fileName = path;
+	int lastSlashIndex = fileName.FindLastCharByPredicate([](TCHAR c) {
+		return c == '/' || c == '\\';
+	});
+	if (lastSlashIndex != INDEX_NONE) {
+		fileName = fileName.RightChop(lastSlashIndex);
+	}
+
+	//create the tree
+	JsonTree* tree = CreateParentlessTreeFromTokens(tokens, fileName);
+
+	return JsonTreeHandle(tree);
 }
 
 JsonTree* JsonTreeHandle::CreateParentlessTreeFromPath(const FString& path, const FString& rootKeyOverride) {
@@ -337,7 +350,7 @@ JsonTree* JsonTreeHandle::CreateParentlessTreeFromPath(const FString& path, cons
 					continue;
 				}
 
-				child = CreateParentlessTreeFromTokens(tokens);
+				child = CreateParentlessTreeFromTokens(tokens, entry.path().filename().string().c_str());
 			}
 		}
 

@@ -18,12 +18,12 @@ namespace Crosshair {
 		g_crosshair0 = LoadObject<UTexture>(nullptr, ANSI_TO_TCHAR("/Game/Materials/UI/Crosshair/T_crosshair0"));
 
 
-		if (!g_crosshair0) {
+		/*if (!g_crosshair0) {
 			NLogger::Fatal("Couldn't load crosshair texture");
 		}
 		else {
 			NLogger::Fatal("Loaded texture!");
-		}
+		}*/
 	}
 
 	void SaveCrosshairSettings() {

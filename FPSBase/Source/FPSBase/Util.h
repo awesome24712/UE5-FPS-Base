@@ -8,6 +8,7 @@
 
 #include "Systems/ConfigSystem.h"
 #include "Systems/ConsoleSystem.h"
+#include "Systems/LangSystem.h"
 
 #include "GameModeCvars.h"
 

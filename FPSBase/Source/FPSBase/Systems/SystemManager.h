@@ -47,10 +47,9 @@ public:
 	~SystemManager();
 	
 
-	void						LoadModProfileList(); //loads all mod profiles for the purpose of display them
-	void						LoadSelectedModProfileContent(); //loads selected mod content into memory - heavy duty function!
-	
-	void						SetSelectedModProfileList(const TArray<ModProfile*>& list); //call this when user is finished selecting mods from menu
+	//void						LoadModProfileList(); //loads all mod profiles for the purpose of display them
+	//void						LoadSelectedModProfileContent(); //loads selected mod content into memory - heavy duty function!
+	//void						SetSelectedModProfileList(const TArray<ModProfile*>& list); //call this when user is finished selecting mods from menu
 
 	const TArray<ModProfile*>*	GetModProfileList() const { return &m_modList; };
 	const TArray<ModProfile*>*	GetSelectedModProfileList() const { return &m_modList; };
