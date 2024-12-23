@@ -4,9 +4,30 @@
 #include "../UIConductor.h"
 #include "../UIHelpers.h"
 
-class AwesomeGlass {
+enum class EGlassAlignment {
+	TOP_LEFT,
+	TOP_CENTER,
+	TOP_RIGHT,
+	LEFT_CENTER,
+	CENTER,
+	RIGHT_CENTER,
+	BOTTOM_LEFT,
+	BOTTOM_CENTER,
+	BOTTOM_RIGHT
+};
+
+#define AWESOME_GLASS_BINDINGS() \
+	JT_BIND_FLOAT(X, "X", true); \
+	JT_BIND_FLOAT(Y, "Y", true); \
+	JT_BIND_FLOAT(W, "W", true); \
+	JT_BIND_FLOAT(H, "H", true); \
+	JT_BIND_COLOR(m_backgroundColor, "bgColor", false); \
+	JT_BIND_STRING(m_backgroundTexturePath, "texture", false); \
+	JT_BIND_STRING(m_sAlignment, "align", false); 
+
+class AwesomeGlass : public IJsonBindable {
 public:
-	AwesomeGlass();
+	AwesomeGlass(bool bSkipBinding = false);
 //-----------------------------------------------------------------
 // variables
 //----------------------------------------------------------------- 
@@ -16,11 +37,15 @@ public:
 	FString					m_backgroundTexturePath; //if present, will be drawn, otherwise uses background color
 
 	inline bool				IsMouseOver() const { return m_bMouseOver; }
+	inline bool				IsVisible() const { return m_bVisible; }
 
-private:
 	float					realX, realY, realW, realH; //private, calculated based on alignment and scaling, ideally calculated only after screen size changes
+private:
 	TObjectPtr<UTexture>	m_backgroundTexture; //if present, will be drawn, otherwise uses background color
 	bool					m_bMouseOver;
+	bool					m_bVisible;
+	EGlassAlignment			m_eAlignment;
+	FString					m_sAlignment; //translated into EAlignment
 
 //-----------------------------------------------------------------
 // overridable interface, some with default implementations that
@@ -30,16 +55,23 @@ public:
 	virtual const FString&	GetTooltip() const { return m_sTooltip; }
 	virtual void			LoadAssets(); //default implementation loads background texture
 	virtual void			Draw(AUIConductor* c); //default implementation draws background, called per-frame
-	virtual void			PerformLayout(); //turns given coordinates into real coordinates, override for more custom alignments
+	virtual void			PerformLayout(AUIConductor* c); //turns given coordinates into real coordinates, override for more custom alignments
+	virtual					~AwesomeGlass() {}
 
 	//mouse interactions
 
 	virtual void			OnMouseBeginHover() {}
 	virtual void			OnMouseEndHover() {}
 	virtual void			OnMouseClick() {}
+	virtual void			OnMouseRelease() {}
 
+	//other stuff
 
+	void					SetIsVisible(bool bVisible) { m_bVisible = bVisible; }
+	inline void				SetAlignment(EGlassAlignment a) { m_eAlignment = a; }
 
 };
+
+
 
 

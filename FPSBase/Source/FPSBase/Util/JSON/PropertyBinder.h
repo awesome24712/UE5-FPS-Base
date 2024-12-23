@@ -107,7 +107,7 @@ public:
 			}
 		}
 		if (!m_bindingSet) {
-			NLogger::Fatal("Missing binding set!");
+			NLogger::Warning("Missing binding set!");
 		}
 	}
 
@@ -136,12 +136,14 @@ public:
 #define JT_BIND_OBJECT(member, bindingName, required) JTClassBindingSet::__CreateBinding(JT_CALC_MEMORY_OFFSET_OBJECT(member), bindingName, JNT_OBJECT, required)
 
 //#define JT_BIND_STRING(member, bindingName) JTClassBindingSet::__CreateBinding(JT_CALC_MEMORY_OFFSET(member), bindingName, JNT_STRING, true)
-#define JT_BIND_NAME(member, bindingName, required) JTClassBindingSet::__CreateBinding(JT_CALC_MEMORY_OFFSET(member), bindingName, JNT_STRING, required)
+#define JT_BIND_STRING(member, bindingName, required) JTClassBindingSet::__CreateBinding(JT_CALC_MEMORY_OFFSET(member), bindingName, JNT_STRING, required)
+
+#define JT_BIND_COLOR(member, bindingName, required) JTClassBindingSet::__CreateBinding(JT_CALC_MEMORY_OFFSET(member), bindingName, JNT_STRING_TO_COLOR, required)
 
 //#define JT_BIND_ARRAY(member, bindingName) JTClassBindingSet::__CreateBinding(JT_CALC_MEMORY_OFFSET(member), bindingName, JNT_ARRAY, true)
 #define JT_BIND_ARRAY(member, bindingName, required) JTClassBindingSet::__CreateBinding(JT_CALC_MEMORY_OFFSET(member), bindingName, JNT_ARRAY, required)
 
-#define JT_BIND_NAME_ARRAY(member, bindingName, required) JTClassBindingSet::__CreateBinding(JT_CALC_MEMORY_OFFSET(member), bindingName, JNT_STRING_ARRAY, required)
+#define JT_BIND_STRING_ARRAY(member, bindingName, required) JTClassBindingSet::__CreateBinding(JT_CALC_MEMORY_OFFSET(member), bindingName, JNT_STRING_ARRAY, required)
 
 //#define JT_BIND_DOUBLE(member, bindingName) JTClassBindingSet::__CreateBinding(JT_CALC_MEMORY_OFFSET(member), bindingName, JNT_NUMBER, true)
 #define JT_BIND_DOUBLE(member, bindingName, required) JTClassBindingSet::__CreateBinding(JT_CALC_MEMORY_OFFSET(member), bindingName, JNT_DOUBLE, required)

@@ -1,4 +1,5 @@
 #include "PropertyBinder.h"
+#include "../TypeConversions.h"
 
 using namespace NJsonPropertyBinding;
 
@@ -154,14 +155,22 @@ void IJsonBindable::LoadBindingsFromJson(const JsonTree* pTree) {
 		const JsonTree* pChildNode = pTree->GetChild(b.m_bindingName);
 
 		//Check for missing child, a NULL child, or a child whose type doesn't match what we expect
-		//also account for double to int conversion
+		//also account for types conversions
 		if (!pChildNode 
 			|| pChildNode->GetType() == JNT_NONEXISTANT
 			|| (pChildNode->GetType() != b.m_jnt 
 				&& !(b.m_jnt == JNT_DOUBLE_TO_INT 
 					&& pChildNode->GetType() == JNT_DOUBLE)
+				&& !(b.m_jnt == JNT_DOUBLE_TO_FLOAT
+					&& pChildNode->GetType() == JNT_DOUBLE)
+				&& !(b.m_jnt == JNT_DOUBLE_TO_USHORT
+					&& pChildNode->GetType() == JNT_DOUBLE)
+				&& !(b.m_jnt == JNT_DOUBLE_TO_BYTE
+					&& pChildNode->GetType() == JNT_DOUBLE)
 				&& !(b.m_jnt == JNT_STRING_ARRAY
 					&& pChildNode->GetType() == JNT_ARRAY)
+				&& !(b.m_jnt == JNT_STRING_TO_COLOR
+					&& pChildNode->GetType() == JNT_STRING)
 				)
 			)
 		{
@@ -185,6 +194,7 @@ void IJsonBindable::LoadBindingsFromJson(const JsonTree* pTree) {
 		float* pFloat;
 		uint8* pByte;
 		uint16* puShort;
+		FColor* pColor;
 
 		switch (b.m_jnt) {
 		case JNT_OBJECT:
@@ -194,6 +204,10 @@ void IJsonBindable::LoadBindingsFromJson(const JsonTree* pTree) {
 		case JNT_STRING:
 			pString = reinterpret_cast<FString*>(pBoundLocation);
 			*pString = pChildNode->GetValueString();
+			break;
+		case JNT_STRING_TO_COLOR:
+			pColor = reinterpret_cast<FColor*>(pBoundLocation);
+			*pColor = StringToColor(pChildNode->GetValueString());
 			break;
 		case JNT_ARRAY:
 			pArray = reinterpret_cast<TArray<IJsonBindable*>*>(pBoundLocation);

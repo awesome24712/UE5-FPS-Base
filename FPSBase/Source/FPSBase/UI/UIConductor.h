@@ -56,7 +56,22 @@ public:
 
 	ABGPlayer* GetPlayer() const;
 
-	int			ScreenHeight() const;
-	int			ScreenWidth() const;
+	float		ScreenHeight() const { return m_flHeight; }
+	float		ScreenWidth() const { return m_flWidth; }
 	FIntPoint	ScreenSize() const;
+	float		GetScale() const { return m_flUiScale;  }
+
+	/**
+	 * Variables
+	 */
+private:
+	float m_flUiScale;
+
+	float m_flHeight;
+	float m_flWidth;
 };
+
+//assumes GEngine is non-null
+//inline AUIConductor* GetLocalConductor() {
+//	return GEngine->GetFirstLocalPlayerController(GEngine->GetWorld())
+//}

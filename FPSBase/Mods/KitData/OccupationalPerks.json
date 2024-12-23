@@ -1,0 +1,132 @@
+{
+	"CandleMaker": {
+		"type": 3,
+		"filter": 0,
+		//make guns waterproof
+		"modifiers": {
+			"uniqueFlags": 1
+		}
+	},
+
+	"Apothecary": {
+		"type": 3,
+		"filter": 0,
+		//better powder -> faster lock time
+		"modifiers": {
+			"igniteTimeModifier": -0.1
+		}
+	},
+
+	"Trapper": {
+		"type": 3,
+		"filter": 0,
+		//increased weight capacity/stamina/accuracy, not for officer
+		"modifers": {
+			"maxWeightModifier": 5,
+			"uniqueFlags": 1024
+		}
+		"adjustments": {
+			"stamina": 2,
+			"accuracy": 2
+		}
+	},
+
+	"Blacksmith": {
+		"type": 3,
+		"filter": 0,
+		//more damage, not for officer
+		"modifiers": {
+			"attack": 4,
+			"stamina": 1
+		}
+	},
+
+	"Tailor": {
+		"type": 3,
+		"filter": 0,
+		//clothes made to fit, better speed, not for officer
+		"modifiers": {
+			"weight": -5
+		}
+		"adjustments": {
+			"speed": 3
+		}
+	},
+
+	"Soldier": {
+		"type": 3,
+		"filter": 0,
+		//gives access to INF perks, +1 all stats
+		"modifiers": {
+			"uniqueFlags": 0
+		}
+		"adjustments": {
+			"attack": 1,
+			"defense": 1,
+			"reach": 1,
+			"stamina": 1,
+			"accuracy": 1,
+			"speed": 1,
+			"reload": 1
+		}
+	},
+
+	"Physician": {
+		"type": 3,
+		"filter": 0,
+		//doubles healing item effectiveness
+		"modifiers": {
+			"uniqueFlags": 128
+		}
+	},
+
+	"Locksmith": {
+		"type": 3,
+		"filter": 0,
+		//access hidden areas in the map
+		"modifiers": {
+			"uniqueFlags": 512
+		}
+	},
+
+	"Fisherman": {
+		"type": 3,
+		"filter": 0,
+		//polearms can be thrown, can melee underwater
+		"modifiers": {
+			"uniqueFlags": 288
+		}
+	},
+
+	"Farmer": {
+		"type": 3,
+		"filter": 0,
+		//move fast in grass, +stamina
+		"modifiers": {
+			"uniqueFlags": 1024
+		}
+		"adjustments": {
+			"stamina": 5
+		}
+	},
+
+	"Gunsmith": {
+		"type": 3,
+		"filter": 0,
+		//+attack AVs also apply to bullets
+		"modifiers": {
+			"uniqueFlags": 2048,
+			"lockTimeModifier": -0.05
+		}
+		
+	}
+
+	"Teacher": {
+		"type": 3,
+		"filter": 0,
+		//doubles AV caps
+		"modifiers": {
+			"m_iAVsCapModifier": 5,
+		}
+	}
+}

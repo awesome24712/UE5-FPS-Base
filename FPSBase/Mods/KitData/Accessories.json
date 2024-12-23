@@ -1,0 +1,100 @@
+{
+  "StandardBayonet": {
+    "type": 1,
+    "filter": 0,
+    //no alternate effect besides weight
+    "modifiers": {
+
+    }
+  },
+
+  "SerratedBayonet": {
+    "type": 1,
+    "filter": 0,
+    //more damage but longer recovery on hits
+    "modifiers": {
+
+    }
+  },
+
+  "TweakedSprings": {
+    "type": 1,
+    "filter": 0,
+    //faster lock time
+    "modifiers": {
+      "lockTimeModifier": -0.1
+    }
+  },
+
+  "ReboredBarrel": {
+    "type": 1,
+    "filter": 0,
+    //Lower damage and accuracy but easier to reload and less weight
+    "modifiers": {
+
+    }
+  },
+
+  "Undersized Ammunition": {
+    "type": 1,
+    "filter": 0,
+    //exchanges damage and accuracy for reload speed and weight savings
+    "modifiers": {
+
+    }
+  },
+
+  "Sling": {
+    "type": 1,
+    "filter": 0,
+    //Able to swap out of this weapon without dropping it
+    "modifiers": {
+
+    }
+  },
+
+  "SharpenedEdge": {
+    "type": 1,
+    "filter": 0,
+    //more damage
+    "modifiers": {
+
+    }
+  },
+
+  "RebalancedPomel": {
+    "type": 1,
+    "filter": 0,
+    //reduced time between attacks
+    "modifiers": {
+
+    }
+  },
+
+  "OiledScabbard": {
+    "type": 1,
+    "filter": 0,
+    //faster draw speed
+    "modifiers": {
+
+    }
+  },
+
+  "ShorterFuse": {
+    "type": 1,
+    "filter": 0,
+    //shorter grenade fuse
+    "modifiers": {
+
+    }
+  },
+
+  "LongerFuse": {
+    "type": 1,
+    "filter": 0,
+    //longer grenade fuse
+    "modifiers": {
+
+    }
+  }
+}

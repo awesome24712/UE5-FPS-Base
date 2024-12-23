@@ -1,0 +1,244 @@
+{
+  "SteadyHands": {
+    "type": 4,
+    "filter": 0,
+    //no recoil or stamina drain from shooting
+    "modifiers": {
+      "recoilMultiplier": 0
+    }
+  },
+
+  "HeadHunter": {
+    "type": 4,
+    "filter": 0,
+    //head stabs guaranteed kill, but takes up 2 slots
+    "modifiers": {
+      "uniqueFlags": 4096
+    },
+    "warning": "#PI_TwoSlotWarning",
+    "twoSlots": true
+  },
+
+  "Courier": {
+    "type": 4,
+    "filter": 0,
+    //extra speed
+    "modifiers": {
+      "speed": 5
+    }
+  },
+
+  "Marksman": {
+    "type": 4,
+    "filter": 0,
+    //more accurate but longer reload
+    "modifiers": {
+      "reloadSpeedModifier": 0.5
+    }
+    "adjustments": {
+      "accuracy": 4
+    }
+  },
+
+  "FlagBearer": {
+    "type": 4,
+    "filter": 0,
+    //Spawn carrying flag, CTF flag doesn't slow player, faster flag cap
+    "modifiers": {
+      "uniqueFlags": 8192
+    }
+  },
+
+
+  "Built": {
+    "type": 4,
+    "filter": 0,
+    //10 extra melee damage dealt
+    "adjustments": {
+      "attack": 10
+    }
+  },
+
+  "Scarred": {
+    "type": 4,
+    "filter": 0,
+    //10 less damage received from all sources
+    "adjustments": {
+      "defense": 10
+    }
+  },
+
+  "Drunk": {
+    "type": 4,
+    "filter": 0,
+    //spawn drunk, but take 50% less damage
+    "modifiers": {
+      "uniqueFlags": 16384,
+      "damageReceivedMultiplier":  0.5
+    }
+  },
+
+  "AdrenalineResistant": {
+    "type": 4,
+    "filter": 0,
+    //slightly less melee damage dealt, but melee drains no stamina
+    "modifiers": {
+      "meleeStaminaDrainMultiplier": 0.0,
+      "meleeDamageMultiplier": 0.95
+    }
+  },
+
+  "AdrenalineFueled": {
+    "type": 4,
+    "filter": 0,
+    //5 extra melee damage dealt, and blocks secondary effects of damage received
+    "modifiers": {
+      "uniqueFlags": 64
+    },
+    "adjustments": {
+      "attack": 5
+    }
+  },
+
+  "RisenFromTheRanks": {
+    "type": 4,
+    "filter": 0,
+    //not for officers, allows non-officers to use officer buffs
+    "modifiers": {
+      "uniqueFlags": 32768
+    }
+    "warning": "#PI_TwoSlotWarning",
+    "twoSlots": true
+  },
+
+  "RankAndFile": {
+    "type": 4,
+    "filter": 1,
+    //INF, +defense and +reload when in line
+    "adjustments": {
+      "defense": 3,
+      "reload": 3
+    }
+  },
+
+  "BayonetCharge": {
+    "type": 4,
+    "filter": 1,
+    //INF, automatic max-range stabs when moving forward
+    "modifiers": {
+      "uniqueFlags": 65536
+    }
+  },
+
+  "DrillDeviation": {
+    "type": 4,
+    "filter": 1,
+    //INF, allows reload cancel
+    "modifiers": {
+      "uniqueFlags": 131072
+    }
+  },
+
+  "ResoundingVoice": {
+    "type": 4,
+    "filter": 2,
+    //OFF, expands buff range
+    "modifiers": {
+      "uniqueFlags": 262144
+    }
+  },
+
+  "NobleEntitlement": {
+    "type": 4,
+    "filter": 2,
+    //OFF, Extra secondary accessory slot
+    "modifiers": {
+      "uniqueFlags": 524288
+    }
+  },
+
+
+  "ForestCrawler": {
+    "type": 4,
+    "filter": 4,
+    //RIF, move faster while crouching and on grass
+    "modifiers": {
+      "crouchedSpeedMultiplier": 1.3,
+      "uniqueFlags": 1024
+    }
+  },
+
+  "TrickShooter": {
+    "type": 4,
+    "filter": 4,
+    //RIF, accurate while jumping and falling
+    "modifiers": {
+      "uniqueFlags": 1048576
+    }
+  },
+  "WigsNotWhigs": {
+    "type": 4,
+    "filter": 4,
+    //RIF, bullet hits against officers are always fatal, American only
+    "modifiers": {
+      "uniqueFlags": 2097152
+    }
+  },
+
+  "Backstabber": {
+    "type": 4,
+    "filter": 8,
+    //SKI, double damage to back
+    "modifiers": {
+      "uniqueFlags": 4194304
+    }
+  },
+
+  "Downswinger": {
+    "type": 4,
+    "filter": 8,
+    //SKI, double melee damage while falling
+    "modifiers": {
+      "jumpMeleeMultiplier": 1.5
+    }
+  },
+
+  "FootCavalry": {
+    "type": 4,
+    "filter": 16,
+    //LINF, faster movement acceleration
+    "modifiers": {
+      "accelerationModifier": 1.5
+    }
+  },
+
+  "Lightfooted": {
+    "type": 4,
+    "filter": 16,
+    //LINF, better jumping and crouching
+    "modifiers": {
+      "jumpSpeedMultiplier": 1.3,
+      "crouchSpeedMultiplier": 1.5
+    }
+  },
+
+  "SteelGrip": {
+    "type": 4,
+    "filter": 32,
+    //GRE, getting hit doesn't drop grenades
+    "modifiers": {
+      "uniqueFlags": 16777216
+    }
+  },
+
+  "SuperSoldier": {
+    "type": 4,
+    "filter": 32,
+    //GRE,
+    "modifiers": {
+      "playerSizeMultiplier": 1.1,
+      "defense": 5,
+      "stamina": 5
+    }
+  }
+}

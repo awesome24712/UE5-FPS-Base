@@ -15,7 +15,14 @@ AUIConductor::AUIConductor() {
 
 
 void AUIConductor::Setup() {
-	//Log("Screensize is %i x %i", ScreenWidth(), ScreenHeight());
+	if (!GEngine) {
+		return;
+	}
+
+	FIntPoint screenSize = GEngine->GameViewport->Viewport->GetSizeXY();
+	m_flHeight = screenSize.Y;
+	m_flWidth = screenSize.X;
+
 	Crosshair::LoadCrosshairSettings();
 }
 
@@ -75,14 +82,6 @@ bool AUIConductor::WantsCursor() const {
 
 ABGPlayer* AUIConductor::GetPlayer() const {
 	return  PlayerOwner->GetPawn<ABGPlayer>();
-}
-
-int AUIConductor::ScreenHeight() const {
-	return (int) GEngine->GameViewport->Viewport->GetSizeXY().Y;
-}
-
-int AUIConductor::ScreenWidth() const {
-	return (int) GEngine->GameViewport->Viewport->GetSizeXY().X;
 }
 
 FIntPoint AUIConductor::ScreenSize() const {

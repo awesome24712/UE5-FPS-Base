@@ -163,9 +163,9 @@ Faction::Faction() {
 
 	JT_START_BINDING("faction", Faction);
 	JT_BIND_INT(m_factionNumber, "factionNumber", true);
-	JT_BIND_NAME(m_sDisplayName, "displayName", true);
+	JT_BIND_STRING(m_sDisplayName, "displayName", true);
 	JT_BIND_OBJECT(m_cColor, "color", true);
-	JT_BIND_NAME_ARRAY(m_aIncludedClasses, "includedClasses", true);
+	JT_BIND_STRING_ARRAY(m_aIncludedClasses, "includedClasses", true);
 	JT_FINISH_BINDING_WITH_CALLBACK([](IJsonBindable* pObj) {
 		//assign to globals if they aren't assigned already
 		/*Faction* pFaction = (Faction*) pObj;

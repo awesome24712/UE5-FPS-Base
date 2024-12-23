@@ -1,0 +1,56 @@
+{
+  "FlashHolePick": {
+    "type": 2,
+    "filter": 0,
+    //improves lock time/reliability for all weapons
+    "modifiers": {
+
+    }
+
+
+  },
+  "Telescope": {
+    "type": 2,
+    "filter": 0,
+    //telescope 'weapon'
+    "modifiers": {
+
+    }
+  },
+
+  "AlcoholBottle": {
+    "type": 2,
+    "filter": 0,
+    //heals 50 but causes drunk effect
+    "modifiers": {
+
+    }
+    "warning": "#PI_AlcoholBottle_Warning"
+  },
+
+  "Bandage": {
+    "type": 2,
+    "filter": 0
+    //heals 20
+    "modifiers": {
+      "uniqueFlags": 
+    }
+  },
+  "Backpack": {
+    "type": 2,
+    "filter": 0
+    //increases weight capacity
+    "modifiers": {
+      "maxWeightModifier": 10
+    }
+  },
+  "FineGrainedPowder": {
+    "type": 1,
+    "filter": 0,
+    //increases bullet damage massively, but risks explosions, applies to all guns
+    "modifiers": {
+
+    },
+    "warning": "#PI_FineGrainedPowder_Warning"
+  }
+}

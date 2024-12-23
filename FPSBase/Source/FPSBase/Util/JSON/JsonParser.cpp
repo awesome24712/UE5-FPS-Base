@@ -87,6 +87,15 @@ namespace NJsonParser {
 		FString numberString = "";
 		bool bFoundDecimalPoint = false;
 		bool bFoundExponent = false;
+
+		//check for negative values
+		bool bIsNegative = (tks[0].m_char == '-');
+		if (bIsNegative) {
+			numberString += '-';
+			tks.RemoveAt(0);
+		}
+			
+
 		while (!tks.IsEmpty() && tks[0].m_char != ',' && tks[0].m_char != ']' && tks[0].m_char != '}') {
 			TCHAR c = tks[0].m_char;
 
@@ -185,7 +194,7 @@ namespace NJsonParser {
 			result = new JsonTree(NULL, 0, JNT_STRING, key);
 			result->SetValue(s);
 		}
-		else if (CharIsNumber(c)) {
+		else if (CharIsNumber(c) || c == '-') {
 			double d = ParseNumber();
 			result = new JsonTree(NULL, 0, JNT_DOUBLE, key);
 			result->SetValue(d);

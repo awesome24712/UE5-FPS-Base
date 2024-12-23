@@ -41,7 +41,7 @@ class Faction : public IJsonBindable {
 private:
 	EFactionNumber m_factionNumber; //shorthand identifier for faction
 
-	const char* m_pszCodeName; //name as it appears in console and logs, unlocalized
+	//const char* m_pszCodeName; //name as it appears in console and logs, unlocalized
 	FName m_sDisplayName; //name as to be shown to users in generic cases, localized
 	BColor m_cColor; //color representation for this team
 	TArray<FName> m_aIncludedClasses; //array of class codeNames to load into m_classes
