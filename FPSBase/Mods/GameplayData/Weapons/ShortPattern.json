@@ -1,0 +1,54 @@
+//Short Pattern Brown Bess weapon data. Might include stats that aren't used, as this file is used as an easy copy+paste reference for making other weapons
+{
+  "codeName": "ShortPattern",
+  "attack1": {
+    "attackType": 3, //0 = none, 1 = stab, 2 = slash, 3 = boomstick
+    "firesUnderWater": false, //whether or not it works underwater by default
+    "range": 0, //melee range in meters, ignored for attackType = 3
+    "damage": 111, //chest damage
+    "recoil": 0.7,
+    "cosAngleTolerance": 0, //melee angle change tolerance, ignored for attackType = 3
+    "retraceDuration": 0, //melee duration, ignored for attackType = 3
+    "retraceDelay": 0, //melee delay, ignored for attackType = 3
+    "attackRate": 1.0, //delay between attacks
+    "staminaDrain": 40 //shooting drains stamina too
+  },
+  "attack2": {
+    "attackType": 1, //0 = none, 1 = stab, 2 = slash, 3 = boomstick
+    "firesUnderWater": true, //whether or not it works underwater by default
+    "range": 2.1082, //melee range in meters, ignored for attackType = 3
+    "damage": 63, //chest damage
+    "recoil": 0,
+    "cosAngleTolerance": 0.9961946980917, //melee angle change tolerance, ignored for attackType = 3
+    "retraceDuration": 0.1, //melee duration, ignored for attackType = 3
+    "retraceDelay": 0, //melee delay, ignored for attackType = 3
+    "attackRate": 1.0, //delay between attacks
+    "staminaDrain": 25 //shooting drains stamina too
+  },
+  "shotAimModifer": 1.0, //accuracy modifier when using buckshot
+  "shotSpread": 1.0, //tightness of buckshot spread
+  "numShot": 6, //number of buckshot
+  "damagePerShot": 18, //damage per buckshot
+  "shotOnly": false, //ex. for blunderbuss
+  "shotMuzzleVelocity": 304.8, //muzzle velocity when using buckshot
+  "muzzleVelocity": 396.2, //muzzle velocity when using ball
+  "damageDropoffMultiplier": 1.0, //additional damage multiplier past constant damage range
+  "penetrateFlesh": false, //collaterals?
+  "verticalAccuracyScale": 1.0, //linebattle only, make smaller to flatten accuracy cone, increases skill ceiling
+  "zeroRange": 45.7, //range the sights/crosshair is sighted for, meters
+  "ownerSpeedModOnKill": 0, //change player speed after getting a kill
+  "aerialDamageMod": 0, //damage modifier when in the air, melee
+  "extraDamageTypes": 0, //bitfield
+  "dontAutoReload": true, //false for things like grenades
+  "cantAbortReload": false, //grenades again
+  "reloadMovementSpeedModifier": 0, //ex. pistols are easier to reload when moving compared to a musket
+  "ironsightFOV_Offset": -2.5, //screen zoom on aim
+  "weaponHasSights": true,
+  "breakable": false, //for models that change after hit
+  "holsterTime": 0.75,
+  "lockTime": 0.2, //time between shooting and bullet coming out
+  "randomAdditionalLockTime": 0,
+  "baseAccuracy": 2.4, //ADS accuracy if we have a gun. Hipfire and running accuracy are based on this
+  "constantDamageRange": 27.4, //in meters, range at which shooting damage is constant
+  "dragMultiplier": 1.0 //multiplies bullet drag, affecting velocity, bullet drop, and damage
+}

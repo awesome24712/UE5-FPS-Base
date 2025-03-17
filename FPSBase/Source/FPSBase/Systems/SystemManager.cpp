@@ -1,6 +1,7 @@
 #include "SystemManager.h"
 #include "../Util.h"
 #include "./LangSystem.h"
+#include "./DataSystem.h"
 
 SystemManager* g_pSystems;
 
@@ -38,6 +39,7 @@ void SystemManager::InitializeAllSystems() {
 	//load data from disk first
 	NTreeManager::LoadTopLevelTree();
 
+	DataSystem::InitDataSystem();
 	LangSystem::InitLangSystem();
 }
 

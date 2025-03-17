@@ -1,9 +1,13 @@
 #include "TypeConversions.h"
 #include "../Util.h"
 
+//expects "rrr,ggg,bbb" format, spaces optional
 FColor StringToColor(const FString& s) {
 	char arr[16];
-	strcpy_s(arr, CStr(s));
+	memset(arr, 0, sizeof(arr));
+	for (int i = 0; i < sizeof(arr) && i < s.Len(); i++) {
+		arr[i] = s[i];
+	}
 	uint8 i = 0, c = 1;
 	union { struct { uint8 R, G, B, A; }; uint32 result; uint8 bits[4]; };
 	result = 0;
@@ -12,7 +16,7 @@ FColor StringToColor(const FString& s) {
 		if (arr[i] == ',') {
 			bits[c] = i + 1; //the initial value of c is 1 because we already know R begins at i == 0
 			c++;
-			arr[i] = 0;
+			arr[i] = 0; //null terminator for atoi
 		}
 		i++;
 	}
@@ -30,3 +34,8 @@ FColor StringToColor(const FString& s) {
 
 	return FColor(result);
 }
+
+FString ColorToString(const FColor& c) {
+	return FString::Printf(TEXT("(%i, %i, %i, %i)"), (int)c.R, (int)c.G, (int)c.B, (int)c.A);
+}
+

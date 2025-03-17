@@ -4,7 +4,7 @@
 #include "../PODT/BColor.h"
 #include "../Util.h"
 
-class PlayerClass;
+class PlayerClassProfile;
 class ABGPlayer;
 class Faction;
 
@@ -15,14 +15,18 @@ extern Faction* g_FactionBystander;
 enum EFactionNumber : uint8 {
 	FN_AmericanClassic,
 	FN_BritishClassic,
-	FN_AmericanPure,
-	FN_BritishPure,
+	FN_EnglishAmerican,
+	FN_EnglishBritish,
 	FN_French,
-	FN_AmericanNative,
-	FN_BritishNative,
+	FN_AmericanIndigenous,
+	FN_BritishIndigenous,
 	FN_Hessian,
 	FN_Civilian,
 };
+
+inline ETeamNumber GetOtherTeam(ETeamNumber t) {
+	return t == TEAM_ATTACKER ? TEAM_DEFENDER : TEAM_ATTACKER;
+}
 
 //General iteratorables for players
 const TArray<ABGPlayer*>& GetPlayers();
@@ -30,6 +34,23 @@ const TArray<ABGPlayer*>& GetAttackingPlayers();
 const TArray<ABGPlayer*>& GetDefendingPlayers();
 const TArray<ABGPlayer*>& GetBystandingPlayers();
 const TArray<ABGPlayer*>& GetTeammatesForPlayer(ABGPlayer* pPlayer);
+const TArray<ABGPlayer*>& GetEmptyPlayerArray();
+
+inline const TArray<ABGPlayer*>& GetPlayersOfTeam(ETeamNumber t) {
+	if (t >= NUM_TEAMS) {
+		NLogger::Fatal("FactionFromTeamNumber BAD number");
+	}
+
+	const TArray<ABGPlayer*>& (*ptrs[5])() = {
+		&GetEmptyPlayerArray,
+		&GetAttackingPlayers,
+		&GetDefendingPlayers,
+		&GetBystandingPlayers,
+		&GetEmptyPlayerArray
+	};
+
+	return ptrs[t]();
+}
 
 Faction* FactionFromTeamNumber(ETeamNumber team);
 
@@ -42,11 +63,12 @@ private:
 	EFactionNumber m_factionNumber; //shorthand identifier for faction
 
 	//const char* m_pszCodeName; //name as it appears in console and logs, unlocalized
-	FName m_sDisplayName; //name as to be shown to users in generic cases, localized
+	FString m_sDisplayName; //name as to be shown to users in generic cases, localized
+	FString m_sAbbreviation;
 	BColor m_cColor; //color representation for this team
-	TArray<FName> m_aIncludedClasses; //array of class codeNames to load into m_classes
+	TArray<FString> m_aIncludedClasses; //array of class codeNames to load into m_classes
 
-	TArray<const PlayerClass*> m_classes;
+	TArray<const PlayerClassProfile*> m_classes;
 	TArray<ABGPlayer*> m_players;
 
 	static TArray<Faction*> s_allFactions;
@@ -78,7 +100,7 @@ public:
 	static void SetBystander(Faction* pFaction) { FactionSwap(&g_FactionBystander, pFaction); };
 
 	EFactionNumber GetFactionNumber() const { return m_factionNumber; }
-	const FName& GetDisplayName() const { return m_sDisplayName; }
+	const FString& GetDisplayName() const { return m_sDisplayName; }
 	const FColor& GetColor() const { return m_cColor; }
 
 	const TArray<ABGPlayer*>& GetPlayers() const { return m_players; }

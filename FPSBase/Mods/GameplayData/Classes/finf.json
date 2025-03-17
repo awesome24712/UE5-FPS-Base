@@ -1,0 +1,24 @@
+{
+  "profile": {
+    "type": 5,
+    "filter": 0,
+    "adjustments": {
+      "attack": 0,
+      "defense": 0,
+      "reach": 0,
+      "stamina": 0,
+      "accuracy": 0,
+      "speed": 0,
+      "reload": 0
+    },
+    "uniqueFlags": 0,
+    "damageReceivedMultiplier": 0,
+    "accelerationMultiplier": 0,
+    "drawSpeedModifier": 0,
+    "crouchedSpeedMultiplier": 0,
+    "jumpSpeedMultiplier":  0
+  },
+  "displayName": "",
+  "abbreviation": "",
+  "weightCapacity": 20
+}

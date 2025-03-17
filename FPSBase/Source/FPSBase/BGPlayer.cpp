@@ -12,6 +12,7 @@
 #include "Util/FileIO/Logger.h"
 #include "Systems/FactionSystem.h"
 #include "UI/UIConductor.h"
+#include "CommonHeaders.h"
 
 static ABGPlayer* g_pLocalPlayer;
 ABGPlayer* GetLocalPlayer() {
@@ -39,6 +40,9 @@ ABGPlayer::ABGPlayer()
 
 	SetupFPV_MeshComponent();
 
+	
+	OnActorHit.AddUniqueDynamic(this, &ABGPlayer::OnPhysicsHit);
+
 
 	JT_START_BINDING_UCLASS("BGPlayer", ABGPlayer);
 	JT_BIND_DOUBLE(m_jumpSpeed, "jumpSpeed", false);
@@ -55,6 +59,13 @@ void ABGPlayer::BeginPlay()
 	GetCharacterMovement()->JumpZVelocity = m_jumpSpeed;
 	GetCharacterMovement()->MaxWalkSpeed = m_runSpeed;
 
+	if (DataSystem::g_weapons.Num()) {
+		m_pPrimaryWeaponSelection = DataSystem::g_weapons[0];
+	}
+
+	SetActorTickEnabled(true);
+
+	Spawn(true);
 }
 
 //////////////////////////////////////////////////////////////////////////// Input
@@ -63,8 +74,6 @@ void ABGPlayer::SetupPlayerInputComponent(class UInputComponent* PlayerInputComp
 {
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
-
-	Msg("Creating input component!");
 
 	// Bind jump events
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ABGPlayer::CustomJump);
@@ -140,12 +149,24 @@ FVector ABGPlayer::GetAimDirection() const {
 //------------------------------------------------------------------
 // player management functions
 //------------------------------------------------------------------
-void ABGPlayer::SwapToPlayerClass(const PlayerClass* pClass, bool bForceNow) {
+void ABGPlayer::SwapToPlayerClass(const PlayerClassProfile* pClass, bool bForceNow) {
 
 
 	if (bForceNow) {
 		Spawn(true);
 	}
+}
+
+//------------------------------------------------------------------
+// per-frame functions
+//------------------------------------------------------------------
+void ABGPlayer::Tick(float deltaSeconds) {
+	GetCharacterMovement()->MaxWalkSpeed = GetMaxSpeed();
+	
+	m_iStamina += 1;
+	if (m_iStamina > 100) m_iStamina = 100;
+
+	
 }
 
 //------------------------------------------------------------------
@@ -169,6 +190,7 @@ void ABGPlayer::Spawn(bool bForce) {
 	if (m_bLoadoutChangePending) {
 		m_loadout.LoadOntoPlayer(this);
 		AccumulatePerks();
+		AccumulateAVs();
 		m_bLoadoutChangePending = false;
 	}
 
@@ -178,8 +200,8 @@ void ABGPlayer::Spawn(bool bForce) {
 
 
 	//TODO find spawn location
-	FVector spawnLocation;
-	FQuat spawnRotation;
+	FVector spawnLocation = GetActorLocation();
+	FQuat spawnRotation = GetActorQuat();
 
 	//Teleport player to spawn
 	SetActorLocation(spawnLocation, false, NULL, ETeleportType::ResetPhysics);
@@ -189,53 +211,7 @@ void ABGPlayer::Spawn(bool bForce) {
 
 }
 
-void ABGPlayer::AccumulatePerks() {
-	typedef KitAccessoryModifiers KAM;
-	KAM& p1 = m_pPrimaryWeaponPerk->m_modifiers;
-	KAM& p2 = m_pSecondaryWeaponPerk->m_modifiers;
-	KAM& p3 = m_pClassSpecificPerk->m_modifiers;
-	KAM& p4 = m_pPrimaryClassPerk->m_modifiers;
-	KAM& p5 = m_pSecondaryClassPerk->m_modifiers;
 
-	KAM* perks[] = { &p1, &p2, &p3, &p4, &p5 };
-
-	//zero it all out
-	memset(&m_accumulatedPerks, 0, sizeof(m_accumulatedPerks));
-
-	KAM& p = m_accumulatedPerks;
-	
-	for (int i = 0; i < 5; i++) {
-		auto po = perks[i];
-		p.m_iUniqueFlags |= po->m_iUniqueFlags;
-
-		p.m_flWeight += po->m_flWeight;
-		p.m_flSpeedModifier += po->m_flSpeedModifier;
-		p.m_flMaxWeightModifier += po->m_flMaxWeightModifier;
-		p.m_flWeightReductionHolstered += po->m_flWeightReductionHolstered;
-		p.m_flStaminaDrainMultiplier += po->m_flStaminaDrainMultiplier;
-		p.m_flDamageReceivedMultiplier += po->m_flDamageReceivedMultiplier;
-		p.m_flLowDamageReceivedMultiplier += po->m_flLowDamageReceivedMultiplier;
-
-		p.m_flLockTimeModifier += po->m_flLockTimeModifier;
-		p.m_flAccuracyModifier += po->m_flAccuracyModifier;
-		p.m_flRecoilModifier += po->m_flRecoilModifier;
-		p.m_flReloadMovementSpeedModifier += po->m_flReloadMovementSpeedModifier;
-		p.m_flReloadSpeedModifier += po->m_flReloadSpeedModifier;
-
-		p.m_flMeleeIntervalModifier += po->m_flMeleeIntervalModifier;
-		p.m_iMeleeRangeExtension += po->m_iMeleeRangeExtension;
-
-		p.m_flFuseLengthModifier += po->m_flFuseLengthModifier;
-		p.m_flGrenadeSpeedModifier += po->m_flGrenadeSpeedModifier;
-	}
-
-	//add weights from weapons and ammo
-	p.m_flWeight += m_pPrimaryWeaponSelection->m_flWeight;
-	if (m_pSecondaryWeaponSelection) p.m_flWeight += m_pSecondaryWeaponSelection->m_flWeight;
-	if (m_pTertiaryWeaponSelection) p.m_flWeight += m_pTertiaryWeaponSelection->m_flWeight;
-
-	//TODO include ammo
-}
 
 void ABGPlayer::GiveSpawnWeapons() {
 
@@ -258,7 +234,7 @@ void ABGPlayer::FilterDamage(FDamageInfo& di) {
 
 }
 void ABGPlayer::OnTakeDamage(const FDamageInfo& di) {
-	if (!HasAccessoryUniqueFlag(EAUF::DAMAGE_NOT_STAMINA)) {
+	if (!HasAccessoryUniqueFlag(EAUF::DAMAGE_NOT_EFFECTS)) {
 		DrainStamina(di.GetDamage());
 	}
 	
@@ -285,14 +261,24 @@ float ABGPlayer::GetMaxSpeed() {
 	//TODO walk, crouch, reload, officer buff
 
 	return 
-		(m_pClass->m_flBaseSpeedCalculated * staminaMultiplier) 
-		+ m_accumulatedPerks.m_flSpeedModifier;
+		(BASE_SPEED_ALL_CLASSES * staminaMultiplier)
+		+ m_accumulatedAVs.m_iSpeed * SPEED_INCREMENT_PER_AV;
 }
 
 void ABGPlayer::DrainStamina(int drain) {
-	drain *= m_accumulatedPerks.m_flStaminaDrainMultiplier;
+	drain *= m_accumulatedPerks.m_flMeleeStaminaDrainMultiplier;
 
 	m_iStamina -= drain;
+}
+
+void ABGPlayer::OnPhysicsHit(AActor* self, AActor* other, FVector normalImpulse, const FHitResult& hit) {
+	FVector v = GetVelocity();
+ 	Msg(UIHelpers::VectorToString(v));
+	if (v.SquaredLength() > (50 * 50)) {
+		//build damage info
+		FDamageInfo di = FDamageInfo(v.Length() / 2, this, EDamageType::DMG_GRAVITY);
+		FIDamageable::TakeDamage(di);
+	}
 }
 
 //------------------------------------------------------------------

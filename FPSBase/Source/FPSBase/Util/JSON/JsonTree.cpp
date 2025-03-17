@@ -142,6 +142,9 @@ const JsonTree* JsonTree::GetChild(const FString& key) const {
 			break;
 		}
 	}
+	/*if (!result) {
+		NLogger::Warning("Could not find JsonTree child named %s", CStr(key));
+	}*/
 	return result;
 }
 

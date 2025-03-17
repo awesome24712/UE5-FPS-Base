@@ -3,6 +3,8 @@
 #include "../../Util.h"
 #include "../UIConductor.h"
 #include "../UIHelpers.h"
+#include "../../PODT/BColor.h"
+#include "Engine/Font.h"
 
 enum class EGlassAlignment {
 	TOP_LEFT,
@@ -19,8 +21,8 @@ enum class EGlassAlignment {
 #define AWESOME_GLASS_BINDINGS() \
 	JT_BIND_FLOAT(X, "X", true); \
 	JT_BIND_FLOAT(Y, "Y", true); \
-	JT_BIND_FLOAT(W, "W", true); \
-	JT_BIND_FLOAT(H, "H", true); \
+	JT_BIND_FLOAT(W, "W", false); \
+	JT_BIND_FLOAT(H, "H", false); \
 	JT_BIND_COLOR(m_backgroundColor, "bgColor", false); \
 	JT_BIND_STRING(m_backgroundTexturePath, "texture", false); \
 	JT_BIND_STRING(m_sAlignment, "align", false); 
@@ -40,12 +42,15 @@ public:
 	inline bool				IsVisible() const { return m_bVisible; }
 
 	float					realX, realY, realW, realH; //private, calculated based on alignment and scaling, ideally calculated only after screen size changes
-private:
+protected:
 	TObjectPtr<UTexture>	m_backgroundTexture; //if present, will be drawn, otherwise uses background color
 	bool					m_bMouseOver;
 	bool					m_bVisible;
 	EGlassAlignment			m_eAlignment;
 	FString					m_sAlignment; //translated into EAlignment
+
+	TArray<AwesomeGlass*>	m_children;
+	void					AddChild(AwesomeGlass* ag) { m_children.Push(ag); }
 
 //-----------------------------------------------------------------
 // overridable interface, some with default implementations that
@@ -69,7 +74,9 @@ public:
 
 	void					SetIsVisible(bool bVisible) { m_bVisible = bVisible; }
 	inline void				SetAlignment(EGlassAlignment a) { m_eAlignment = a; }
-
+	void					SetSizeToScreen();
+	inline void				SetSize(float _W, float _H) { W = _W; H = _H; }
+	inline void				SetPos(float _X, float _Y) { X = _X; Y = _Y; }
 };
 
 

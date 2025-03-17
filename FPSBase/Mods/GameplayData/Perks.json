@@ -34,7 +34,7 @@
     //more accurate but longer reload
     "modifiers": {
       "reloadSpeedModifier": 0.5
-    }
+    },
     "adjustments": {
       "accuracy": 4
     }
@@ -106,7 +106,7 @@
     //not for officers, allows non-officers to use officer buffs
     "modifiers": {
       "uniqueFlags": 32768
-    }
+    },
     "warning": "#PI_TwoSlotWarning",
     "twoSlots": true
   },

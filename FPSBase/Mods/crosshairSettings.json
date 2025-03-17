@@ -1,0 +1,14 @@
+{
+  "scale": 2.0,
+  "textureIndex": 0,
+  "dot": true,
+  "makeDynamic": true,
+  "topLine": false,
+  "rightLine": true,
+  "bottomLine": true,
+  "leftLine": true,
+  "circle": true,
+  "showHealthAndStamina": true,
+  "crosshairColor": "255,255,0,255",
+  "healthAndStaminaAlpha": 255
+}

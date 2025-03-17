@@ -1,0 +1,16 @@
+{
+  "displayName": "#T_French",
+  "abbreviation": "f",
+  "color": {
+    "r": 128,
+    "g": 128,
+    "b": 255,
+    "a": 255
+  },
+  "includedClasses": [
+    "finf.json",
+    "foff.json",
+    "fgre.json"
+  ],
+  "factionNumber": 4
+}

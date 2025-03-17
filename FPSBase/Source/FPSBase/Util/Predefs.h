@@ -38,3 +38,5 @@ FORCEINLINE bool CharIsNumber(TCHAR c) { return (c <= '9' && c >= '0'); }
 
 #define FCOLOR_WHITE FColor(255, 255, 255)
 #define FCOLOR_RED FColor(255, 0, 0)
+#define FCOLOR_TAN FColor(232, 231, 182)
+#define FCOLOR_TAN_DARK FColor(129, 126, 90)

@@ -1,0 +1,17 @@
+{
+  "displayName": "#T_AmericanIndigenous",
+  "abbreviation": "ai",
+  "color": {
+    "r": 0,
+    "g": 255,
+    "b": 255,
+    "a": 255
+  },
+  "includedClasses": [
+    "ioff.json",
+    "irif.json",
+    "iski.json",
+    "arif.json"
+  ],
+  "factionNumber": 5
+}

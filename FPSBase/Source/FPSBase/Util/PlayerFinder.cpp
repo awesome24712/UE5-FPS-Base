@@ -95,7 +95,7 @@ ABGPlayer* FindPlayerByName(const char* pszName) {
 
 void GetPlayersFromString(TArray<ABGPlayer*>& outList, const char* pszString, ABGPlayer* pRequester) {
 
-	outList = TArray<ABGPlayer*>();
+	outList.Empty();
 
 	//two possibilities - keyword or name
 	if (pszString[0] == '@') {
@@ -213,4 +213,14 @@ ABGPlayer* GetSinglePlayerFromSelector(const char* pszSelector) {
 	}
 
 	return pResult;
+}
+
+void GetPlayersInRadius(const TArray<ABGPlayer*>& inList, TArray<ABGPlayer*>& outList, FVector loc, float radius) {
+	outList.Empty(8);
+
+	for (auto pPlayer : inList) {
+		if (pPlayer && (pPlayer->GetActorLocation() - loc).SquaredLength() < (radius * radius)) {
+			outList.Add(pPlayer);
+		}
+	}
 }

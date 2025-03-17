@@ -6,10 +6,12 @@
 #include "Util/Globals.h"
 #include "Util/Shared.h"
 #include "Util/TypeConversions.h"
+#include "Util/PlayerFinder.h"
 
 #include "Systems/ConfigSystem.h"
 #include "Systems/ConsoleSystem.h"
 #include "Systems/LangSystem.h"
+#include "Systems/DataSystem.h"
 
 #include "GameModeCvars.h"
 

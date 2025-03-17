@@ -1,0 +1,16 @@
+{
+  "displayName": "#T_BritishIndigenous",
+  "abbreviation": "ai",
+  "color": {
+    "r": 255,
+    "g": 128,
+    "b": 128,
+    "a": 255
+  },
+  "includedClasses": [
+    "ioff.json",
+    "irif.json",
+    "iski.json"
+  ],
+  "factionNumber": 6
+}

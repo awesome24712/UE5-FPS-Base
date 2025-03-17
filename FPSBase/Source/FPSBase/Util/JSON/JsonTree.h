@@ -114,7 +114,7 @@ public:
 	}
 
 	bool GetValueBool() const {
-		if (m_eType == JNT_STRING)
+		if (m_eType == JNT_BOOLEAN)
 			return m_bValue;
 		else
 			return false;

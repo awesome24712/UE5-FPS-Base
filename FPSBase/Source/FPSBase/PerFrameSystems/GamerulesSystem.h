@@ -15,7 +15,7 @@ inline bool UsingRoundSystem() { return gr_rounds.GetValueInt() > 0; }
 class ABGPlayer;
 
 class BG4Gamerules;
-extern BG4Gamerules g_pGamerules;
+extern BG4Gamerules* g_pGamerules;
 
 class BG4Gamerules : PerFrameSystem {
 private:
@@ -51,6 +51,8 @@ private:
 	void TicketThink();
 	void PauseThink();
 
+
+public:
 	//Procedures
 	void ResetScoresAndTimes();
 	void RestartMap();
@@ -58,6 +60,7 @@ private:
 	void PerformWinTheatrics(ETeamNumber iWinner);
 	void SwapTeams();
 	void ScrambleTeams();
+	void DeliverTeamScore(int amount, ETeamNumber team);
 	void DeliverPlayerScore(int amount, ABGPlayer* pPlayer);
 	void MarkFullcapCheckNextFrame() { m_bFullcapThink = true; }
 	void ChangemapDelayed(FString mapName, ftime delay);
@@ -74,7 +77,6 @@ private:
 	//Listeners
 	void OnPlayerKilled(ABGPlayer* pVictim, const FDamageInfo& info);
 
-public:
 	//Getters - public
 	int GetScoreA() const { return m_iScoreA; }
 	int GetScoreD() const { return m_iScoreD; }

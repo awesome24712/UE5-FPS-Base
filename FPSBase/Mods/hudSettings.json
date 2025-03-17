@@ -1,0 +1,30 @@
+{
+  "compass": {
+    "X": 120,
+    "Y": 120,
+    "W": 100,
+    "H": 100,
+    "align": "br"
+  },
+  "healthbar": {
+    "X": 120,
+    "Y": 40,
+    "W": 100,
+    "H": 20,
+    "align": "bl",
+    "bgColor": "232,231,182"
+  },
+  "healthlabel": {
+    "X": 20,
+    "Y": 40,
+    "align": "bl",
+    "fontSize": 20,
+    "text": "H"
+  },
+  "ammocount": {
+    "X": 240,
+    "Y": 40,
+    "align": "bl",
+    "fontSize": 20
+  }
+}

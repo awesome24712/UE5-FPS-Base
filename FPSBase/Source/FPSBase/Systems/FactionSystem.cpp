@@ -35,15 +35,20 @@ const TArray<ABGPlayer*>& GetTeammatesForPlayer(ABGPlayer* pPlayer) {
 	return pPlayer->GetFaction()->GetPlayers();
 }
 
+const TArray<ABGPlayer*> g_emptyPlayerArray;
+const TArray<ABGPlayer*>& GetEmptyPlayerArray() {
+	return g_emptyPlayerArray;
+}
+
 Faction* FactionFromTeamNumber(ETeamNumber team) {
 	if (team >= NUM_TEAMS) {
 		NLogger::Fatal("FactionFromTeamNumber BAD number");
 	}
 
 	Faction* factions[] = {
+		g_FactionBystander,
 		g_FactionAttacker,
 		g_FactionDefender,
-		g_FactionBystander,
 		g_FactionBystander,
 	};
 
@@ -82,7 +87,7 @@ void Faction::FactionSwap(Faction** ppTarget, Faction* pNewFaction) {
 	//actually set the faction pointer
 	*ppTarget = pNewFaction;
 
-	Msg("Faction %s has changed to %s", NAME_TO_ANSI(pOldFaction->GetDisplayName()), NAME_TO_ANSI(pNewFaction->GetDisplayName()));
+	Msg("Faction %s has changed to %s", CStr(pOldFaction->GetDisplayName()), CStr(pNewFaction->GetDisplayName()));
 }
 
 
@@ -148,7 +153,7 @@ Faction* Faction::AssignPlayerToFaction(ABGPlayer* pPlayer, ETeamNumber tn) {
 	pOldFaction->m_players.Remove(pPlayer);
 	pNewFaction->m_players.Add(pPlayer);
 
-	Msg("Player %s has changed to team %s", WCStr(pPlayer->GetPlayerName()), NAME_TO_ANSI(pNewFaction->GetDisplayName()));
+	Msg("Player %s has changed to team %s", WCStr(pPlayer->GetPlayerName()), CStr(pNewFaction->GetDisplayName()));
 
 	return pNewFaction;
 }
@@ -164,6 +169,7 @@ Faction::Faction() {
 	JT_START_BINDING("faction", Faction);
 	JT_BIND_INT(m_factionNumber, "factionNumber", true);
 	JT_BIND_STRING(m_sDisplayName, "displayName", true);
+	JT_BIND_STRING(m_sAbbreviation, "abbreviation", true);
 	JT_BIND_OBJECT(m_cColor, "color", true);
 	JT_BIND_STRING_ARRAY(m_aIncludedClasses, "includedClasses", true);
 	JT_FINISH_BINDING_WITH_CALLBACK([](IJsonBindable* pObj) {

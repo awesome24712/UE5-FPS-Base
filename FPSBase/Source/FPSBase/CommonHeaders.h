@@ -1,0 +1,13 @@
+#pragma once
+#include "Util.h"
+#include "Systems/FactionSystem.h"
+#include "Systems/FlagSystem.h"
+#include "Profiles/AmmoProfile.h"
+#include "Profiles/KitAccessoryProfile.h"
+#include "Profiles/MenuItemProfile.h"
+#include "Profiles/PlayerClassProfile.h"
+#include "Profiles/SettingsProfile.h"
+#include "Profiles/WeaponDefProfile.h"
+#include "PerFrameSystems/GamerulesSystem.h"
+#include "BGPlayer.h"
+#include "UI/AwesomeGlass.h"

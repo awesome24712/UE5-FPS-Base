@@ -1,0 +1,18 @@
+{
+  "displayName": "#T_Hessian",
+  "abbreviation": "h",
+  "color": {
+    "r": 128,
+    "g": 0,
+    "b": 255,
+    "a": 255
+  },
+  "includedClasses": [
+    "hinf.json",
+    "hoff.json",
+    "hrif.json",
+    "hlinf.json",
+    "hgre.json"
+  ],
+  "factionNumber": 7
+}

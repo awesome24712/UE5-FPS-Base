@@ -1,0 +1,19 @@
+{
+  "displayName": "#T_British",
+  "abbreviation": "b",
+  "color": {
+    "r": 255,
+    "g": 0,
+    "b": 0,
+    "a": 255
+  },
+  "includedClasses": [
+    "binf.json",
+    "boff.json",
+    "hrif.json",
+    "iski.json",
+    "blinf.json",
+    "bgre.json"
+  ],
+  "factionNumber": 1
+}

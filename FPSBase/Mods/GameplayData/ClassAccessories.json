@@ -24,21 +24,21 @@
     //heals 50 but causes drunk effect
     "modifiers": {
 
-    }
+    },
     "warning": "#PI_AlcoholBottle_Warning"
   },
 
   "Bandage": {
     "type": 2,
-    "filter": 0
+    "filter": 0,
     //heals 20
     "modifiers": {
-      "uniqueFlags": 
+      "uniqueFlags": 0
     }
   },
   "Backpack": {
     "type": 2,
-    "filter": 0
+    "filter": 0,
     //increases weight capacity
     "modifiers": {
       "maxWeightModifier": 10

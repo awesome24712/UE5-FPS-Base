@@ -55,19 +55,24 @@ class ABGPlayer : public ACharacter, public IJsonBindable, public FIDamageable
 	ETeamNumber m_iTeam;
 	UPROPERTY() FKitLoadout m_loadout;
 	bool m_bLoadoutChangePending = false;
-	const PlayerClass* m_pClass;
-	WeaponDef* m_pPrimaryWeaponSelection;
+	const PlayerClassProfile* m_pClass;
+	WeaponDef* m_pPrimaryWeaponSelection = NULL;
 	WeaponDef* m_pSecondaryWeaponSelection;
 	WeaponDef* m_pTertiaryWeaponSelection;
 
-	KitAccessoryProfile* m_pPrimaryWeaponPerk;
-	KitAccessoryProfile* m_pSecondaryWeaponPerk;
+	KitAccessoryProfile* m_pPrimaryWeaponAccessory1;
+	KitAccessoryProfile* m_pPrimaryWeaponAccessory2;
+	KitAccessoryProfile* m_pSecondaryWeaponAccessory1;
+	KitAccessoryProfile* m_pSecondaryWeaponAccessory2;
 
-	KitAccessoryProfile* m_pClassSpecificPerk;
-	KitAccessoryProfile* m_pPrimaryClassPerk;
-	KitAccessoryProfile* m_pSecondaryClassPerk;
+	KitAccessoryProfile* m_pClassAccessory;
+
+	KitAccessoryProfile* m_pOccupationalPerk;
+	KitAccessoryProfile* m_pPrimaryPerk;
+	KitAccessoryProfile* m_pSecondaryPerk;
 
 	KitAccessoryModifiers m_accumulatedPerks;
+	KitAdjustmentValues m_accumulatedAVs;
 
 	uint8 m_iAmmoIncrement; //5 shots per increment, adds weight too
 
@@ -118,7 +123,12 @@ public:
 	//------------------------------------------------------------------
 	// player management functions
 	//------------------------------------------------------------------
-	void SwapToPlayerClass(const PlayerClass* pClass, bool bForceNow);
+	void SwapToPlayerClass(const PlayerClassProfile* pClass, bool bForceNow);
+
+	//------------------------------------------------------------------
+	// per-frame functions
+	//------------------------------------------------------------------
+	void Tick(float deltaSeconds) override;
 
 
 	//------------------------------------------------------------------
@@ -127,6 +137,8 @@ public:
 	void Spawn(bool bForce);
 
 	void AccumulatePerks(); //updates m_accumulatedPerks
+
+	void AccumulateAVs();
 
 	void GiveSpawnWeapons();
 
@@ -151,6 +163,9 @@ public:
 
 	void DrainStamina(int drain);
 
+	UFUNCTION()
+	void OnPhysicsHit(AActor* self, AActor* other, FVector normalImpulse, const FHitResult& hit);
+
 
 	//------------------------------------------------------------------
 	// helper getters
@@ -169,11 +184,10 @@ public:
 	Faction* GetFaction() const;
 	FString GetPlayerName() const { return ""; }
 	float GetWeight() const { return m_accumulatedPerks.m_flWeight; }
-	float GetWeightCapacity() const { return m_pClass->m_flWeightCapacity; }
+	float GetWeightCapacity() const { return m_pClass->GetWeightCapacity(); }
 	bool IsAmmoFull() const;
-	bool HasAccessoryUniqueFlag(EAUF flag) const {
-		return (m_accumulatedPerks.m_iUniqueFlags & (int)flag);
-	}
+	bool HasAccessoryUniqueFlag(EAUF flag) const { return (m_accumulatedPerks.m_iUniqueFlags & (int)flag); }
+	const WeaponDef* GetActiveWeaponDef() const { return m_pPrimaryWeaponSelection; }
 
 	//------------------------------------------------------------------
 	// UI interaction

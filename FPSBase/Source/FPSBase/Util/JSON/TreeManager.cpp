@@ -33,4 +33,12 @@ namespace NTreeManager {
 
 		return g_pTopLevelTree->Get()->BFS(JNT_FOLDER, folderName);
 	}
+
+	void LoadBindablesFromFile(IJsonBindable* target, const FString& fileName) {
+		auto tree = FindFile(fileName);
+		Log(CStr(tree->ToString()));
+		if (tree) {
+			target->LoadBindingsFromJson(tree);
+		}
+	}
 }

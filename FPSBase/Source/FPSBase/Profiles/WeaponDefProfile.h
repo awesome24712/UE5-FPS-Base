@@ -36,11 +36,7 @@ struct WeaponAttackInfo : public IJsonBindable {
 			m_flAttackrate;
 	int		m_iStaminaDrain;			//stamina drained by attack
 
-	//cone values.. firearms only
-	float	m_flBaseAccuracy,
-
-			m_flConstantDamageRange,	//how long until we start losing damage?
-			m_flRelativeDrag;			//how does the drag on this bullet compare to a musket's?
+	
 
 	inline bool HasMelee() const;
 
@@ -100,7 +96,10 @@ public:
 	float	m_fHolsterTime;
 	float	m_flLockTime;
 	float	m_flRandomAdditionalLockTimeMax;
-	//float	m_flApproximateReloadTime; //approximate because the actual time used is based on the animation. These values need to be kept up-to-date with animation times
+	//cone values.. firearms only
+	float	m_flBaseAccuracy,
+			m_flConstantDamageRange,	//how long until we start losing damage?
+			m_flRelativeDrag;			//how does the drag on this bullet compare to a musket's?
 
 
 	//FString m_weaponName;

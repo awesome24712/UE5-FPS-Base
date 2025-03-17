@@ -32,7 +32,7 @@ namespace NJsonParser {
 			char buffer[32];
 			_itoa_s(tks[0].m_iLineNumber, buffer, 10);
 			throw JsonParserException{ 
-				FString("Expected ") + c + " at line " + buffer + " but saw " + tks[0].m_char
+				FString("Expected ") + c + " at line " + buffer + " but saw " + tks[0].m_char + " when parsing " + g_currentParserPath
 			};
 		}
 		else {
@@ -113,7 +113,7 @@ namespace NJsonParser {
 				}
 			} else if (!CharIsNumber(c)) {
 				char buffer[32]; _itoa_s(tks[0].m_iLineNumber, buffer, 10);
-				throw JsonParserException({ FString("Found badly formatted number on line ") + buffer + "unexpected token " + c});
+				throw JsonParserException({ FString("Found badly formatted number on line ") + buffer + ", unexpected token " + c});
 			}
 
 			numberString += c;
@@ -290,6 +290,7 @@ using namespace NJsonParser;
 
 JsonTree* JsonTreeHandle::CreateParentlessTreeFromTokens(TArray<Token>& tokens, const FString& fileName) {
 	//Log(__FUNCTION__ "\n");
+	g_currentParserPath = fileName;
 
 	tks = tokens;
 	
@@ -301,13 +302,14 @@ JsonTree* JsonTreeHandle::CreateParentlessTreeFromTokens(TArray<Token>& tokens, 
 	}
 	catch (JsonParserException e) {
 		NLogger::Fatal(e.m_message);
-		NLogger::Fatal("This also causes a memory leak.");
+		NLogger::Fatal("When parsing %s. This also causes a memory leak.", TCHAR_TO_ANSI(*g_currentParserPath));
 	}
 
 	return pResult;
 }
 
 JsonTreeHandle JsonTreeHandle::CreateFromFile(const FString& path) {
+
 	//Log(__FUNCTION__ "\n");
 	TArray<NTokenizer::Token> tokens;
 	NTokenizer::TokenizeFile(path, tokens);
@@ -333,22 +335,18 @@ JsonTreeHandle JsonTreeHandle::CreateFromFile(const FString& path) {
 }
 
 JsonTree* JsonTreeHandle::CreateParentlessTreeFromPath(const FString& path, const FString& rootKeyOverride) {
-	Log(__FUNCTION__ "\n");
 	namespace fs = std::filesystem;
 
 	TArray<JsonTree*> foundChildren;
 
 	for (const auto& entry : fs::directory_iterator(WCStr(path))) {
 		JsonTree* child = nullptr;
-		Log("looking at %s ", entry.path().filename().string().c_str());
 		bool isDirectory = entry.is_directory();
 		if (isDirectory) {
-			Log("is directory\n");
 			child = CreateParentlessTreeFromPath(path + "/" + entry.path().filename().string().c_str(), "");
 			//child->SetKey(entry.path().filename().string().c_str());
 		}
 		else {
-			Log("is file\n");
 			FString extension = entry.path().extension().string().c_str();
 			if (extension == FString(".json")) {
 				TArray<NTokenizer::Token> tokens;

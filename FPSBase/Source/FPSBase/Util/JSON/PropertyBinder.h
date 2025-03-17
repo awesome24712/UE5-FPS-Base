@@ -45,6 +45,7 @@ class JTClassBindingSet {
 	friend class IJsonBindable;
 private:
 	TArray<NJsonPropertyBinding::Binding> m_bindings;
+	bool	m_bFinishedCreatingBindings;
 	UClass* m_pClass;
 	FString m_name;
 	IJsonBindableFactoryBase* m_pFactory;

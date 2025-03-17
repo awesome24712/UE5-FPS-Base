@@ -14,14 +14,9 @@ WeaponAttackInfo::WeaponAttackInfo() {
 	JT_BIND_FLOAT(m_flRecoil, "recoil", false);
 	JT_BIND_FLOAT(m_flCosAngleTolerance, "cosAngleTolerance", false);
 	JT_BIND_FLOAT(m_flRetraceDuration, "retraceDuration", false);
-	JT_BIND_FLOAT(m_flRetraceDelay, "flRetraceDelay", false);
+	JT_BIND_FLOAT(m_flRetraceDelay, "retraceDelay", false);
 	JT_BIND_FLOAT(m_flAttackrate, "attackRate", false);
 	JT_BIND_INT(m_iStaminaDrain, "staminaDrain", true);
-	//accuracies
-	JT_BIND_FLOAT(m_flBaseAccuracy, "baseAccuracy", false);
-
-	JT_BIND_FLOAT(m_flConstantDamageRange, "constantDamageRange", false);
-	JT_BIND_FLOAT(m_flRelativeDrag, "dragMultiplier", false);
 	JT_FINISH_BINDING();
 }
 
@@ -102,6 +97,9 @@ WeaponDef::WeaponDef() {
 	JT_BIND_FLOAT(m_fHolsterTime, "holsterTime", true);
 	JT_BIND_FLOAT(m_flLockTime, "lockTime", false);
 	JT_BIND_FLOAT(m_flRandomAdditionalLockTimeMax, "randomAdditionalLockTime", false);
+	JT_BIND_FLOAT(m_flBaseAccuracy, "baseAccuracy", false);
+	JT_BIND_FLOAT(m_flConstantDamageRange, "constantDamageRange", false);
+	JT_BIND_FLOAT(m_flRelativeDrag, "dragMultiplier", false);
 	//JT_BIND_STRING(m_weaponName, "weaponName", true);
 	JT_FINISH_BINDING();
 

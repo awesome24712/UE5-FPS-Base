@@ -8,24 +8,24 @@ namespace Crosshair {
 
 	class CrosshairSettings : public IJsonBindable {
 
+	public:
 		CrosshairSettings();
 
-		float m_flScale;
-		int m_iTextureIndex;
+		float m_flScale = 1.0f;
+		int m_iTextureIndex = 1;
 
-		bool m_bMakeDynamic;
-		bool m_bTopLine;
-		bool m_bRightLine;
-		bool m_bBottomLine;
-		bool m_bLeftLine;
-		bool m_bShowHealthAndStamina;
+		bool m_bDot = true;
+		bool m_bMakeDynamic = true;
+		bool m_bTopLine = true;
+		bool m_bRightLine = true;
+		bool m_bBottomLine = true;
+		bool m_bLeftLine = true;
+		bool m_bCircle = true;
+		bool m_bShowHealthAndStamina = true;
 
-		uint8 m_iColorR;
-		uint8 m_iColorG;
-		uint8 m_iColorB;
-		uint8 m_iColorA;
+		FColor m_color = FCOLOR_WHITE;
 
-		uint8 m_iHealthAndStaminaAlpha;
+		uint8 m_iHealthAndStaminaAlpha = 255;
 
 	};
 

@@ -1,12 +1,13 @@
 #pragma once
 
 enum ETeamNumber : unsigned char {
-	TEAM_ATTACKER = 0,
+	TEAM_UNASSIGNED = 0,
+	TEAM_ATTACKER,
 	TEAM_DEFENDER,
 	TEAM_SPECTATOR,
-	TEAM_UNASSIGNED,
 	//BG2 - Tjoppen - NUM_TEAMS is useful
-	NUM_TEAMS,	//!! must be last !!
+	NUM_TEAMS,	//!! must be last real team !!
+	TEAM_BOTH, //useful for when something is applicable for attackers and defenders, ex. who can capture a flag
 };
 
 //These denote the current available of a class, according to the gamerules
@@ -59,16 +60,19 @@ enum EClassNumber : unsigned int {
 //PLAYER SPEEDS
 */
 #if 1
-#define SPEED_INFANTRY		195
-#define SPEED_OFFICER		200 //BG3 - was 210
-#define SPEED_OFFICER_HEAVY	195	//BG3 - speed of officers carrying carbine
-#define SPEED_SNIPER		205
-#define SPEED_SKIRMISHER	210 //BG3 - was 200 - native and minutemen
-#define SPEED_LIGHT_INF		200 //BG3 - was 198
-#define SPEED_GRENADIER		185
-
-#define SPEED_WALK			120
-#define SPEED_SPECTATE		240
+//#define SPEED_INFANTRY		195
+//#define SPEED_OFFICER		200 //BG3 - was 210
+//#define SPEED_OFFICER_HEAVY	195	//BG3 - speed of officers carrying carbine
+//#define SPEED_SNIPER		205
+//#define SPEED_SKIRMISHER	210 //BG3 - was 200 - native and minutemen
+//#define SPEED_LIGHT_INF		200 //BG3 - was 198
+//#define SPEED_GRENADIER		185
+//
+//#define SPEED_WALK			120
+//#define SPEED_SPECTATE		240
+#define INCHES_TO_CM(a) ((a)*2.54)
+#define BASE_SPEED_ALL_CLASSES INCHES_TO_CM(185)
+#define SPEED_INCREMENT_PER_AV INCHES_TO_CM(5)
 
 //These are multipliers
 #define SPEED_MOD_IRONSIGHT 0.3f

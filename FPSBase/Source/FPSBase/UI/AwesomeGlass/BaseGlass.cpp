@@ -20,7 +20,13 @@ AwesomeGlass::AwesomeGlass(bool bSkipBinding) :
 }
 
 void AwesomeGlass::LoadAssets() {
-	m_backgroundTexture = LoadObject<UTexture>(nullptr, *m_backgroundTexturePath);
+	if (!m_backgroundTexturePath.IsEmpty()) {
+		m_backgroundTexture = LoadObject<UTexture>(nullptr, *m_backgroundTexturePath);
+	}
+
+	for (auto child : m_children) {
+		child->LoadAssets();
+	}
 }
 
 void AwesomeGlass::Draw(AUIConductor* c) {
@@ -29,6 +35,9 @@ void AwesomeGlass::Draw(AUIConductor* c) {
 	}
 	else if (m_backgroundColor.Bits) {
 		c->DrawRect(m_backgroundColor, realX, realY, realW, realH);
+	}
+	for (auto child : m_children) {
+		child->Draw(c);
 	}
 }
 
@@ -39,6 +48,38 @@ void AwesomeGlass::PerformLayout(AUIConductor* c) {
 	//scale
 	float scale = c->GetScale();
 	realX *= scale; realY *= scale; realW *= scale; realH *= scale;
+
+	//if we have a string-based alignment and (probably) haven't aligned yet, load that
+	if (!m_sAlignment.IsEmpty() && m_eAlignment == EGlassAlignment::TOP_LEFT) {
+		FString& s = m_sAlignment;
+		if (s[0] == 't' && s[1] == 'l') {
+			m_eAlignment = EGlassAlignment::TOP_LEFT;
+		}
+		else if (s[0] == 't' && s[1] == 'c') {
+			m_eAlignment = EGlassAlignment::TOP_CENTER;
+		}
+		else if (s[0] == 't' && s[1] == 'r') {
+			m_eAlignment = EGlassAlignment::TOP_RIGHT;
+		}
+		else if (s[0] == 'c' && s[1] == 'l') {
+			m_eAlignment = EGlassAlignment::LEFT_CENTER;
+		}
+		else if (s[0] == 'c' && s[1] == 'c') {
+			m_eAlignment = EGlassAlignment::CENTER;
+		}
+		else if (s[0] == 'c' && s[1] == 'r') {
+			m_eAlignment = EGlassAlignment::RIGHT_CENTER;
+		}
+		else if (s[0] == 'b' && s[1] == 'l') {
+			m_eAlignment = EGlassAlignment::BOTTOM_LEFT;
+		}
+		else if (s[0] == 'b' && s[1] == 'c') {
+			m_eAlignment = EGlassAlignment::BOTTOM_CENTER;
+		}
+		else if (s[0] == 'b' && s[1] == 'r') {
+			m_eAlignment = EGlassAlignment::BOTTOM_RIGHT;
+		}
+	}
 
 	//do alignments
 	//first, make right-aligned items use coordinates from the right
@@ -58,4 +99,15 @@ void AwesomeGlass::PerformLayout(AUIConductor* c) {
 	if (e == EGlassAlignment::LEFT_CENTER || e == EGlassAlignment::CENTER || e == EGlassAlignment::RIGHT_CENTER) {
 		realX = realY + (c->ScreenHeight() / 2) - (realH / 2);
 	}
+
+	for (auto child : m_children) {
+		child->PerformLayout(c);
+	}
+}
+
+void AwesomeGlass::SetSizeToScreen() {
+	FIntPoint screenSize = GEngine->GameViewport->Viewport->GetSizeXY();
+	X = Y = 0;
+	H = screenSize.Y;
+	W = screenSize.X;
 }

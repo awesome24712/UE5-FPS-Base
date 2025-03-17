@@ -7,6 +7,7 @@
 #include "UIConductor.generated.h"
 
 class ABGPlayer;
+class AwesomeHUD;
 
 /**
  * 
@@ -47,6 +48,8 @@ public:
 	 */
 	void OnLostFocusPause(bool bEnable) override;
 
+	void PerformLayout(); //calls PerformLayout on all top-level AwesomeGlass components
+
 
 	/** 
 	* Getters
@@ -55,6 +58,7 @@ public:
 	bool WantsCursor() const;
 
 	ABGPlayer* GetPlayer() const;
+	APlayerController* GetController() const;
 
 	float		ScreenHeight() const { return m_flHeight; }
 	float		ScreenWidth() const { return m_flWidth; }
@@ -69,6 +73,9 @@ private:
 
 	float m_flHeight;
 	float m_flWidth;
+
+	//Top-level AwesomeGlass components
+	AwesomeHUD* m_hud;
 };
 
 //assumes GEngine is non-null

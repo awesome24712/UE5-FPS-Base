@@ -1,10 +1,14 @@
 #include "GamerulesSystem.h"
 
+BG4Gamerules* g_pGamerules;
+
 BG4Gamerules::BG4Gamerules() : PerFrameSystem("gamerules") {
 	ResetScoresAndTimes();
 
 	m_bPaused = false;
 	m_iMapCycleIndex = 0;
+
+	g_pGamerules = this;
 }
 
 void BG4Gamerules::Init() {
@@ -111,6 +115,15 @@ void BG4Gamerules::SwapTeams() {
 
 void BG4Gamerules::ScrambleTeams() {
 
+}
+
+void BG4Gamerules::DeliverTeamScore(int amount, ETeamNumber team) {
+	if (team == TEAM_ATTACKER) {
+		m_iScoreA += amount;
+	}
+	else if (team == TEAM_DEFENDER) {
+		m_iScoreD += amount;
+	}
 }
 
 void BG4Gamerules::DeliverPlayerScore(int amount, ABGPlayer* pPlayer) {

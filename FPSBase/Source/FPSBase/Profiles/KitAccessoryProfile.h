@@ -16,6 +16,7 @@ enum class EAccessoryType : uint8 {
 	CLASS_ACCESSORY, //flash hole pick, butterknife, backpack, bandage
 	OCCUPATIONAL_PERK,
 	PERK, //
+	CLASS,
 	
 };
 
@@ -42,7 +43,8 @@ enum class EAccessoryFilter : uint32 {
 	W_GRENADE			= 1 << 12, //fuse, explosive type adjustments
 	W_BLUNDERBUSS		= 1 << 13, //sling, 
 	W_POLEARM			= 1 << 14, //speartip, shaft length
-	W_ALL				= (1 << 15) - 1,
+	W_PISTOL			= 1 << 15,
+	W_ALL				= (1 << 16) - 1,
 };
 
 //For data-independent on/off modifiers
@@ -114,7 +116,6 @@ struct KitAccessoryModifiers : public IJsonBindable {
 	//shooting
 	float	m_flLockTimeModifier;
 	float	m_flIgniteTimeModifier;
-	//float	m_flAccuracyMultiplier;
 	float	m_flRecoilMultiplier;
 	float	m_flReloadMovementSpeedModifier;
 	float	m_flReloadSpeedModifier;
@@ -122,7 +123,6 @@ struct KitAccessoryModifiers : public IJsonBindable {
 	//melee
 	float	m_flMeleeIntervalModifier;
 	float	m_flMeleeHitIntervalModifier;
-	//int8	m_iMeleeRangeExtension;
 	float	m_flMeleeDamageMultiplier;
 	float	m_flMeleeStaminaDrainMultiplier;
 	float	m_flJumpMeleeMultiplier;
@@ -137,7 +137,13 @@ struct KitAccessoryModifiers : public IJsonBindable {
 	int8	m_iAVsAmountModifier;
 
 	KitAccessoryModifiers();
+
+	bool HasFlag(EAccessoryUniqueFlags f) const { 
+		return !!(((uint32)f) & m_iUniqueFlags);
+	}
 };
+
+extern KitAccessoryModifiers g_emptyKitAccessoryModifiers;
 
 enum class EAccessoryCosmeticFlags : uint32 {
 
@@ -185,23 +191,23 @@ struct FKitLoadout {
 
 	//indexes into factory lists, i.e. the arrays returned by JTClassBindingSet::GetAll()
 	//these indexes can change as profiles are added to the game
-	uint8 m_iClass;
+	int8 m_iClass;
 
-	uint8 m_iWeapon1;
-	uint8 m_iWeapon2; //-1 for none
-	uint8 m_iWeapon3;
+	int8 m_iWeapon1;
+	int8 m_iWeapon2; //-1 for none
+	int8 m_iWeapon3;
 
-	uint8 m_iPrimaryAccessory1;
-	uint8 m_iPrimaryAccessory2;
+	int8 m_iPrimaryAccessory1;
+	int8 m_iPrimaryAccessory2;
 
-	uint8 m_iSecondaryAccessory1;
-	uint8 m_iSecondaryAccessory2;
+	int8 m_iSecondaryAccessory1;
+	int8 m_iSecondaryAccessory2;
 
-	uint8 m_iClassAccessory;
+	int8 m_iClassAccessory;
 
-	uint8 m_iPerk1;
-	uint8 m_iPerk2;
-	uint8 m_iPerk3;
+	int8 m_iOccupationalPerk;
+	int8 m_iPerk1;
+	int8 m_iPerk2;
 
 	//Updates variables inside pPlayer to match these indexes
 	void LoadOntoPlayer(ABGPlayer* pPlayer);
