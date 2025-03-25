@@ -87,6 +87,8 @@ public:
 	* Rather this should only be done for POD types where we're managing the lifecycle ourselves
 	*/
 	static void DeleteObjectsOfBindingSet(const FString& name);
+
+	const TArray<NJsonPropertyBinding::Binding>& GetBindings() const { return m_bindings; }
 };
 
 inline JTClassBindingSet* FindBindingSet(const FString& name) { return JTClassBindingSet::FindBindingSet(name); }
@@ -124,6 +126,10 @@ public:
 
 	const TMap<FString, IJsonBindable*>& GetAllNamedOfThisType() const { return m_bindingSet->m_factoryMap; };
 	const TArray<IJsonBindable*>& GetAllOfThisType() const { return m_bindingSet->m_factoryList; };
+
+	JsonTreeHandle ToJsonTree();
+private:
+	void ToJsonTree(JsonTree* jt); //recursive implementation function for above function
 };
 
 #ifndef JT_CALC_MEMORY_OFFSET

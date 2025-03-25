@@ -78,14 +78,14 @@ enum EClassNumber : unsigned int {
 #define SPEED_MOD_IRONSIGHT 0.3f
 #define SPEED_MOD_RELOAD	0.5f
 
-
 #endif
 
 /*
 //STAMINA DRAIN AMOUNTS - USED IN A LOT OF PLACES
 */
 #if 1
-#define STAMINA_REGEN_AMOUNT	3 //server-side, per tick
+#define STAMINA_REGEN_AMOUNT	3 //server-side, per interval
+#define STAMINA_REGEN_INTERVAL (0.1f)
 #define STAMINA_DRAIN_JUMP		40
 #define STAMINA_DRAIN_CROUCH	25
 #endif

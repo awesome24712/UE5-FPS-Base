@@ -20,11 +20,13 @@ JTClassBindingSet* JTClassBindingSet::__CreateBindingSet(FString name, IJsonBind
 
 	if (g_pCurrentBindingSet) {
 		NLogger::Fatal("Creating new binding set but %s is still the active one", CStr(g_pCurrentBindingSet->m_name));
+		delete pFactoryOnHeap;
 		return NULL;
 	}
 
 	if (g_classNameBindingSets.Contains(name)) {
 		g_pCurrentBindingSet = *(g_classNameBindingSets.Find(name));
+		delete pFactoryOnHeap;
 		return g_pCurrentBindingSet;
 	}
 

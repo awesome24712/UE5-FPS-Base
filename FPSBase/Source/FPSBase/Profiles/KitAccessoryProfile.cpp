@@ -28,6 +28,18 @@ KitAdjustmentValues::KitAdjustmentValues() :
 KitAccessoryModifiers::KitAccessoryModifiers() {
 	memset(this, 0, sizeof(KitAccessoryModifiers));
 
+	//set multipliers to 1
+
+	m_flDamageReceivedMultiplier =
+		m_flCrouchedSpeedMultiplier =
+		m_flAccelerationMultiplier =
+		m_flCrouchSpeedMultiplier =
+		m_flJumpSpeedMultiplier =
+		m_flRecoilMultiplier =
+		m_flMeleeStaminaDrainMultiplier =
+		m_flMeleeDamageMultiplier =
+		m_flJumpMeleeMultiplier = 1.f;
+
 	//general
 	JT_START_BINDING("kitAccessoryModifiers", KitAccessoryModifiers);
 	JT_BIND_INT(m_iUniqueFlags, "uniqueFlags", false);

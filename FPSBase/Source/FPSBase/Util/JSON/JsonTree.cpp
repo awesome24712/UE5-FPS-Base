@@ -216,7 +216,7 @@ FString JsonTree::ToString(bool bHideFilenameForWriting, int depth) const {
 		}
 		result += '}';
 	}
-	else if (m_eType == JNT_ARRAY) {
+	else if (m_eType == JNT_ARRAY || m_eType == JNT_STRING_ARRAY) {
 		result = result + "[\n";
 		for (int i = 0; i < m_iNumChildren; i++) {
 			result += GetChild(i)->ToString(bHideFilenameForWriting, depth + 1);

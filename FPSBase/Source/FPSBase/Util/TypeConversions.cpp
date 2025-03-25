@@ -36,6 +36,6 @@ FColor StringToColor(const FString& s) {
 }
 
 FString ColorToString(const FColor& c) {
-	return FString::Printf(TEXT("(%i, %i, %i, %i)"), (int)c.R, (int)c.G, (int)c.B, (int)c.A);
+	return FString::Printf(TEXT("%i,%i,%i,%i"), (int)c.R, (int)c.G, (int)c.B, (int)c.A);
 }
 

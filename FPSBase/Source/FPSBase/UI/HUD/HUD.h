@@ -21,6 +21,8 @@ public:
 	TextGlass* m_pHealthLabel;
 	TextGlass* m_pAmmoCountLabel;
 	AwesomeGlass* m_pHealthBar;
-	float	m_flHealthbarMaxPixelWidth;
+	float	m_flHealthBarMaxPixelWidth;
+	AwesomeGlass* m_pStaminaBar;
+	float	m_flStaminaBarMaxPixelWidth;
 	
 };

@@ -8,6 +8,7 @@ AwesomeHUD::AwesomeHUD() {
 	AddChild(m_pHealthLabel = new TextGlass());
 	AddChild(m_pAmmoCountLabel = new TextGlass());
 	AddChild(m_pHealthBar = new AwesomeGlass());
+	AddChild(m_pStaminaBar = new AwesomeGlass());
 }
 
 void AwesomeHUD::LoadAssets() {
@@ -15,6 +16,7 @@ void AwesomeHUD::LoadAssets() {
 	m_pCompass->LoadBindingsFromJson(settings->GetChild("compass"));
 	m_pHealthLabel->LoadBindingsFromJson(settings->GetChild("healthlabel"));
 	m_pHealthBar->LoadBindingsFromJson(settings->GetChild("healthbar"));
+	m_pStaminaBar->LoadBindingsFromJson(settings->GetChild("staminabar"));
 	m_pAmmoCountLabel->LoadBindingsFromJson(settings->GetChild("ammocount"));
 
 	AwesomeGlass::LoadAssets();
@@ -34,13 +36,14 @@ void AwesomeHUD::Draw(AUIConductor* c) {
 	m_pAmmoCountLabel->SetText("1");
 
 	//size the m_pHealthBar to match player health
-	m_pHealthBar->realW = m_flHealthbarMaxPixelWidth * pPlayer->GetHealth() / pPlayer->GetMaxHealth();
+	m_pHealthBar->realW = m_flHealthBarMaxPixelWidth * FMath::Max((float) pPlayer->GetHealth() / pPlayer->GetMaxHealth(), 0);
+	m_pStaminaBar->realW = m_flStaminaBarMaxPixelWidth * FMath::Max((float) pPlayer->GetStamina() / 100, 0);
 
 	AwesomeGlass::Draw(c);
 
 	//draw texture over healthbar
 	auto hb = m_pHealthBar;
-	c->DrawTexture(SharedAssets::statbarmeter, hb->realX, hb->realY, m_flHealthbarMaxPixelWidth, hb->realH, 0, 0, 1, 1);
+	c->DrawTexture(SharedAssets::statbarmeter, hb->realX, hb->realY, m_flHealthBarMaxPixelWidth, hb->realH, 0, 0, 1, 1);
 
 
 }
@@ -48,7 +51,8 @@ void AwesomeHUD::Draw(AUIConductor* c) {
 void AwesomeHUD::PerformLayout(AUIConductor* c) {
 	SetSizeToScreen();
 	AwesomeGlass::PerformLayout(c);
-	m_flHealthbarMaxPixelWidth = m_pHealthBar->realW;
+	m_flHealthBarMaxPixelWidth = m_pHealthBar->realW;
+	m_flStaminaBarMaxPixelWidth = m_pStaminaBar->realW;
 
 	/*m_pCompass->SetAlignment(EGlassAlignment::BOTTOM_RIGHT);
 	m_pCompass->SetSize(100, 100);

@@ -29,7 +29,7 @@ ABGPlayer* GetLocalPlayer();
 inline ABGPlayer* ToPlayer(AActor* pActor) { return dynamic_cast<ABGPlayer*>(pActor); }
 
 UCLASS(config=Game)
-class ABGPlayer : public ACharacter, public IJsonBindable, public FIDamageable
+class ABGPlayer : public ACharacter, /*public IJsonBindable,*/ public FIDamageable
 {
 	GENERATED_BODY()
 
@@ -46,8 +46,8 @@ class ABGPlayer : public ACharacter, public IJsonBindable, public FIDamageable
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FirstPersonCameraComponent;
 
-	double m_jumpSpeed = 100.0;
-	double m_runSpeed = 100;
+	/*double m_jumpSpeed = 100.0;
+	double m_runSpeed = 100;*/
 	//WeaponSystemProfile* m_pActiveWeaponSystemProfile;
 
 	//Player-configurable options - class, weapon, etc.
@@ -85,6 +85,10 @@ class ABGPlayer : public ACharacter, public IJsonBindable, public FIDamageable
 	uint8 m_iBandages;
 	uint8 m_iHealthToLose; //losing 1 per second
 	uint8 m_iHealthLostToBleeding; //to be healed with bandages
+
+	//Movement
+	FVector m_prevFrameVelocity;
+	float m_flRemainingTimeUntilNextStaminaRegen;
 
 
 public:
@@ -188,6 +192,7 @@ public:
 	bool IsAmmoFull() const;
 	bool HasAccessoryUniqueFlag(EAUF flag) const { return (m_accumulatedPerks.m_iUniqueFlags & (int)flag); }
 	const WeaponDef* GetActiveWeaponDef() const { return m_pPrimaryWeaponSelection; }
+	inline int GetStamina() const { return m_iStamina; }
 
 	//------------------------------------------------------------------
 	// UI interaction

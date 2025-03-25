@@ -12,7 +12,15 @@
     "W": 100,
     "H": 20,
     "align": "bl",
-    "bgColor": "232,231,182"
+    "bgColor": "232,231,182,255"
+  },
+  "staminabar": {
+    "X": 0,
+    "Y": 100,
+    "W": 100,
+    "H": 20,
+    "align": "cc",
+    "bgColor": "0,0,255,155"
   },
   "healthlabel": {
     "X": 20,

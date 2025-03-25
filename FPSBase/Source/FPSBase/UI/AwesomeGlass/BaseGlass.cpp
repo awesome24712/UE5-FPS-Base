@@ -97,7 +97,7 @@ void AwesomeGlass::PerformLayout(AUIConductor* c) {
 		realX = realX + (c->ScreenWidth() / 2) - (realW / 2);
 	}
 	if (e == EGlassAlignment::LEFT_CENTER || e == EGlassAlignment::CENTER || e == EGlassAlignment::RIGHT_CENTER) {
-		realX = realY + (c->ScreenHeight() / 2) - (realH / 2);
+		realY = realY + (c->ScreenHeight() / 2) - (realH / 2);
 	}
 
 	for (auto child : m_children) {

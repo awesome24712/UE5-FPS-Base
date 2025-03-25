@@ -44,10 +44,8 @@ ABGPlayer::ABGPlayer()
 	OnActorHit.AddUniqueDynamic(this, &ABGPlayer::OnPhysicsHit);
 
 
-	JT_START_BINDING_UCLASS("BGPlayer", ABGPlayer);
-	JT_BIND_DOUBLE(m_jumpSpeed, "jumpSpeed", false);
-	JT_BIND_DOUBLE(m_runSpeed, "runSpeed", false);
-	JT_FINISH_BINDING();
+	/*JT_START_BINDING_UCLASS("BGPlayer", ABGPlayer);
+	JT_FINISH_BINDING();*/
 }
 
 void ABGPlayer::BeginPlay()
@@ -55,9 +53,7 @@ void ABGPlayer::BeginPlay()
 	// Call the base class  
 	Super::BeginPlay();
 
-	LoadBindingsFromJson("player_movement.json");
-	GetCharacterMovement()->JumpZVelocity = m_jumpSpeed;
-	GetCharacterMovement()->MaxWalkSpeed = m_runSpeed;
+	//LoadBindingsFromJson("player_movement.json");
 
 	if (DataSystem::g_weapons.Num()) {
 		m_pPrimaryWeaponSelection = DataSystem::g_weapons[0];
@@ -136,8 +132,9 @@ void ABGPlayer::MoveRight(float Value)
 
 void ABGPlayer::CustomJump()
 {
-	Msg("Jump!");
+	//Msg("Jump!");
 	Jump();
+	DrainStamina(30);
 }
 
 FVector ABGPlayer::GetAimDirection() const {
@@ -163,10 +160,18 @@ void ABGPlayer::SwapToPlayerClass(const PlayerClassProfile* pClass, bool bForceN
 void ABGPlayer::Tick(float deltaSeconds) {
 	GetCharacterMovement()->MaxWalkSpeed = GetMaxSpeed();
 	
-	m_iStamina += 1;
-	if (m_iStamina > 100) m_iStamina = 100;
-
+	if (m_iStamina < 100) {
+		m_flRemainingTimeUntilNextStaminaRegen -= deltaSeconds;
+		if (m_flRemainingTimeUntilNextStaminaRegen <= 0) {
+			m_iStamina += STAMINA_REGEN_AMOUNT;
+			m_flRemainingTimeUntilNextStaminaRegen = STAMINA_REGEN_INTERVAL;
+			if (m_iStamina > 100) m_iStamina = 100;
+		}
+	}
 	
+	
+
+	m_prevFrameVelocity = GetVelocity();
 }
 
 //------------------------------------------------------------------
@@ -186,6 +191,10 @@ void ABGPlayer::Spawn(bool bForce) {
 	m_iBandages = 0; //assume 0, will give later if needed
 	m_iHealthToLose = 0;
 	m_iHealthLostToBleeding = 0;
+
+	m_prevFrameVelocity = FVector::ZeroVector;
+
+	GetCharacterMovement()->JumpZVelocity = 400 * m_accumulatedPerks.m_flJumpSpeedMultiplier;
 
 	if (m_bLoadoutChangePending) {
 		m_loadout.LoadOntoPlayer(this);
@@ -234,6 +243,7 @@ void ABGPlayer::FilterDamage(FDamageInfo& di) {
 
 }
 void ABGPlayer::OnTakeDamage(const FDamageInfo& di) {
+	Msg("Recieved %i damage!", di.GetDamage());
 	if (!HasAccessoryUniqueFlag(EAUF::DAMAGE_NOT_EFFECTS)) {
 		DrainStamina(di.GetDamage());
 	}
@@ -267,16 +277,19 @@ float ABGPlayer::GetMaxSpeed() {
 
 void ABGPlayer::DrainStamina(int drain) {
 	drain *= m_accumulatedPerks.m_flMeleeStaminaDrainMultiplier;
-
+	drain = FMath::Min(drain, 100);
 	m_iStamina -= drain;
+	if (m_iStamina > 100) m_iStamina = 0; //watch out for underflow;
+
+	m_flRemainingTimeUntilNextStaminaRegen = STAMINA_REGEN_INTERVAL;
 }
 
 void ABGPlayer::OnPhysicsHit(AActor* self, AActor* other, FVector normalImpulse, const FHitResult& hit) {
-	FVector v = GetVelocity();
- 	Msg(UIHelpers::VectorToString(v));
-	if (v.SquaredLength() > (50 * 50)) {
+	FVector v = m_prevFrameVelocity;
+ 	//Msg(UIHelpers::VectorToString(v));
+	if (v.SquaredLength() > (1000 * 1000)) {
 		//build damage info
-		FDamageInfo di = FDamageInfo(v.Length() / 2, this, EDamageType::DMG_GRAVITY);
+		FDamageInfo di = FDamageInfo(v.Length() / 30, this, EDamageType::DMG_GRAVITY);
 		FIDamageable::TakeDamage(di);
 	}
 }
