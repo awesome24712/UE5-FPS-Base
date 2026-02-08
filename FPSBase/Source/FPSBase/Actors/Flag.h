@@ -18,7 +18,7 @@ protected:
 	//--------------------------------------------------------------
 	bool m_bStartDisabled = false; //also controls visibility
 
-	uint8 m_iForTeam = 4; //0 => neither, 1 => attacker, 2 => defender, 4 = both
+	uint8 m_iForTeam = TEAM_BOTH; //0 => neither, 1 => attacker, 2 => defender, 4 = both
 	uint8 m_iStartingTeam = 0; //who owns flag at round start
 	uint8 m_iPickupTeam = 0; //which team can pickup this flag?
 	float m_flRadius = 2.f; //capture or pickup radius

@@ -6,6 +6,7 @@
 #include "BGController.h"
 #include "UI/UIConductor.h"
 #include "Systems/SystemManager.h"
+#include "FPSBasePlayerState.h"
 
 UWorld* g_pCurrentWorld;
 
@@ -20,6 +21,7 @@ AFPSBaseGameMode::AFPSBaseGameMode()
 	DefaultPlayerName = FText::FromString("Unknown Soldier");
 	HUDClass = AUIConductor::StaticClass();
 	PlayerControllerClass = ABGController::StaticClass();
+	PlayerStateClass = AFPSBasePlayerState::StaticClass();
 }
 
 void AFPSBaseGameMode::InitGame(const FString& mapName, const FString& options, FString& errorMessage) {

@@ -7,6 +7,8 @@
 #include "../BGController.h"
 #include "Crosshair/Crosshair.h"
 #include "AwesomeGlass.h"
+#include "Widgets/AwesomeChat.h"
+#include "../FPSBasePlayerState.h"
 
 using namespace UIHelpers;
 
@@ -16,7 +18,7 @@ AUIConductor::AUIConductor() {
 
 
 void AUIConductor::Setup() {
-	if (!GEngine) {
+	if (!GEngine || m_bHasDoneUISetup) {
 		return;
 	}
 
@@ -33,6 +35,8 @@ void AUIConductor::Setup() {
 	}
 
 	PerformLayout();
+
+	m_bHasDoneUISetup = true;
 }
 
 void AUIConductor::ShowHUD() {
@@ -41,6 +45,12 @@ void AUIConductor::ShowHUD() {
 
 void AUIConductor::PostInitializeComponents() {
 	Super::PostInitializeComponents();
+	Setup();
+	if (GEngine && GEngine->GameViewport) // make sure our screen is ready for the widget
+	{
+		SAssignNew(m_chatWidget, SAwesomeChatWidget).OwnerHUD(this); // add the widget and assign it to the var
+		GEngine->GameViewport->AddViewportWidgetContent(SNew(SWeakWidget).PossiblyNullContent(m_chatWidget));
+	}
 }
 
 void AUIConductor::RemovePostRenderedActor(AActor* A) {
@@ -79,6 +89,13 @@ void AUIConductor::DrawHUD() {
 	Super::DrawHUD();
 
 	//do NOT access canvas from here
+	//but we can do slate stuff
+
+	if (GetController()->WasInputKeyJustPressed(EKeys::Y) && m_chatWidget.IsValid()) {
+		if (m_chatWidget->ChatInput.IsValid()) {
+			FSlateApplication::Get().SetKeyboardFocus(m_chatWidget->ChatInput);
+		}
+	}
 }
 
 /**
@@ -93,6 +110,25 @@ void AUIConductor::PerformLayout() {
 	m_hud->PerformLayout(this);
 }
 
+void AUIConductor::AddMessage(const int32 type, const FString& username, const FString& text, const bool replicate) {
+	if (!GetController() || !m_chatWidget.IsValid())
+		return;
+
+	FChatMsg newMsg;
+	newMsg.Init(type, FText::FromString(username), FText::FromString(text));
+	if (newMsg.m_type > 0) {
+		if (replicate) {
+			auto ps = GetPlayerState();
+			if (ps) {
+				ps->UserChatRPC(newMsg);
+			}
+		}
+		else {
+			GetChatWidget()->AddMessage(newMsg);
+		}
+	}
+}
+
 bool AUIConductor::WantsCursor() const {
 	return false;
 }
@@ -101,9 +137,12 @@ ABGPlayer* AUIConductor::GetPlayer() const {
 	return  PlayerOwner->GetPawn<ABGPlayer>();
 }
 
-APlayerController* AUIConductor::GetController() const
-{
-	return Cast<APlayerController>(GetPlayer()->Controller);;
+ABGController* AUIConductor::GetController() const {
+	return Cast<ABGController>(GetPlayer()->Controller);;
+}
+
+AFPSBasePlayerState* AUIConductor::GetPlayerState() const {
+	return Cast<AFPSBasePlayerState>(GetPlayer()->Controller->PlayerState);;
 }
 
 FIntPoint AUIConductor::ScreenSize() const {

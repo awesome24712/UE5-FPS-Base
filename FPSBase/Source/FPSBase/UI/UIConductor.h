@@ -4,10 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
+#include "SlateBasics.h"
 #include "UIConductor.generated.h"
 
 class ABGPlayer;
 class AwesomeHUD;
+class ABGController;
+class SAwesomeChatWidget;
+class AFPSBasePlayerState;
 
 /**
  * 
@@ -50,6 +54,10 @@ public:
 
 	void PerformLayout(); //calls PerformLayout on all top-level AwesomeGlass components
 
+	/**
+	* Interactables
+	*/
+	void AddMessage(const int32 type, const FString& username, const FString&text, const bool replicate);
 
 	/** 
 	* Getters
@@ -58,7 +66,9 @@ public:
 	bool WantsCursor() const;
 
 	ABGPlayer* GetPlayer() const;
-	APlayerController* GetController() const;
+	ABGController* GetController() const;
+	AFPSBasePlayerState* GetPlayerState() const;
+
 
 	float		ScreenHeight() const { return m_flHeight; }
 	float		ScreenWidth() const { return m_flWidth; }
@@ -75,7 +85,12 @@ private:
 	float m_flWidth;
 
 	//Top-level AwesomeGlass components
+	bool	m_bHasDoneUISetup = false;
 	AwesomeHUD* m_hud;
+
+public:
+	TSharedPtr<SAwesomeChatWidget> m_chatWidget;
+	SAwesomeChatWidget* GetChatWidget() const { return (SAwesomeChatWidget*) m_chatWidget.Get(); }
 };
 
 //assumes GEngine is non-null

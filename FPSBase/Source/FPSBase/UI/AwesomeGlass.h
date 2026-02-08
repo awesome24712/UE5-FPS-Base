@@ -13,3 +13,4 @@
 #include "HUD/Compass.h"
 #include "HUD/HUD.h"
 #include "UIHelpers.h"
+#include "../PODT/ChatMessage.h"

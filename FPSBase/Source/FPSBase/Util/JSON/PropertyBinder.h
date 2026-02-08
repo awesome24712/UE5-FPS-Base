@@ -123,6 +123,7 @@ public:
 	void LoadBindingsFromJson(FString path);
 
 	inline FString GetCodeName() const { return m_codeName; }
+	inline FString GetClassName() const { return m_bindingSet->GetName(); }
 
 	const TMap<FString, IJsonBindable*>& GetAllNamedOfThisType() const { return m_bindingSet->m_factoryMap; };
 	const TArray<IJsonBindable*>& GetAllOfThisType() const { return m_bindingSet->m_factoryList; };
